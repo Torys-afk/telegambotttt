@@ -306,4 +306,7 @@ body{background:#000;display:flex;justify-content:center;align-items:center;min-
 /* ============ TOAST ============ */
 .toast-area{position:absolute;top:60px;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;gap:6px;z-index:1000;pointer-events:none;width:90%;max-width:320px;}
 .toast{background:#272a2f;border:1px solid #f3ba2f;padding:8px 14px;border-radius:10px;color:#fff;font-size:12px;font-weight:600;animation:ta 2.8s forwards;}
+.toast.success{border-color:#2ed573;}
+.toast.error{border-color:#ff4757;}
+.toast.info{border-color:#3498db;}
 @keyframes ta{0%{opacity:0;transform:translateY(-10px)}10%,80%{opacity:1;transform:translateY(0)}100%{opacity:0;transform:translateY(-10px)}}

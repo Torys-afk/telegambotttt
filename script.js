@@ -9,10 +9,10 @@ function defState() {
     lastDailyCheck: '', crates: 0, inventory: [], items: [],
     rank: 'Bronz', league: 'Bronz', leagueScore: 0, lastSave: Date.now(),
     totalTaps: 0, totalEarned: 0, bestCombo: 0, bossWins: 0, gems: 0,
-    username: '', settings: { musicOn: true, musicVol: 0.5, sfxOn: true, sfxVol: 0.5, botUsername: 'BOTUNUZ' },
+    username: '', settings: { musicOn: true, musicVol: 0.5, sfxOn: true, sfxVol: 0.5, botUsername: 'Rat_combatbot' },
     comboGuess: [], comboGuessedToday: '', tutorialDone: false, dailyInvites: 0, inviteDate: '', refCode: '',
     multiTap: 1, energyRegenBonus: 0, offlineStamp: 0, dailyStreak: 0, dailyLastClaim: '',
-    totalOffline: 0, comboMilestones: [], lvlMilestones: [], prestige: 0, autoBuyOn: false,
+    totalOffline: 0, comboMilestones: [], lvlMilestones: [], prestige: 0, autoBuyOn: false, favorites: [],
   };
 }
 
@@ -350,6 +350,8 @@ function update() {
   if (perHourShort) perHourShort.textContent = fmt(perSecDisplay * 3600) + '/saat';
   const totalTop = $('totalEarnedTop');
   if (totalTop) totalTop.textContent = fmt(S.totalEarned || 0);
+  setBadge('earnTabBadge', S.totalEarned >= 1e6 ? '💰' : '');
+  updateEnergyBar();
   const userDisp = $('userDisplay');
   if (userDisp) userDisp.textContent = S.username && S.username.trim() ? S.username.trim() : 'Misafir';
   updateLastActive();
@@ -363,6 +365,7 @@ function update() {
   S.perClick = Math.floor((2 + clickBonus) * setClickMult);
   const tapValEl = $('perTapText');
   if (tapValEl) tapValEl.textContent = '/tık: ' + fmt(Math.floor(S.perClick)) + (isX2() ? ' 🔥x2' : '');
+  $('bossDmgDisplay').textContent = '⚔️ ' + fmt(Math.floor(S.perClick)) + '/tık';
   const x2Indicator = $('x2Indicator');
   if (x2Indicator) {
     if (isX2()) {
@@ -395,10 +398,11 @@ function update() {
   }
   $('friendCount').textContent = S.friends;
   $('gemCount').textContent = S.gems || 0;
+  $('gemCount').title = '💎 Toplam kazanılan: ' + fmt(getTotalGemsEarned());
   const inviteCountEl = $('dailyInviteCount');
   if (inviteCountEl) inviteCountEl.textContent = S.dailyInvites || 0;
   const refInput = $('refInput');
-  if (refInput) refInput.value = `https://t.me/${S.settings.botUsername || 'BOTUNUZ'}?start=${S.refCode}`;
+  if (refInput) refInput.value = `https://t.me/Rat_combatbot?start=${S.refCode}`;
 
   /* Stats */
   $('statTaps').textContent = fmt(S.totalTaps || 0);
@@ -407,6 +411,10 @@ function update() {
   $('statRegen').textContent = (1 + (S.energyRegenBonus || 0)).toFixed(1) + '/s';
   $('statMulti').textContent = (S.multiTap || 1) + 'x';
   $('statBoss').textContent = S.bossWins || 0;
+  $('statCrates').textContent = S.crates || 0;
+  $('statPassive').textContent = fmt(S.perSec * 3600) + '/s';
+  $('statCardLevels').textContent = fmt(getTotalCardLevels());
+  $('statTotalGems').textContent = fmt(S.totalEarned ? Math.floor(S.totalEarned / 10000) + (S.gems || 0) : S.gems || 0);
   $('multiTapDesc').textContent = S.multiTap || 1;
   $('multiTapCostBtn').textContent = '💎 ' + fmt(getMultiTapCost());
   $('regenDesc').textContent = (1 + (S.energyRegenBonus || 0)).toFixed(1);
@@ -419,6 +427,8 @@ function update() {
   checkDailyTasks();
   const autoInd = $('autoTapIndicator');
   if (autoInd) autoInd.style.display = autoTapInterval ? 'inline' : 'none';
+  const totalLevelsEl = $('totalCardLevels');
+  if (totalLevelsEl) totalLevelsEl.textContent = `📈 Toplam ${fmt(getTotalCardLevels())} seviye`;
   updateBadge();
   const mineBtn = document.querySelector('.nav-btn[data-tab="tab-mine"] .nav-icon');
   if (mineBtn) {
@@ -730,8 +740,9 @@ function processTap(cx, cy) {
     S.totalTaps += taps;
     S.totalEarned += gain;
     addXp(gain);
-    spawnParticles(cx, cy, isCrit ? '#ff4757' : null);
-    spawnRipple(cx, cy);
+  spawnParticles(cx, cy, isCrit ? '#ff4757' : null);
+  spawnRipple(cx, cy);
+  if (combo >= 10) spawnComboTrail(cx, cy, combo);
     const tz = $('tapZone');
     tz.classList.remove('shockwave');
     void tz.offsetWidth;
@@ -861,6 +872,94 @@ function spawnFloat(x, y, text, isCrit, color) {
   document.body.appendChild(el);
   setTimeout(() => el.remove(), 1200);
 }
+
+/* ===== COMBO TRAIL ===== */
+function spawnComboTrail(cx, cy, combo) {
+  const colors = ['#ff4757', '#ff9f43', '#f3ba2f', '#2ed573', '#3498db', '#9b59b6'];
+  for (let i = 0; i < 2; i++) {
+    const dot = document.createElement('div');
+    dot.style.cssText = `position:fixed;width:${4 + Math.random() * 4}px;height:${4 + Math.random() * 4}px;background:${colors[i % colors.length]};border-radius:50%;pointer-events:none;z-index:9999;left:${cx - 2 + (Math.random() - 0.5) * 20}px;top:${cy - 2 + (Math.random() - 0.5) * 20}px;opacity:1;`;
+    document.body.appendChild(dot);
+    dot.animate([{ transform: 'translate(0,0) scale(1)', opacity: 1 }, { transform: `translate(${(Math.random() - 0.5) * 40}px, ${-20 - Math.random() * 30}px) scale(0)`, opacity: 0 }], { duration: 400, easing: 'ease-out' }).onfinish = () => dot.remove();
+  }
+}
+
+/* ===== GEMS EARNED TRACKING ===== */
+function getTotalGemsEarned() {
+  if (!S.achieved) return 0;
+  return ACH.filter(a => S.achieved.includes(a.id)).reduce((sum, a) => sum + (a.gem || 0), 0);
+}
+
+/* ===== CARD COLLECTION COMPLETION ===== */
+function getCardCompletion() {
+  return CARDS.filter(c => getItemLevel(c.id) > 0).length;
+}
+
+/* ===== QUICK BUY X LEVELS ===== */
+function quickBuyLevels(id, count) {
+  let bought = 0;
+  for (let i = 0; i < count; i++) {
+    const c = CARDS.find(x => x.id === id);
+    if (!c || S.coins < cardCost(c) || getItemLevel(id) >= 9999) break;
+    buyCard(id);
+    bought++;
+  }
+  if (bought > 0) toast(`⚡ ${bought}x yükseltildi!`);
+  renderGrid(document.querySelector('.chip.active')?.dataset?.f || 'all');
+  update();
+}
+
+/* ===== ENERGY BAR BETTER ===== */
+function updateEnergyBar() {
+  const pct = S.maxEnergy > 0 ? (S.energy / S.maxEnergy) * 100 : 0;
+  const fill = $('energyFill');
+  if (!fill) return;
+  fill.style.width = pct + '%';
+  const hue = pct * 1.2;
+  fill.style.background = pct > 50 ? `hsl(${hue}, 80%, 50%)` : pct > 25 ? '#f39c12' : '#ff4757';
+  fill.style.boxShadow = pct > 90 ? '0 0 18px rgba(46,213,115,.5)' : pct > 50 ? '0 0 8px rgba(46,213,115,.2)' : pct > 25 ? '0 0 8px rgba(243,156,18,.2)' : '0 0 12px rgba(255,71,87,.4)';
+  if (pct < 25) fill.style.animation = 'energyLow 1s ease-in-out infinite';
+  else fill.style.animation = 'none';
+}
+
+/* ===== BADGE HELPER ===== */
+function setBadge(id, text) {
+  const el = $(id);
+  if (!el) return;
+  if (text) { el.textContent = text; el.style.display = 'inline'; }
+  else el.style.display = 'none';
+}
+
+/* ===== SESSION TIMER ===== */
+let sessionStart = Date.now();
+function getSessionTime() {
+  const sec = Math.floor((Date.now() - sessionStart) / 1000);
+  if (sec < 60) return sec + 's';
+  if (sec < 3600) return Math.floor(sec / 60) + 'dk';
+  return Math.floor(sec / 3600) + 's ' + Math.floor((sec % 3600) / 60) + 'dk';
+}
+
+/* ===== QUICK ELMAS SHOP OPEN ===== */
+$('gemCount')?.addEventListener('dblclick', () => { $('shopModal').classList.remove('hidden'); toast('💎 Elmas Dükkanı açıldı'); });
+function getEnergyRestoreTime() {
+  if (S.energy >= S.maxEnergy) return '';
+  const regen = 0.5 + (S.energyRegenBonus || 0);
+  const need = S.maxEnergy - S.energy;
+  let sec = Math.ceil(need / regen);
+  if (sec < 60) return sec + 's';
+  if (sec < 3600) return Math.floor(sec / 60) + 'dk ' + (sec % 60) + 's';
+  return Math.floor(sec / 3600) + 's ' + Math.floor((sec % 3600) / 60) + 'dk';
+}
+
+/* ===== TOTAL CARD LEVELS ===== */
+function getTotalCardLevels() {
+  return CARDS.reduce((sum, c) => sum + getItemLevel(c.id), 0);
+}
+
+/* ===== MODAL CLOSE ON OVERLAY ===== */
+document.querySelectorAll('.modal-overlay').forEach(m => {
+  m.addEventListener('click', e => { if (e.target === m) m.classList.add('hidden'); });
+});
 
 function addXp(amount) {
   S.xp += amount;
@@ -994,6 +1093,7 @@ function sortCards(cards) {
   if (cardSortMode === 'level') sorted.sort((a, b) => getItemLevel(b.id) - getItemLevel(a.id));
   else if (cardSortMode === 'price') sorted.sort((a, b) => cardCost(a) - cardCost(b));
   else if (cardSortMode === 'rarity') { const r = {legendary:5,epic:4,rare:3,uncommon:2,common:1}; sorted.sort((a, b) => (r[b.rarity]||0) - (r[a.rarity]||0)); }
+  else if (cardSortMode === 'favorites') { const favs = S.favorites || []; sorted.sort((a, b) => { const af = favs.includes(a.id) ? 1 : 0; const bf = favs.includes(b.id) ? 1 : 0; return bf - af || getItemLevel(b.id) - getItemLevel(a.id); }); }
   return sorted;
 }
 
@@ -1016,10 +1116,12 @@ function renderGrid(filter) {
     const cost = cardCost(c);
     const pph = c.baseSec ? c.baseSec * lvl : 0;
     const maxLvl = 9999;
-    const fillPct = Math.min(100, (lvl / 9999) * 100);
-    const barHue = Math.min(140, Math.max(0, 140 - lvl * 0.015));
+    const fillPct = Math.min(100, (lvl / 100) * 100);
+    const barHue = Math.min(140, Math.max(0, 140 - lvl * 0.5));
     const isRainbow = lvl >= 1000;
     const isMaxed = lvl >= 9999;
+    const isFav = (S.favorites || []).includes(c.id);
+    const lvlMilestone = lvl >= 5000 ? '💎' : lvl >= 1000 ? '🌟' : lvl >= 500 ? '⭐' : lvl >= 100 ? '🏅' : lvl >= 50 ? '🎖️' : lvl >= 25 ? '🔰' : '';
     const locked = c.levelReq && S.lvl < c.levelReq;
     const tooExpensive = locked || S.coins < cost;
     const ri = RARITY[c.rarity] || 0;
@@ -1037,11 +1139,14 @@ function renderGrid(filter) {
     div.setAttribute('data-rarity', c.rarity || 'legendary');
     if (isMaxed) div.style.setProperty('--gold-glow', '#f3ba2f');
     div.innerHTML = `
-      <div class="ucard-icon" style="background:${rc}22;border-color:${rc}44;">${locked ? '🔒' : c.icon}</div>
+      <div class="ucard-icon" style="background:${rc}22;border-color:${rc}44;position:relative;">
+        ${locked ? '🔒' : c.icon}
+        ${!locked ? `<span class="fav-star" data-id="${c.id}" style="position:absolute;top:-4px;right:-4px;font-size:12px;cursor:pointer;filter:drop-shadow(0 0 2px rgba(0,0,0,.5));">${isFav ? '⭐' : '☆'}</span>` : ''}
+      </div>
       <div class="ucard-body">
         <div class="ucard-top">
           <span class="ucard-name">${locked ? '🔒 ' + c.name : c.name}${c.levelReq ? ' <span style="font-size:9px;color:#ff00ff;">Lv.' + c.levelReq + '</span>' : ''}</span>
-          <span class="ucard-level" style="background:${rc}22;color:${rc};">${locked ? '🔒' : 'Lv.' + lvl}</span>
+          <span class="ucard-level" style="background:${rc}22;color:${rc};">${locked ? '🔒' : lvlMilestone + 'Lv.' + lvl}</span>
         </div>
         <div class="ucard-pps" style="color:${rc}">${locked ? '🔒 Level ' + c.levelReq + ' gerekli' : (pph > 0 ? '+' + fmt(pph) + '/s' : rarityLabel) + (extraStr ? ' | ' + extraStr : '')}</div>
         <div class="ucard-bar"><div class="ucard-fill" style="width:${locked ? 0 : fillPct}%;background:${locked ? 'transparent' : isRainbow ? 'linear-gradient(90deg,#ff4757,#ff9f43,#2ed573,#3498db,#9b59b6)' : `hsl(${barHue},80%,${50 + lvl * 0.03}%)`}"></div></div>
@@ -1066,6 +1171,18 @@ function renderGrid(filter) {
       sellBtn.addEventListener('click', e => {
         e.stopPropagation();
         if (confirm(`${c.icon} ${c.name} seviye ${lvl} satılsın mı?`)) sellCard(c.id);
+      });
+    }
+    const favStar = div.querySelector('.fav-star');
+    if (favStar) {
+      favStar.addEventListener('click', e => {
+        e.stopPropagation();
+        if (!S.favorites) S.favorites = [];
+        const idx = S.favorites.indexOf(c.id);
+        if (idx >= 0) S.favorites.splice(idx, 1);
+        else S.favorites.push(c.id);
+        save();
+        renderGrid(document.querySelector('.chip.active')?.dataset?.f || 'all');
       });
     }
     div.addEventListener('click', e => {
@@ -1744,30 +1861,60 @@ function showCardDetail(id) {
   const perSecNext = (c.baseSec || 0) * (lvl + 1);
   const perClickHere = (c.baseClick || 0) * lvl;
   const perClickNext = (c.baseClick || 0) * (lvl + 1);
-  const totalSpent = Array.from({length: lvl}, (_, i) => cardCost(c, i)).reduce((a, b) => a + b, 0);
+  const totalSpent = lvl > 0 ? Array.from({length: lvl}, (_, i) => cardCost(c, i)).reduce((a, b) => a + b, 0) : 0;
+  const roi = lvl > 0 && perSecHere > 0 ? Math.floor(totalSpent / perSecHere) : 0;
   const rarityColors = {'common':'#8e9cb5','uncommon':'#2ed573','rare':'#3498db','epic':'#9b59b6','legendary':'#f39c12','mythic':'#ff4757'};
   const rc = rarityColors[c.rarity] || '#fff';
+  const setInfo = SET_BONUSES.find(s => s.cat === c.cat);
   el.innerHTML = `
     <span style="font-size:48px;">${c.icon}</span>
     <h3 style="color:${rc};margin:0;">${c.name}</h3>
-    <span style="color:#8e9cb5;font-size:11px;">${c.rarity.toUpperCase()} · Seviye ${lvl}/9999</span>
-    <span style="color:${rc};font-size:24px;font-weight:800;">💰${fmt(cost)}</span>
+    <span style="color:#8e9cb5;font-size:11px;">${c.rarity.toUpperCase()} · Seviye ${lvl}/9999 ${c.cat === 'retro' ? '🎮 RETRO' : ''}</span>
+    <span style="color:${rc};font-size:22px;font-weight:800;">💰${fmt(cost)}</span>
+    ${setInfo ? `<span style="font-size:10px;color:#8e9cb5;">🎯 Set: ${setInfo.name} ${setInfo.desc}</span>` : ''}
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;width:100%;margin-top:6px;">
       <div style="background:rgba(255,255,255,.04);padding:8px;border-radius:8px;text-align:center;">
         <div style="color:#8e9cb5;font-size:10px;">Anlık ⏱️</div>
         ${perSecHere > 0 ? `<div style="font-size:14px;font-weight:700;">💰${fmt(perSecHere)}/s</div>` : ''}
         ${perClickHere > 0 ? `<div style="font-size:14px;font-weight:700;">👆${fmt(perClickHere)}/tık</div>` : ''}
+        ${lvl === 0 ? `<div style="font-size:12px;color:#8e9cb5;">Henüz sahip değil</div>` : ''}
       </div>
       <div style="background:rgba(255,255,255,.04);padding:8px;border-radius:8px;text-align:center;">
         <div style="color:#8e9cb5;font-size:10px;">Sonraki ⏭️</div>
-        ${perSecNext > 0 ? `<div style="font-size:14px;font-weight:700;color:#2ed573;">💰${fmt(perSecNext)}/s</div>` : ''}
-        ${perClickNext > 0 ? `<div style="font-size:14px;font-weight:700;color:#2ed573;">👆${fmt(perClickNext)}/tık</div>` : ''}
+        ${perSecNext > 0 ? `<div style="font-size:14px;font-weight:700;color:#2ed573;">💰${fmt(perSecNext)}/s <span style="font-size:10px;color:#2ed573;">(+${fmt(perSecNext - perSecHere)})</span></div>` : ''}
+        ${perClickNext > 0 ? `<div style="font-size:14px;font-weight:700;color:#2ed573;">👆${fmt(perClickNext)}/tık <span style="font-size:10px;color:#2ed573;">(+${fmt(perClickNext - perClickHere)})</span></div>` : ''}
+        <div style="font-size:11px;color:#8e9cb5;">💰${fmt(nextCost)}</div>
       </div>
     </div>
-    ${lvl > 0 ? `<div style="background:rgba(255,255,255,.04);padding:8px;border-radius:8px;width:100%;text-align:center;"><span style="color:#8e9cb5;">Toplam harcama:</span> <span style="font-weight:700;">💰${fmt(totalSpent)}</span></div>` : ''}
-    ${c.desc ? `<div style="color:#8e9cb5;font-size:11px;text-align:center;margin-top:4px;">${c.desc}</div>` : ''}
+    ${lvl > 0 ? `
+    <div style="background:rgba(255,255,255,.04);padding:8px;border-radius:8px;width:100%;">
+      <div style="display:flex;justify-content:space-between;font-size:11px;">
+        <span style="color:#8e9cb5;">Yatırım:</span><span style="font-weight:700;">💰${fmt(totalSpent)}</span>
+      </div>
+      ${roi > 0 ? `<div style="display:flex;justify-content:space-between;font-size:11px;margin-top:2px;">
+        <span style="color:#8e9cb5;">Geri ödeme:</span><span style="color:${roi < 3600 ? '#2ed573' : '#f39c12'};">${roi < 60 ? roi+'s' : roi < 3600 ? Math.floor(roi/60)+'dk' : Math.floor(roi/3600)+'s'}</span>
+      </div>` : ''}
+    </div>` : ''}
+    ${c.desc ? `<div style="color:#8e9cb5;font-size:11px;text-align:center;margin-top:4px;">📖 ${c.desc}</div>` : ''}
+    ${lvl > 0 && lvl < 9999 ? `<button class="btn btn-gold btn-block" style="margin-top:6px;font-size:12px;" id="quickBuyDetailBtn">↑ Yükselt (💰${fmt(cost)})</button>` : ''}
+    ${lvl > 0 && lvl < 9999 ? `<button class="btn btn-secondary btn-block" style="margin-top:4px;font-size:10px;background:rgba(46,213,115,.15);color:#2ed573;" id="quickBuy10DetailBtn">↑↑ x10 Yükselt (💰${fmt(cardCost(c, lvl + 10))})</button>` : ''}
+    ${lvl > 0 ? `<button class="btn btn-secondary btn-block" style="margin-top:4px;font-size:11px;background:rgba(255,71,87,.15);color:#ff4757;" id="sellDetailBtn">🔄 Sat (💰${fmt(Math.floor(cardCost(c, lvl) * 0.4))})</button>` : ''}
   `;
   $('cardDetailModal').classList.remove('hidden');
+  const buyBtn = $('quickBuyDetailBtn');
+  if (buyBtn) buyBtn.addEventListener('click', () => { buyCard(id); showCardDetail(id); });
+  const buy10Btn = $('quickBuy10DetailBtn');
+  if (buy10Btn) buy10Btn.addEventListener('click', () => { 
+    let bought = 0;
+    for (let i = 0; i < 10; i++) {
+      if (S.coins >= cardCost(c) && getItemLevel(c.id) < 9999) { buyCard(id); bought++; }
+      else break;
+    }
+    if (bought > 0) toast(`⚡ ${bought}x ${c.name} yükseltildi!`);
+    showCardDetail(id);
+  });
+  const sellBtn = $('sellDetailBtn');
+  if (sellBtn) sellBtn.addEventListener('click', () => { if (confirm(`${c.icon} ${c.name} seviye ${lvl} satılsın mı?`)) { sellCard(id); $('cardDetailModal').classList.add('hidden'); } });
 }
 $('closeCardDetail')?.addEventListener('click', () => { $('cardDetailModal').classList.add('hidden'); });
 
@@ -1788,8 +1935,6 @@ function initSettingsUI() {
   sb.style.color = S.settings.sfxOn ? '' : '#8e9cb5';
   $('volumeSlider').value = (S.settings.musicVol || 0.5) * 100;
   $('sfxSlider').value = (S.settings.sfxVol || 0.5) * 100;
-  const botInput = $('botUsernameInput');
-  if (botInput) botInput.value = S.settings.botUsername || 'BOTUNUZ';
 }
 
 $('musicToggleBtn').addEventListener('click', () => {
@@ -1818,16 +1963,49 @@ $('sfxSlider').addEventListener('input', e => {
   save();
 });
 
-$('usernameInput')?.addEventListener('input', e => {
-  S.username = e.target.value.trim().slice(0, 20);
-  update();
-  save();
-});
+/* ===== NAME PICKER ===== */
+const PRESET_NAMES = [
+  '🐹 HamsterKing', '⚡ CryptoCEO', '💎 ElmasKral', '🔥 AteşTopu', '🌀 HızlıFare',
+  '🎮 PixelHero', '👑 BossHunter', '🚀 RocketTap', '⭐ YıldızFare', '💰 CoinLord',
+  '🦾 MegaTap', '🤖 AutoBot', '🥇 GoldHamster', '🏆 ChampTap', '💥 CritMaster',
+  '🌪️ ComboKing', '⚡ EnergyLord', '💎 DiamondRat', '🎯 SniperTap', '🔥 BlazeIt',
+  '🌀 ChaosTap', '⚔️ BossSlayer', '🛡️ TankHamster', '🎲 LuckyRat', '💫 StarCollector',
+  '🌙 NightTap', '☀️ SunHamster', '💧 WaterRat', '🌿 NatureTap', '🎪 ShowMaster',
+  '🎭 MaskedTap', '🎪 CircusRat', '🎯 TargetHit', '🎲 DiceRoller', '🎰 JackpotRat'
+];
 
-$('botUsernameInput')?.addEventListener('input', e => {
-  S.settings.botUsername = e.target.value.trim() || 'BOTUNUZ';
+function openNamePicker() {
+  const modal = $('namePickerModal');
+  modal.classList.remove('hidden');
+  rollNames();
+}
+
+function rollNames() {
+  const list = $('nameList');
+  const shuffled = [...PRESET_NAMES].sort(() => Math.random() - 0.5);
+  const picks = shuffled.slice(0, 12);
+  list.innerHTML = picks.map(n => `<button class="btn name-pick-btn" style="background:rgba(255,255,255,.08);border:1px solid #333;border-radius:8px;padding:6px 10px;cursor:pointer;font-size:12px;transition:.2s;">${n}</button>`).join('');
+  list.querySelectorAll('.name-pick-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      S.username = btn.textContent;
+      $('namePickerModal').classList.add('hidden');
+      update();
+      save();
+      toast(`👤 Hoş geldin, ${btn.textContent}!`);
+    });
+    btn.addEventListener('mouseenter', () => { btn.style.background = 'rgba(255,255,255,.15)'; btn.style.borderColor = '#f3ba2f'; });
+    btn.addEventListener('mouseleave', () => { btn.style.background = 'rgba(255,255,255,.08)'; btn.style.borderColor = '#333'; });
+  });
+}
+
+$('closeNamePicker')?.addEventListener('click', () => { $('namePickerModal').classList.add('hidden'); });
+$('rollNameBtn')?.addEventListener('click', rollNames);
+$('skipNameBtn')?.addEventListener('click', () => {
+  S.username = 'Misafir';
+  $('namePickerModal').classList.add('hidden');
   update();
   save();
+  toast('👤 Misafir olarak devam ediyorsun');
 });
 
 document.addEventListener('click', () => {
@@ -2101,9 +2279,9 @@ setInterval(save, 15000);
 
 /* ===== TOAST QUEUE ===== */
 let toastQueue = [];
-function toast(msg, duration) {
+function toast(msg, duration, type) {
   const el = document.createElement('div');
-  el.className = 'toast';
+  el.className = 'toast' + (type ? ' ' + type : '');
   el.textContent = msg;
   $('toastArea').appendChild(el);
   setTimeout(() => { el.style.opacity = '0'; el.style.transform = 'translateY(20px)'; setTimeout(() => el.remove(), 300); }, duration || 3000);
@@ -2118,6 +2296,10 @@ setInterval(() => {
   if (tapEl && tpm > 0) {
     tapEl.textContent = combo > 0 ? `${combo} tık | ${tpm} TPM` : `${tpm} TPM`;
   }
+  const tsEl = $('tapSpeedDisplay');
+  if (tsEl) tsEl.textContent = Math.round(tpm / 60) + '/s';
+  const sessEl = $('sessionTimeDisplay');
+  if (sessEl) sessEl.textContent = getSessionTime();
 }, 1000);
 
 /* ===== TUTORIAL ===== */
@@ -2137,6 +2319,9 @@ $('tNextBtn').addEventListener('click', () => {
 
 $('tStartBtn').addEventListener('click', () => {
   $('tutorialModal').classList.add('hidden');
+  if (!S.username || S.username.trim() === '') {
+    openNamePicker();
+  }
   toast('🐹 Hoş geldin CEO! Haydi kazanmaya başla!');
 });
 
@@ -2193,18 +2378,8 @@ function importSave() {
   inp.click();
 }
 
-/* ===== ENERGY RESTORE TIME ===== */
-function getEnergyRestoreTime() {
-  const missing = S.maxEnergy - S.energy;
-  if (missing <= 0) return 'Dolu';
-  const regen = 0.5 + (S.energyRegenBonus || 0);
-  const sec = Math.ceil(missing / regen);
-  if (sec < 60) return sec + 's';
-  if (sec < 3600) return Math.floor(sec / 60) + 'dk ' + (sec % 60) + 's';
-  return Math.floor(sec / 3600) + 's ' + Math.floor((sec % 3600) / 60) + 'dk';
-}
-
-/* ===== KEYBOARD SHORTCUTS ===== */
+/* ===== TOTAL CARD LEVELS ===== */
+function getTotalCardLevels() {
 document.addEventListener('keydown', e => {
   const tabs = ['tab-borsa', 'tab-mine', 'tab-friends', 'tab-earn', 'tab-boss'];
   const cur = document.querySelector('.tab:not(.hidden)');
