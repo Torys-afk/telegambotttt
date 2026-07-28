@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <script src="https://telegram.org/js/telegram-web-app.js?56"></script>
+    <title>Hamster Kombat</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="app">
+
+    <!-- TAB 1: EXCHANGE -->
+    <section id="tab-exchange" class="tab active">
+
+        <!-- TOP BAR -->
+        <div class="top-bar">
+            <div class="user-info">
+                <div class="hamster-icon">🐹</div>
+                <span class="user-name">CEO Hamster</span>
+            </div>
+            <div class="profit-display">
+                <div class="profit-label">Profit per hour</div>
+                <div class="profit-value">
+                    <span class="coin-small">💰</span>
+                    <span id="perSecText">+0</span>
+                    <span id="perHourText" style="font-size:9px;color:#8e9cb5;margin-left:2px;"></span>
+                    <span id="perTapText" style="font-size:10px;color:#8e9cb5;"></span>
+                    <span class="info-icon">⏱️</span>
+                </div>
+            </div>
+            <div style="display:flex;align-items:center;gap:6px;">
+                <span style="font-size:16px;cursor:pointer;" id="skinBtn" title="Görünüm Seç">🎨</span>
+                <span style="font-size:14px;cursor:pointer;" id="statBtn" title="İstatistikler">📊</span>
+                <span style="font-size:14px;cursor:pointer;" id="gemDisplay" title="Elmas Dükkanı">💎 <span id="gemCount" style="color:#3498db;font-weight:800;">0</span></span>
+            <span style="font-size:14px;cursor:pointer;" id="exchangeBtn" title="Coin → Elmas" onclick="exchangeCoins()">🔄</span>
+                <span class="settings-icon">⚙️</span>
+            </div>
+        </div>
+
+        <!-- LEVEL BAR -->
+        <div class="level-bar">
+            <div class="level-left">
+                <span class="level-name" id="rankTitle">Bronze</span>
+                <span style="font-size:10px;color:#8e9cb5;margin-left:6px;" id="xpText">0/100 XP</span>
+            </div>
+            <div class="level-right">
+                <span id="lvlText">1</span><span class="level-total">/10</span>
+            </div>
+        </div>
+        <div class="bar-track">
+            <div class="bar-fill" id="lvlProgressFill" style="width:5%"></div>
+        </div>
+
+        <!-- MAIN GOLD SECTION -->
+        <div class="gold-section">
+            <div class="gold-inner">
+
+                <!-- DAILY CARDS ROW -->
+                <div class="daily-row">
+                    <div class="daily-card"><div class="dot-green"></div><div class="card-icon">🎁</div><span>Daily<br>reward</span><span class="card-time" id="dailyRewardTime">00:00</span></div>
+                    <div class="daily-card"><div class="dot-green"></div><div class="card-icon">🔐</div><span>Daily<br>cipher</span><span class="card-time" id="dailyCipherTime">00:00</span></div>
+                    <div class="daily-card"><div class="dot-green"></div><div class="card-icon">🎯</div><span>Daily<br>combo</span><span class="card-time" id="dailyComboTime">00:00</span><div id="comboHint" style="display:flex;gap:2px;margin-top:2px;"></div></div>
+                </div>
+
+                <!-- COIN BALANCE -->
+                <div class="coin-balance">
+                    <span class="coin-big-icon">💰</span>
+                    <span class="coin-number" id="coinDisplay">0</span>
+                    <span id="x2Indicator" style="display:none;font-size:13px;font-weight:800;color:#f3ba2f;margin-left:6px;"></span>
+                <span id="autoTapIndicator" style="display:none;font-size:11px;font-weight:700;color:#3498db;margin-left:4px;">🤖</span>
+            </div>
+            <div style="display:flex;justify-content:space-between;font-size:9px;color:#8e9cb5;padding:0 10px;"><span><span id="userDisplay" style="color:#f3ba2f;font-weight:700;">Misafir</span> · <span id="lastActive">🟢 Çevrimiçi</span></span><span id="totalEarnedDisplay" style="color:#f3ba2f;">💰 <span id="totalEarnedTop">0</span></span></div>
+            <div id="passiveDisplay" style="font-size:10px;color:#8e9cb5;text-align:center;margin-top:-2px;">⏱️ <span id="perSecText">+0/s</span> · <span id="perHourShort">0/saat</span></div>
+
+                <div id="tierBadge" style="display:none;text-align:center;font-size:11px;font-weight:800;margin-top:6px;letter-spacing:1px;"></div>
+
+                <!-- COMBO STREAK -->
+                <div class="combo-wrap hidden" id="comboWrap">
+                    <span class="combo-label">🔥 COMBO</span>
+                    <span class="combo-val" id="comboVal">x1</span>
+                    <span class="combo-taps" id="comboTaps" style="font-size:10px;color:#8e9cb5;"></span>
+                </div>
+
+                <!-- TAP CIRCLE -->
+                <div class="tap-outer" id="tapZone">
+                    <div class="combo-glow" id="comboGlow"></div>
+                    <div class="combo-ring" id="comboRing"></div>
+                    <div class="tap-inner">
+                        <img src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 200'><circle cx='100' cy='90' r='70' fill='%23ffffff' stroke='%23d0d0d0' stroke-width='2'/><ellipse cx='100' cy='160' rx='42' ry='18' fill='%23ffffff' stroke='%23d0d0d0' stroke-width='2'/><circle cx='100' cy='80' r='38' fill='%23ffffff' stroke='%23d0d0d0' stroke-width='2'/><ellipse cx='86' cy='68' rx='12' ry='18' fill='%23ffffff' stroke='%23d0d0d0' stroke-width='2'/><ellipse cx='114' cy='68' rx='12' ry='18' fill='%23ffffff' stroke='%23d0d0d0' stroke-width='2'/><ellipse cx='86' cy='66' rx='8' ry='12' fill='%23ffe4e1'/><ellipse cx='114' cy='66' rx='8' ry='12' fill='%23ffe4e1'/><circle cx='100' cy='56' r='6' fill='%23ff9999'/><circle cx='100' cy='59' r='5' fill='%23ffffff'/><circle cx='88' cy='82' r='4' fill='%23333'/><circle cx='112' cy='82' r='4' fill='%23333'/><ellipse cx='100' cy='91' rx='3' ry='2' fill='%23ff9999'/><path d='M60 50 Q45 30 50 60' stroke='%23ffffff' stroke-width='3' fill='none' stroke-linecap='round'/><path d='M140 50 Q155 30 150 60' stroke='%23ffffff' stroke-width='3' fill='none' stroke-linecap='round'/><path d='M72 45 Q30 20 40 60' stroke='%23ffffff' stroke-width='2' fill='none'/><path d='M128 45 Q170 20 160 60' stroke='%23ffffff' stroke-width='2' fill='none'/><path d='M70 140 Q100 155 130 140 L125 152 Q100 168 75 152 Z' fill='%23ff9999'/></svg>" alt="Mouse">
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- ENERGY BAR (Fixed at bottom of tab) -->
+        <div class="energy-bar">
+            <div class="energy-left">
+                <span class="energy-icon">⚡</span>
+                <div class="energy-fill-wrap">
+                    <div class="energy-fill-bar" id="energyFill" style="width:100%;background:#2ed573;"></div>
+                </div>
+                <span id="energyDisplay">2500/2500</span>
+                <div id="energySegments"></div>
+            </div>
+            <button class="boost-btn" id="quickBoostBtn">🚀</button>
+        </div>
+    </section>
+
+    <!-- TAB 2: MINE -->
+    <section id="tab-mine" class="tab">
+        <div class="mine-header" style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:4px;">
+            <div><h2>⛏️ Madencilik</h2><p>Kartları yükselterek güçlen</p><span id="totalCards" style="font-size:10px;color:#8e9cb5;"></span></div>
+            <div style="display:flex;gap:4px;flex-wrap:wrap;justify-content:flex-end;">
+                <input id="cardSearch" placeholder="🔍 Ara..." style="width:80px;padding:4px 8px;border-radius:8px;border:1px solid rgba(255,255,255,.1);background:rgba(255,255,255,.04);color:#fff;font-size:11px;" oninput="renderGrid(document.querySelector('.chip.active')?.dataset?.f || 'all')">
+                <button class="btn btn-xs" style="background:rgba(255,255,255,.08);padding:4px 6px;" onclick="setCardSort('default')" title="Varsayılan">📋</button>
+                <button class="btn btn-xs" style="background:rgba(255,255,255,.08);padding:4px 6px;" onclick="setCardSort('level')" title="Seviyeye göre">⬇️</button>
+                <button class="btn btn-xs" style="background:rgba(255,255,255,.08);padding:4px 6px;" onclick="setCardSort('price')" title="Fiyata göre">💰</button>
+                <button class="btn btn-xs" style="background:rgba(255,255,255,.08);padding:4px 6px;" onclick="setCardSort('rarity')" title="Nadirlik">⭐</button>
+                <button class="btn btn-gold btn-xs" onclick="quickUpgrade()" style="height:32px;padding:4px 8px;">⚡</button>
+            </div>
+        </div>
+        <div class="chips">
+            <button class="chip active" data-f="all">Tümü</button>
+            <button class="chip" data-f="items">Ekipman</button>
+            <button class="chip" data-f="miners">Madenci</button>
+            <button class="chip" data-f="boosts">Boost</button>
+            <button class="chip hidden" data-f="retro" id="retroChip">🎮 Retro</button>
+        </div>
+        <div class="ulist" id="cardGrid"></div>
+    </section>
+
+    <!-- TAB 3: FRIENDS -->
+    <section id="tab-friends" class="tab">
+        <div class="mine-header" style="text-align:center;">
+            <div style="font-size:48px;margin-bottom:8px;">👥</div>
+            <h2>Arkadaşlarını Davet Et</h2>
+            <p>Her davette +15K Coin +30 💎</p>
+        </div>
+        <div class="reward-card">
+            <span style="font-size:28px;">🎁</span>
+            <div><strong>+15,000 Coin + 30 Elmas</strong><p style="font-size:12px;color:#8e9cb5;">Davet başına bonus</p></div>
+        </div>
+        <div class="ref-row">
+            <input type="text" id="refInput" readonly value="https://t.me/hamster_bot?ref=abc123">
+            <button class="btn btn-gold" id="copyRefBtn">📋</button>
+        </div>
+        <div class="f-section">
+            <h3>Davet Ettiklerin (<span id="friendCount">0</span>)</h3>
+            <div id="friendList"><div class="empty">Henüz davet etmedin</div></div>
+            <button class="btn btn-gold btn-block" id="simInviteBtn" style="margin-top:12px;">👥 Arkadaşını Davet Et</button>
+            <div style="text-align:center;font-size:10px;color:#8e9cb5;margin-top:6px;">Davet: <span id="dailyInviteCount">0</span> | Limit: 5/gün</div>
+        </div>
+    </section>
+
+    <!-- TAB 4: EARN -->
+    <section id="tab-earn" class="tab">
+        <div class="mine-header" style="text-align:center;">
+            <div style="font-size:48px;margin-bottom:8px;">🏆</div>
+            <h2>Kazanç</h2>
+            <p>İstatistikler, günlük ödüller ve reklamlar</p>
+        </div>
+
+        <div class="stats-grid">
+            <div class="stat-box"><div class="stat-icon">👆</div><div class="stat-label">Toplam Tık</div><div class="stat-value" id="statTaps">0</div></div>
+            <div class="stat-box"><div class="stat-icon">💰</div><div class="stat-label">Toplam Kazanç</div><div class="stat-value" id="statEarned">0</div></div>
+            <div class="stat-box"><div class="stat-icon">🔥</div><div class="stat-label">En İyi Combo</div><div class="stat-value" id="statCombo">0</div></div>
+            <div class="stat-box"><div class="stat-icon">⚡</div><div class="stat-label">Yenilenme</div><div class="stat-value" id="statRegen">1/s</div></div>
+            <div class="stat-box"><div class="stat-icon">👆</div><div class="stat-label">Çoklu Tık</div><div class="stat-value" id="statMulti">1x</div></div>
+            <div class="stat-box"><div class="stat-icon">🏆</div><div class="stat-label">Boss</div><div class="stat-value" id="statBoss">0</div></div>
+        </div>
+
+        <div class="section-label" style="margin-top:12px;">💎 Elmas Mağazası</div>
+        <div class="shop-up" onclick="upgradeMultiTap()">
+            <span class="shop-up-icon">👆</span>
+            <div class="shop-up-body">
+                <div class="shop-up-name">Çoklu Tık +1</div>
+                <div class="shop-up-desc">Her tık <span id="multiTapDesc">1</span>x vuruş yap</div>
+            </div>
+            <button class="shop-up-btn" id="multiTapCostBtn">💎 50</button>
+        </div>
+        <div class="shop-up" onclick="upgradeRegen()">
+            <span class="shop-up-icon">⚡</span>
+            <div class="shop-up-body">
+                <div class="shop-up-name">Enerji Yenilenme +0.5/s</div>
+                <div class="shop-up-desc">Şu an <span id="regenDesc">1</span>/s yenileniyor</div>
+            </div>
+            <button class="shop-up-btn" id="regenCostBtn">💎 30</button>
+        </div>
+
+        <div class="section-label" style="margin-top:12px;">📋 Günlük Görevler</div>
+        <div id="dailyTasks"></div>
+
+        <div class="section-label" style="margin-top:12px;">🏅 Başarımlar</div>
+        <div id="achievementList"></div>
+
+        <div class="section-label" style="margin-top:12px;">📅 Günlük</div>
+        <div class="task" id="openDailyBtn">
+            <span style="font-size:20px;">📅</span>
+            <span style="flex:1;font-weight:600;">Günlük Takvim</span>
+            <span id="dailyStreakBadge" style="font-size:11px;color:#ff9f43;">🔥 0 gün</span>
+            <span style="color:#8e9cb5;">▶️</span>
+        </div>
+        <div class="section-label" style="margin-top:14px;">🎁 Hızlı Ödüller</div>
+        <div class="task" onclick="quickReward('coin')">
+            <span style="font-size:20px;">💰</span>
+            <span style="flex:1;font-weight:600;">+10,000 Coin +2💎</span>
+            <button class="btn btn-gold btn-xs">Al</button>
+        </div>
+        <div class="task" onclick="quickReward('energy')">
+            <span style="font-size:20px;">⚡</span>
+            <span style="flex:1;font-weight:600;">Tam Enerji Doldur</span>
+            <button class="btn btn-gold btn-xs">Doldur</button>
+        </div>
+        <div class="task" onclick="quickReward('x2')">
+            <span style="font-size:20px;">🔥</span>
+            <span style="flex:1;font-weight:600;">2x Çarpan 60sn</span>
+            <button class="btn btn-gold btn-xs">Aktifleştir</button>
+        </div>
+        <div class="task" onclick="quickReward('gem')">
+            <span style="font-size:20px;">💎</span>
+            <span style="flex:1;font-weight:600;">+100 Elmas (25💎)</span>
+            <button class="btn btn-gold btn-xs">💎 25</button>
+        </div>
+        <div class="task" onclick="quickReward('boost')">
+            <span style="font-size:20px;">🚀</span>
+            <span style="flex:1;font-weight:600;">+1,000 Enerji (10💎)</span>
+            <button class="btn btn-gold btn-xs">💎 10</button>
+        </div>
+        <div class="section-label" style="margin-top:14px;">🔄 Gelişmiş</div>
+        <div class="task" onclick="toggleAutoBuy()">
+            <span style="font-size:20px;">🤖</span>
+            <span style="flex:1;font-weight:600;">Otomatik Alım <span id="autoBuyStatus">(Kapalı)</span></span>
+            <button class="btn btn-gold btn-xs" id="autoBuyBtn">Aç</button>
+        </div>
+        <div class="task" onclick="doPrestige()">
+            <span style="font-size:20px;">🔄</span>
+            <span style="flex:1;font-weight:600;">Prestige (Level 250+)</span>
+            <button class="btn btn-gold btn-xs">🔄</button>
+        </div>
+        <div style="height:80px;"></div>
+    </section>
+
+    <!-- TAB 5: BOSS -->
+    <section id="tab-boss" class="tab">
+        <div class="mine-header">
+            <h2>☠️ Boss Savaşı</h2>
+            <p>Level 15'te açılır</p>
+        </div>
+        <div id="bossLocked">
+            <div class="lock-card">
+                <div style="font-size:48px;color:#ff4757;">🔒</div>
+                <h3>Kilitli</h3>
+                <p>Level 15 olman lazım</p>
+                <div class="boss-bar"><span id="bossLvlText">Seviye: 1/15</span>
+                <div class="bar-track"><div class="bar-fill" id="bossLvlFill" style="width:6%"></div></div></div>
+            </div>
+        </div>
+        <div id="bossUnlocked" class="hidden">
+            <div class="arena">
+                <div class="b-head">
+                    <div><h3 style="color:#ff4757;">Karanlık CEO</h3><span class="b-tag">Efsanevi</span></div>
+                    <div class="b-timer" id="bossTimerDisplay">30s</div>
+                </div>
+                <div class="b-hp"><span>HP</span><span id="bossHpDisplay">15000/15000</span></div>
+                <div class="bar-track"><div class="bar-fill hp-fill" id="bossHpFill" style="width:100%"></div></div>
+                <div class="b-tap" id="bossTapTarget">
+                    <img src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 200'><circle cx='100' cy='85' r='68' fill='%23e0e0e0' stroke='%23999' stroke-width='3'/><ellipse cx='100' cy='155' rx='40' ry='16' fill='%23e0e0e0' stroke='%23999' stroke-width='2'/><circle cx='100' cy='75' r='36' fill='%23e0e0e0' stroke='%23999' stroke-width='2'/><ellipse cx='87' cy='64' rx='10' ry='16' fill='%23e0e0e0' stroke='%23999' stroke-width='2'/><ellipse cx='113' cy='64' rx='10' ry='16' fill='%23e0e0e0' stroke='%23999' stroke-width='2'/><circle cx='100' cy='52' r='6' fill='%23ff4757'/><circle cx='90' cy='78' r='5' fill='%23ff4757'/><circle cx='110' cy='78' r='5' fill='%23ff4757'/><path d='M40 60 Q50 30 60 65' stroke='%23e0e0e0' stroke-width='4' fill='none' stroke-linecap='round'/><path d='M160 60 Q150 30 140 65' stroke='%23e0e0e0' stroke-width='4' fill='none' stroke-linecap='round'/><path d='M65 130 Q100 150 135 130 L130 148 Q100 168 70 148 Z' fill='%23ff4757'/></svg>">
+                </div>
+                <button class="btn btn-danger btn-block" id="startBossBtn">⚔️ Başlat</button>
+            </div>
+        </div>
+        <div style="margin-top:16px;">
+            <h3 style="font-size:14px;color:#fff;margin-bottom:8px;">🎯 Set Bonusları</h3>
+            <div id="setBonusList"></div>
+        </div>
+    </section>
+
+    <!-- BOTTOM NAV -->
+    <nav class="bottom-nav">
+        <button class="nav-btn active" data-tab="tab-exchange"><span class="nav-icon">🏛️</span><span>Borsa</span></button>
+        <button class="nav-btn" data-tab="tab-mine"><span class="nav-icon">⛏️</span><span>Maden</span></button>
+        <button class="nav-btn" data-tab="tab-friends"><span class="nav-icon">👥</span><span>Arkadaş</span></button>
+        <button class="nav-btn" data-tab="tab-earn"><span class="nav-icon">🏆</span><span>Kazanç</span></button>
+        <button class="nav-btn" data-tab="tab-boss"><span class="nav-icon">☠️</span><span>Boss</span></button>
+    </nav>
+</div>
+
+<!-- MODALS -->
+<div class="modal-overlay hidden" id="dailyModal">
+    <div class="modal-card">
+        <button class="modal-x" id="closeDailyModal">✕</button>
+        <div style="font-size:40px;margin-bottom:8px;">📅</div>
+        <h3>Günlük Ödüller</h3>
+        <p>Her gün farklı ödül - streak arttıkça bonus artar!</p>
+        <div class="daily-streak"><span>🔥</span><span id="dailyStreakText">0 gün</span></div>
+        <div class="daily-grid" id="dailyGrid"></div>
+    </div>
+</div>
+<div class="modal-overlay hidden" id="crateModal">
+    <div class="modal-card" style="text-align:center;">
+        <div class="crate-icon" style="font-size:56px;">📦</div>
+        <h3>📦 KASA DÜŞTÜ!</h3>
+        <p>Bir kasa buldun! Aç ve ödülü al.</p>
+        <div class="hidden" id="crateRewards"></div>
+        <button class="btn btn-gold btn-block" id="openCrateBtn">Aç</button>
+        <button class="btn btn-secondary btn-block hidden" id="claimCrateBtn">Al</button>
+    </div>
+</div>
+<div class="modal-overlay hidden" id="offlineModal">
+    <div class="modal-card" style="text-align:center;">
+        <div style="font-size:56px;">💰</div>
+        <h3>Hoş Geldin!</h3>
+        <p>Uzaktayken kazandığın coinler</p>
+        <div id="offlineReward" style="font-size:28px;font-weight:900;color:#f3ba2f;">+0</div>
+        <div id="offlineExtraInfo" style="margin:4px 0;"></div>
+        <button class="btn btn-gold btn-block" id="claimOfflineBtn">Al</button>
+    </div>
+</div>
+<div class="modal-overlay hidden" id="cardDetailModal">
+    <div class="modal-card" style="max-width:340px;">
+        <button class="modal-x" id="closeCardDetail">✕</button>
+        <div id="cardDetailContent" style="display:flex;flex-direction:column;align-items:center;gap:8px;"></div>
+    </div>
+</div>
+<div class="modal-overlay hidden" id="statModal">
+    <div class="modal-card">
+        <button class="modal-x" id="closeStatModal">✕</button>
+        <div style="font-size:40px;margin-bottom:8px;">📊</div>
+        <h3>İstatistikler</h3>
+        <div id="statContent" style="display:flex;flex-direction:column;gap:8px;margin-top:8px;font-size:12px;color:#fff;"></div>
+    </div>
+</div>
+<div class="modal-overlay hidden" id="skinModal">
+    <div class="modal-card">
+        <button class="modal-x" id="closeSkinModal">✕</button>
+        <div style="font-size:40px;margin-bottom:8px;">🎨</div>
+        <h3>Görünüm Seç</h3>
+        <p style="font-size:12px;color:#8e9cb5;">100+ level'da yeni görünümler açılır</p>
+        <div id="skinList" style="display:flex;flex-direction:column;gap:6px;margin-top:8px;"></div>
+    </div>
+</div>
+<div class="modal-overlay hidden" id="settingsModal">
+    <div class="modal-card">
+        <button class="modal-x" id="closeSettingsModal">✕</button>
+        <div style="font-size:40px;margin-bottom:8px;">⚙️</div>
+        <h3>Ayarlar</h3>
+        <div style="display:flex;flex-direction:column;gap:14px;margin-top:8px;">
+            <div style="display:flex;flex-direction:column;gap:6px;">
+                <span style="color:#8e9cb5;font-size:12px;">👤 Kullanıcı Adın</span>
+                <input type="text" id="usernameInput" placeholder="Kullanıcı adın..." style="background:#1d2025;border:1px solid #333;border-radius:8px;padding:8px 10px;color:#fff;font-size:13px;outline:none;text-align:center;font-weight:600;">
+            </div>
+            <div style="border-top:1px solid rgba(255,255,255,.06);margin:4px 0;"></div>
+            <div style="display:flex;align-items:center;justify-content:space-between;">
+                <span style="color:#fff;font-weight:600;">🎵 Müzik</span>
+                <button id="musicToggleBtn" class="btn btn-gold" style="min-width:60px;padding:6px 12px;">Açık</button>
+            </div>
+            <div style="display:flex;flex-direction:column;gap:4px;">
+                <span style="color:#8e9cb5;font-size:11px;">Müzik Seviyesi</span>
+                <input type="range" id="volumeSlider" min="0" max="100" style="width:100%;accent-color:#f3ba2f;">
+            </div>
+            <div style="display:flex;align-items:center;justify-content:space-between;">
+                <span style="color:#fff;font-weight:600;">🔊 Efekt</span>
+                <button id="sfxToggleBtn" class="btn btn-gold" style="min-width:60px;padding:6px 12px;">Açık</button>
+            </div>
+            <div style="display:flex;flex-direction:column;gap:4px;">
+                <span style="color:#8e9cb5;font-size:11px;">Efekt Seviyesi</span>
+                <input type="range" id="sfxSlider" min="0" max="100" style="width:100%;accent-color:#f3ba2f;">
+            </div>
+            <div style="border-top:1px solid rgba(255,255,255,.06);margin:4px 0;"></div>
+            <div style="display:flex;flex-direction:column;gap:4px;">
+                <span style="color:#8e9cb5;font-size:11px;">🤖 Davet Botu</span>
+                <input type="text" id="botUsernameInput" placeholder="BOTUNUZ" style="background:#1d2025;border:1px solid #333;border-radius:8px;padding:6px 10px;color:#fff;font-size:12px;outline:none;">
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal-overlay hidden" id="shopModal">
+    <div class="modal-card">
+        <button class="modal-x" id="closeShopModal">✕</button>
+        <div style="font-size:40px;margin-bottom:8px;">💎</div>
+        <h3>Elmas Dükkanı</h3>
+        <p style="color:#3498db;font-weight:700;">💎 <span id="shopGemCount">0</span> Elmasın var</p>
+        <div class="shop-grid" id="shopGrid"></div>
+    </div>
+</div>
+<div class="modal-overlay hidden" id="dailyComboModal">
+    <div class="modal-card">
+        <button class="modal-x" id="closeComboModal">✕</button>
+        <div style="font-size:40px;margin-bottom:8px;">🎯</div>
+        <h3>Günlük Combo</h3>
+        <p>3 kart seç ve büyük ödülü kazan!</p>
+        <div id="comboCards" style="display:flex;gap:6px;justify-content:center;margin:8px 0;flex-wrap:wrap;"></div>
+        <button class="btn btn-gold btn-block" id="guessComboBtn">🎯 Tahmin Et (100 💎)</button>
+    </div>
+</div>
+<div class="modal-overlay hidden" id="tutorialModal">
+    <div class="modal-card" style="text-align:left;max-width:360px;padding:20px;">
+        <div id="tStep1">
+            <div style="font-size:48px;text-align:center;margin-bottom:8px;">🐹</div>
+            <h3 style="text-align:center;">Hoş Geldin CEO!</h3>
+            <p style="text-align:center;color:#8e9cb5;font-size:12px;margin-bottom:10px;">Hamster Kombat'a hoş geldin. Hadi başlayalım!</p>
+            <div class="t-item"><span class="t-icon">👆</span><div><strong>Tıkla & Kazan</strong><p style="font-size:11px;color:#8e9cb5;">Altın fareye tıkla, coin kazan. Her tık enerji harcar.</p></div></div>
+            <div class="t-item"><span class="t-icon">⚡</span><div><strong>Enerji</strong><p style="font-size:11px;color:#8e9cb5;">Enerjin bitince boost al veya bekle. Zamanla yenilenir.</p></div></div>
+            <div class="t-item"><span class="t-icon">⛏️</span><div><strong>Maden & Yükseltme</strong><p style="font-size:11px;color:#8e9cb5;">Maden tabında kart satın al, pasif gelirini artır.</p></div></div>
+            <div class="t-item"><span class="t-icon">🔥</span><div><strong>Combo</strong><p style="font-size:11px;color:#8e9cb5;">Hızlı tıkla combo yap, çarpan kazan. 1.5sn içinde tıkla!</p></div></div>
+            <button class="btn btn-gold btn-block" id="tNextBtn">Devam →</button>
+        </div>
+        <div id="tStep2" class="hidden">
+            <div style="font-size:48px;text-align:center;margin-bottom:8px;">💎</div>
+            <h3 style="text-align:center;">Elmas & Dükkan</h3>
+            <p style="text-align:center;color:#8e9cb5;font-size:12px;margin-bottom:10px;">Elmaslarla dükkandan güçlendirme al!</p>
+            <div class="t-item"><span class="t-icon">🏆</span><div><strong>Başarımlar</strong><p style="font-size:11px;color:#8e9cb5;">Görevleri tamamla, elmas kazan.</p></div></div>
+            <div class="t-item"><span class="t-icon">📅</span><div><strong>Günlük Ödül</strong><p style="font-size:11px;color:#8e9cb5;">Her gün giriş yap, ödülünü al.</p></div></div>
+            <div class="t-item"><span class="t-icon">🎯</span><div><strong>Günlük Combo</strong><p style="font-size:11px;color:#8e9cb5;">3 kart tahmin et, büyük ödülü kazan.</p></div></div>
+            <div class="t-item"><span class="t-icon">💎</span><div><strong>Elmas Dükkanı</strong><p style="font-size:11px;color:#8e9cb5;">Elmaslarınla enerji, coin, XP satın al.</p></div></div>
+            <button class="btn btn-gold btn-block" id="tStartBtn">🚀 Başla!</button>
+        </div>
+    </div>
+</div>
+<audio id="bgm" loop preload="none"></audio>
+<div class="toast-area" id="toastArea"></div>
+<script src="script.js"></script>
+</body>
+</html>
