@@ -178,10 +178,10 @@ body{background:#0a0a0f;display:flex;justify-content:center;align-items:center;m
 @keyframes navGlow{0%,100%{opacity:.7}50%{opacity:1}}
 
 /* ===== MODALS ===== */
-.modal-overlay{position:absolute;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.85);display:flex;align-items:center;justify-content:center;z-index:999;padding:16px;animation:modalFadeIn .2s ease-out;backdrop-filter:blur(8px);}
+.modal-overlay{position:absolute;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.85);display:flex;align-items:flex-start;justify-content:center;z-index:999;padding:20px 12px;animation:modalFadeIn .2s ease-out;backdrop-filter:blur(8px);overflow-y:auto;}
 .modal-overlay.hidden{display:none!important;}
 @keyframes modalFadeIn{0%{opacity:0;backdrop-filter:blur(0px)}100%{opacity:1;backdrop-filter:blur(8px)}}
-.modal-card{background:linear-gradient(135deg,#1e2028,#282a34);border-radius:24px;width:100%;max-width:340px;padding:24px;position:relative;display:flex;flex-direction:column;gap:10px;text-align:center;border:1px solid rgba(255,255,255,.06);box-shadow:0 20px 60px rgba(0,0,0,.5);animation:modalSlide .3s ease-out;}
+.modal-card{background:linear-gradient(135deg,#1e2028,#282a34);border-radius:20px;width:100%;max-width:340px;padding:20px 16px;position:relative;display:flex;flex-direction:column;gap:8px;text-align:center;border:1px solid rgba(255,255,255,.06);box-shadow:0 20px 60px rgba(0,0,0,.5);animation:modalSlide .3s ease-out;margin:auto 0;}
 @keyframes modalSlide{0%{transform:translateY(30px) scale(.95);opacity:0}100%{transform:translateY(0) scale(1);opacity:1}}
 .modal-card h3{color:#fff;font-size:17px;}
 .modal-card p{color:#6b7280;font-size:12px;}
