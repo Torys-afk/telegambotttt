@@ -2221,6 +2221,11 @@ function checkOffline() {
 try {
   if (window.Telegram?.WebApp) {
     Telegram.WebApp.ready();
+    Telegram.WebApp.expand();
+    Telegram.WebApp.enableClosingConfirmation();
+    Telegram.WebApp.setHeaderColor('#000000');
+    Telegram.WebApp.setBackgroundColor('#000000');
+    Telegram.WebApp.onEvent('viewportChanged', () => { Telegram.WebApp.expand(); });
     const u = Telegram.WebApp.initDataUnsafe?.user;
     if (u) {
       if (u.id) S.userId = String(u.id);
