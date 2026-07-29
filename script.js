@@ -18,6 +18,10 @@ function defState() {
     dungeonFloor: 0, dungeonBuffs: [], dungeonBest: 0, dungeonDaily: 0,
     riftUsed: '', riftReward: 0,
     territories: [], alchemyEssence: 0, artifacts: [],
+    _totalCrits: 0, _totalCombos: 0, _bestDungeonTime: 0, _totalExchanges: 0,
+    _maxComboEver: 0, _totalPrestigeGems: 0, _skinsOwned: 0, _totalShopSpent: 0,
+    _totalMerges: 0, _cipherSolved: 0, _wheelSpins: 0, _totalBoosts: 0,
+    _xpFromCrits: 0, _totalDungeonRuns: 0, _bossMaxDmg: 0,
   };
 }
 
@@ -126,6 +130,37 @@ const CARDS = [
   { id: 'bigbang', name: 'Büyük Patlama', icon: '💥', cat: 'boosts', b: 500000, bonusEnergy: 500000, rarity: 'legendary', desc: '+500000 Enerji' },
   { id: 'dreamcast', name: 'Dreamcast', icon: '🎮', cat: 'retro', b: 600000, baseClick: 5, baseSec: 500, rarity: 'legendary', desc: '+5/tık +500/s', levelReq: 250 },
   { id: 'atari2600', name: 'Atari 2600', icon: '🕹️', cat: 'retro', b: 700000, baseCombo: 0.8, rarity: 'legendary', desc: '+0.8x combo', levelReq: 250 },
+  /* WAVE 4 - ULTRA */
+  { id: 'mega_drill', name: 'Mega Matkap', icon: '⚙️', cat: 'miners', b: 2000000, baseSec: 50000, rarity: 'legendary', desc: 'Süper iletken matkap' },
+  { id: 'hyper_rig', name: 'Hiper Tesis', icon: '🔬', cat: 'miners', b: 5000000, baseSec: 150000, rarity: 'legendary', desc: 'Hiper uzay madenciliği' },
+  { id: 'omni_drill', name: 'Omni Delici', icon: '💠', cat: 'miners', b: 10000000, baseSec: 500000, rarity: 'legendary', desc: 'Her boyutta deler' },
+  { id: 'prism_shard', name: 'Prizma Parçası', icon: '🔷', cat: 'miners', b: 25000000, baseSec: 1000000, rarity: 'legendary', desc: 'Işık hızında kazar' },
+  { id: 'tesseract', name: 'Tesseract', icon: '🧊', cat: 'miners', b: 50000000, baseSec: 2500000, rarity: 'legendary', desc: '4-boyutlu madencilik' },
+  { id: 'photon_drill', name: 'Foton Matkabı', icon: '💡', cat: 'miners', b: 100000000, baseSec: 5000000, rarity: 'legendary', desc: 'Foton ışınıyla deler' },
+  { id: 'antigravity', name: 'Anti-Yerçekimi', icon: '🪐', cat: 'miners', b: 250000000, baseSec: 10000000, rarity: 'legendary', desc: 'Yerçekimine meydan okur' },
+  { id: 'reality_bender', name: 'Gerçeklik Büken', icon: '🌀', cat: 'miners', b: 500000000, baseSec: 25000000, rarity: 'legendary', desc: 'Gerçekliği bükerek maden' },
+  { id: 'bat_belt', name: 'Yarasa Kemeri', icon: '🦇', cat: 'items', b: 80000, baseClick: 10, rarity: 'legendary', desc: '+10/tık' },
+  { id: 'dragon_eye', name: 'Ejderha Gözü', icon: '🐉', cat: 'items', b: 100000, baseCrit: 0.12, rarity: 'legendary', desc: '+%12 kritik' },
+  { id: 'phoenix_feather', name: 'Anka Tüyü', icon: '🪶', cat: 'items', b: 150000, baseCombo: 0.6, rarity: 'legendary', desc: '+0.6x combo' },
+  { id: 'titan_armor', name: 'Titan Zırhı', icon: '🛡️', cat: 'items', b: 200000, bonusMaxEnergy: 5000, rarity: 'legendary', desc: '+5000 max enerji' },
+  { id: 'cosmic_ring', name: 'Kozmik Yüzük', icon: '💍', cat: 'items', b: 300000, baseSec: 1000, baseClick: 8, rarity: 'legendary', desc: '+8/tık +1000/s' },
+  { id: 'god_crown', name: 'Tanrı Tacı', icon: '👑', cat: 'items', b: 500000, baseClick: 20, baseSec: 5000, rarity: 'legendary', desc: '+20/tık +5000/s' },
+  { id: 'infinite_battery', name: 'Sonsuz Batarya', icon: '🔋', cat: 'boosts', b: 200000, bonusEnergy: 1000000, rarity: 'legendary', desc: '+1M Enerji' },
+  { id: 'quantum_battery', name: 'Kuantum Batarya', icon: '⚛️', cat: 'boosts', b: 500000, bonusEnergy: 5000000, rarity: 'legendary', desc: '+5M Enerji' },
+  { id: 'stellar_cell', name: 'Yıldız Hücresi', icon: '⭐', cat: 'boosts', b: 1000000, bonusEnergy: 10000000, rarity: 'legendary', desc: '+10M Enerji' },
+  { id: 'galaxy_core', name: 'Galaksi Çekirdeği', icon: '🌌', cat: 'boosts', b: 2000000, bonusEnergy: 50000000, rarity: 'legendary', desc: '+50M Enerji' },
+  { id: 'universal_boost', name: 'Evrensel Güç', icon: '🌠', cat: 'boosts', b: 5000000, bonusEnergy: 100000000, rarity: 'legendary', desc: '+100M Enerji' },
+  { id: 'xbox_classic', name: 'Xbox Klasik', icon: '🎮', cat: 'retro', b: 800000, baseClick: 7, baseSec: 800, rarity: 'legendary', desc: '+7/tık +800/s', levelReq: 250 },
+  { id: 'wii_remote', name: 'Wii Kumanda', icon: '🕹️', cat: 'retro', b: 900000, baseCombo: 1, rarity: 'legendary', desc: '+1.0x combo', levelReq: 250 },
+  { id: 'psp', name: 'PSP', icon: '📱', cat: 'retro', b: 1000000, baseCrit: 0.15, rarity: 'legendary', desc: '+%15 kritik', levelReq: 250 },
+  { id: 'gamegear', name: 'Game Gear', icon: '🎰', cat: 'retro', b: 1200000, bonusMaxEnergy: 5000, rarity: 'legendary', desc: '+5000 max enerji', levelReq: 250 },
+  { id: 'neogeo', name: 'Neo Geo', icon: '🕹️', cat: 'retro', b: 1500000, baseSec: 2000, baseClick: 10, rarity: 'legendary', desc: '+10/tık +2000/s', levelReq: 250 },
+  { id: 'commodore', name: 'Commodore', icon: '💻', cat: 'retro', b: 2000000, baseCombo: 1.5, rarity: 'legendary', desc: '+1.5x combo', levelReq: 250 },
+  { id: 'spectrum', name: 'ZX Spectrum', icon: '📺', cat: 'retro', b: 2500000, baseCrit: 0.2, rarity: 'legendary', desc: '+%20 kritik', levelReq: 250 },
+  { id: 'dos_pc', name: 'MS-DOS PC', icon: '🖥️', cat: 'retro', b: 3000000, baseClick: 15, baseSec: 5000, rarity: 'legendary', desc: '+15/tık +5000/s', levelReq: 250 },
+  { id: 'windows95', name: 'Windows 95', icon: '🪟', cat: 'retro', b: 4000000, bonusMaxEnergy: 10000, rarity: 'legendary', desc: '+10000 max enerji', levelReq: 250 },
+  { id: 'mythic_orb', name: 'Mitik Küre', icon: '🔮', cat: 'miners', b: 1000000000, baseSec: 50000000, rarity: 'legendary', desc: 'Efsanevi madencilik küresi' },
+  { id: 'ultimate_drill', name: 'Nihai Matkap', icon: '🗡️', cat: 'miners', b: 5000000000, baseSec: 100000000, rarity: 'legendary', desc: 'Var olan en güçlü matkap' },
 ];
 
 function getItemLevel(cardId) {
@@ -139,8 +174,9 @@ function setItemLevel(cardId, lvl) {
   else S.items.push({ id: cardId, lvl });
 }
 
-function cardCost(card) {
-  return Math.floor(card.b * Math.pow(1.25, getItemLevel(card.id) + 1));
+function cardCost(card, overrideLvl) {
+  const lvl = (overrideLvl !== undefined ? overrideLvl : getItemLevel(card.id)) + 1;
+  return Math.floor(card.b * Math.pow(1.25, lvl));
 }
 
 /* ===== ACHIEVEMENTS ===== */
@@ -201,6 +237,34 @@ const ACH = [
   { id: 'allitems', icon: '🎒', name: 'Ekipman Koleksiyoncusu', desc: 'Tüm ekipman kartlarına sahip ol', check: s => CARDS.filter(c => c.cat === 'items').every(c => getItemLevel(c.id) > 0), gem: 3000 },
   { id: 'tap100m', icon: '🏅', name: '100M Tık', desc: '100 milyon tık yap', check: s => s.totalTaps >= 100000000, gem: 10000 },
   { id: 'earn100t', icon: '🌌', name: '100T Coin', desc: '100 trilyon coin kazan', check: s => s.totalEarned >= 1e14, gem: 50000 },
+  { id: 'earn1q', icon: '🪐', name: '1 Katrilyon', desc: '1 katrilyon coin kazan', check: s => s.totalEarned >= 1e15, gem: 100000 },
+  { id: 'lvl500', icon: '🔥', name: 'Level 500', desc: 'Level 500 ol', check: s => s.lvl >= 500, gem: 25000 },
+  { id: 'lvl600', icon: '💥', name: 'Level 600', desc: 'Level 600 ol', check: s => s.lvl >= 600, gem: 50000 },
+  { id: 'lvl700', icon: '👁️', name: 'Level 700', desc: 'Level 700 ol', check: s => s.lvl >= 700, gem: 100000 },
+  { id: 'lvl800', icon: '🌋', name: 'Level 800', desc: 'Level 800 ol', check: s => s.lvl >= 800, gem: 200000 },
+  { id: 'lvl900', icon: '☄️', name: 'Level 900', desc: 'Level 900 ol', check: s => s.lvl >= 900, gem: 500000 },
+  { id: 'lvl1000', icon: '👑', name: 'Level 1000', desc: 'Efsanevi Level 1000', check: s => s.lvl >= 1000, gem: 1000000 },
+  { id: 'combo1000', icon: '🌪️', name: '1000 Combo', desc: '1000 combo ya ulaş', check: s => s.bestCombo >= 1000, gem: 5000 },
+  { id: 'combo2500', icon: '⚡', name: '2500 Combo', desc: '2500 combo ya ulaş', check: s => s.bestCombo >= 2500, gem: 15000 },
+  { id: 'combo5000', icon: '💫', name: '5000 Combo', desc: '5000 combo ya ulaş', check: s => s.bestCombo >= 5000, gem: 50000 },
+  { id: 'prestige10', icon: '🔄', name: '10. Prestige', desc: '10 kere prestige yap', check: s => (s.prestige || 0) >= 10, gem: 25000 },
+  { id: 'prestige25', icon: '🔄', name: '25. Prestige', desc: '25 kere prestige yap', check: s => (s.prestige || 0) >= 25, gem: 100000 },
+  { id: 'pvp10', icon: '⚔️', name: 'PVP Savaşçısı', desc: '10 PVP savaşı kazan', check: s => (s.pvpWins || 0) >= 10, gem: 200 },
+  { id: 'pvp50', icon: '⚔️', name: 'PVP Ustası', desc: '50 PVP savaşı kazan', check: s => (s.pvpWins || 0) >= 50, gem: 1000 },
+  { id: 'pvp200', icon: '🏆', name: 'PVP Efsanesi', desc: '200 PVP savaşı kazan', check: s => (s.pvpWins || 0) >= 200, gem: 5000 },
+  { id: 'dungeon10', icon: '🏰', name: 'Zindan Fatihi', desc: '10 zindan tamamla', check: s => (s.dungeonBest || 0) >= 10, gem: 500 },
+  { id: 'dungeon50', icon: '🏰', name: 'Zindan Efsanesi', desc: '50 zindan tamamla', check: s => (s.dungeonDaily || 0) >= 50, gem: 2000 },
+  { id: 'rift10', icon: '🌀', name: 'Zaman Yolcusu', desc: '10 zaman yarığı kullan', check: s => s.riftUsed ? true : false, gem: 1000 },
+  { id: 'world5', icon: '🌍', name: 'Kaşif', desc: '5 bölge ele geçir', check: s => (s.territories || []).length >= 5, gem: 200 },
+  { id: 'world10', icon: '🌍', name: 'Kâşif', desc: '10 bölge ele geçir', check: s => (s.territories || []).length >= 10, gem: 500 },
+  { id: 'world20', icon: '🌍', name: 'Dünya Hakimi', desc: 'Tüm bölgeleri ele geçir', check: s => (s.territories || []).length >= 20, gem: 2000 },
+  { id: 'alchemy5', icon: '🧪', name: 'Simyacı', desc: '5 eser yap', check: s => (s.artifacts || []).length >= 5, gem: 300 },
+  { id: 'alchemy15', icon: '🧪', name: 'Simya Ustası', desc: '15 eser yap', check: s => (s.artifacts || []).length >= 15, gem: 1500 },
+  { id: 'boss500', icon: '💀', name: 'Boss Katili', desc: 'Boss 500 kere yen', check: s => s.bossWins >= 500, gem: 10000 },
+  { id: 'gem5000', icon: '💎', name: 'Elmas Zengini', desc: 'Toplam 5000 elmas topla', check: s => ACH.filter(a => (S.achieved || []).includes(a.id)).reduce((sum, a) => sum + (a.gem || 0), 0) >= 5000, gem: 2000 },
+  { id: 'gem10000', icon: '💎', name: 'Elmas Kralı', desc: 'Toplam 10000 elmas topla', check: s => ACH.filter(a => (S.achieved || []).includes(a.id)).reduce((sum, a) => sum + (a.gem || 0), 0) >= 10000, gem: 5000 },
+  { id: 'friend100', icon: '👥', name: 'Süper Sosyal', desc: '100 arkadaş davet et', check: s => s.friends >= 100, gem: 2000 },
+  { id: 'friend500', icon: '👥', name: 'Influencer', desc: '500 arkadaş davet et', check: s => s.friends >= 500, gem: 10000 },
 ];
 
 function checkAch() {
@@ -438,6 +502,8 @@ function update() {
   }, 0);
   const setMult = getSetBonusMult();
   S.perSec = Math.floor(pph * setMult);
+  const territoryPerSec = (S.territories || []).reduce((sum, i) => sum + (TERRITORIES[i]?.bonus?.type === 'perSec' ? TERRITORIES[i].bonus.val : 0), 0);
+  S.perSec += territoryPerSec;
   const setEnergyBonus = getSetEnergyBonus();
   S.maxEnergy = 2500 + setEnergyBonus * 2500;
   const maxEngBonus = S.items.reduce((sum, it) => {
@@ -445,6 +511,9 @@ function update() {
     return c && c.bonusMaxEnergy ? sum + c.bonusMaxEnergy * it.lvl : sum;
   }, 0);
   S.maxEnergy += maxEngBonus;
+  const territoryMaxEnergy = (S.territories || []).reduce((sum, i) => sum + (TERRITORIES[i]?.bonus?.type === 'maxEnergy' ? TERRITORIES[i].bonus.val : 0), 0);
+  S.maxEnergy += territoryMaxEnergy;
+  S._territoryRegen = (S.territories || []).reduce((sum, i) => sum + (TERRITORIES[i]?.bonus?.type === 'energyRegenBonus' ? TERRITORIES[i].bonus.val : 0), 0);
   const perSecDisplay = S.perSec * getX2Mult();
   $('perSecText').textContent = '+' + fmt(perSecDisplay) + (isX2() ? ' x2' : '');
   const perHrEl = $('perHourText');
@@ -463,6 +532,8 @@ function update() {
     return sum + b;
   }, 0);
   S.perClick = Math.floor((2 + clickBonus) * setClickMult);
+  const territoryPerClick = (S.territories || []).reduce((sum, i) => sum + (TERRITORIES[i]?.bonus?.type === 'perClick' ? TERRITORIES[i].bonus.val : 0), 0);
+  S.perClick += territoryPerClick;
   const tapValEl = $('perTapText');
   if (tapValEl) tapValEl.textContent = '/tık: ' + fmt(Math.floor(S.perClick)) + (isX2() ? ' 🔥x2' : '');
   const x2Indicator = $('x2Indicator');
@@ -846,18 +917,20 @@ function processTap(cx, cy) {
     const ring = $('comboRing');
     const glow = $('comboGlow');
     if (combo >= 3) {
-      ring.classList.add('active');
-      const intensity = Math.min(combo / 20, 1);
-      const hue = 30 + combo * 5;
-      ring.style.setProperty('--r-color', `hsl(${hue},100%,60%)`);
-      ring.style.opacity = 0.2 + intensity * 0.6;
+      if (ring) ring.classList.add('active');
+      if (ring) {
+        const intensity = Math.min(combo / 20, 1);
+        const hue = 30 + combo * 5;
+        ring.style.setProperty('--r-color', `hsl(${hue},100%,60%)`);
+        ring.style.opacity = 0.2 + intensity * 0.6;
+      }
       if (glow) {
         glow.classList.add('active');
         glow.style.setProperty('--r-color', `hsla(${hue},100%,60%,.15)`);
         glow.style.setProperty('--glow-op', Math.min(0.15 + intensity * 0.25, 0.4));
       }
     } else {
-      ring.classList.remove('active');
+      if (ring) ring.classList.remove('active');
       if (glow) glow.classList.remove('active');
     }
     const retroComboBonus = S.items.reduce((sum, it) => {
@@ -1278,7 +1351,7 @@ $('coinDisplay')?.addEventListener('dblclick', () => {
 });
 function getEnergyRestoreTime() {
   if (S.energy >= S.maxEnergy) return '';
-  const regen = 0.5 + (S.energyRegenBonus || 0);
+  const regen = 2 + (S.energyRegenBonus || 0) + (S._territoryRegen || 0);
   const need = S.maxEnergy - S.energy;
   let sec = Math.ceil(need / regen);
   if (sec < 60) return sec + 's';
@@ -1350,7 +1423,7 @@ let lastEnergyFullNotif = 0;
 let energySaverActive = false;
 setInterval(() => {
   if (S.energy < S.maxEnergy * 1.1) {
-    let regen = 2 + (S.energyRegenBonus || 0);
+    let regen = 2 + (S.energyRegenBonus || 0) + (S._territoryRegen || 0);
     const isLow = S.energy < S.maxEnergy * 0.1;
     if (isLow) { regen *= 2; if (!energySaverActive) { energySaverActive = true; toast('⚡ Tasarruf modu: çift yenilenme!'); } }
     else energySaverActive = false;
@@ -1462,7 +1535,7 @@ function openPrestigeShop() {
 }
 $('closePrestigeShopModal')?.addEventListener('click', () => $('prestigeShopModal').classList.add('hidden'));
 
-$('openPrestigeShopBtn')?.addEventListener('click', openPrestigeShop);
+$('prestigeShopTask')?.addEventListener('click', openPrestigeShop);
 
 /* ===== CRATE TIERS (Enhanced) ===== */
 const CRATE_TIERS = [
@@ -1861,7 +1934,19 @@ const LEVEL_MILESTONES = [
   { lvl: 50, coin: 200000, gem: 200, label: 'Seviye 50 Ödülü (Altın!)' },
   { lvl: 75, coin: 500000, gem: 350, label: 'Seviye 75 Ödülü (Platin!)' },
   { lvl: 100, coin: 1000000, gem: 500, label: 'Seviye 100 Ödülü (Elmas!)' },
+  { lvl: 150, coin: 3000000, gem: 1000, label: 'Seviye 150 Ödülü' },
+  { lvl: 200, coin: 6000000, gem: 1500, label: 'Seviye 200 Ödülü' },
   { lvl: 250, coin: 10000000, gem: 2000, label: 'Seviye 250 Ödülü (RETRO!)' },
+  { lvl: 300, coin: 20000000, gem: 3000, label: 'Seviye 300 Ödülü (Efsanevi!)' },
+  { lvl: 350, coin: 35000000, gem: 4000, label: 'Seviye 350 Ödülü' },
+  { lvl: 400, coin: 50000000, gem: 5000, label: 'Seviye 400 Ödülü (Mistik!)' },
+  { lvl: 450, coin: 75000000, gem: 7000, label: 'Seviye 450 Ödülü' },
+  { lvl: 500, coin: 100000000, gem: 10000, label: '🎉 Seviye 500 Ödülü (Yarı Tanrı!)' },
+  { lvl: 600, coin: 250000000, gem: 20000, label: 'Seviye 600 Ödülü' },
+  { lvl: 700, coin: 500000000, gem: 35000, label: 'Seviye 700 Ödülü' },
+  { lvl: 800, coin: 1000000000, gem: 50000, label: 'Seviye 800 Ödülü' },
+  { lvl: 900, coin: 2000000000, gem: 75000, label: 'Seviye 900 Ödülü' },
+  { lvl: 1000, coin: 5000000000, gem: 100000, label: '👑 Seviye 1000 Ödülü (TANRI!)' },
 ];
 
 function checkLevelMilestones() {
@@ -1910,16 +1995,15 @@ function applySkin(skinId) {
   if (!skin) return;
   if (S.lvl < skin.lvlReq) return;
   S.activeSkin = skinId;
+  const tapInner = document.querySelector('.tap-inner');
+  if (tapInner) tapInner.style.background = '';
   const img = document.querySelector('.tap-inner img');
   if (!img) return;
   if (skin.svg) {
     img.src = 'data:image/svg+xml;utf8,' + skin.svg;
   } else if (skin.id === 'rainbow') {
-    const tapInner = document.querySelector('.tap-inner');
     if (tapInner) tapInner.style.background = 'linear-gradient(145deg, #ff000044, #ff880044, #ffff0044, #00ff0044, #0088ff44, #8800ff44, #ff008844)';
   } else {
-    const tapInner = document.querySelector('.tap-inner');
-    if (tapInner) tapInner.style.background = '';
     img.src = 'data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 200 200\'><circle cx=\'100\' cy=\'90\' r=\'70\' fill=\'%23ffffff\' stroke=\'%23d0d0d0\' stroke-width=\'2\'/><ellipse cx=\'100\' cy=\'160\' rx=\'42\' ry=\'18\' fill=\'%23ffffff\' stroke=\'%23d0d0d0\' stroke-width=\'2\'/><circle cx=\'100\' cy=\'80\' r=\'38\' fill=\'%23ffffff\' stroke=\'%23d0d0d0\' stroke-width=\'2\'/><ellipse cx=\'86\' cy=\'68\' rx=\'12\' ry=\'18\' fill=\'%23ffffff\' stroke=\'%23d0d0d0\' stroke-width=\'2\'/><ellipse cx=\'114\' cy=\'68\' rx=\'12\' ry=\'18\' fill=\'%23ffffff\' stroke=\'%23d0d0d0\' stroke-width=\'2\'/><ellipse cx=\'86\' cy=\'66\' rx=\'8\' ry=\'12\' fill=\'%23ffe4e1\'/><ellipse cx=\'114\' cy=\'66\' rx=\'8\' ry=\'12\' fill=\'%23ffe4e1\'/><circle cx=\'100\' cy=\'56\' r=\'6\' fill=\'%23ff9999\'/><circle cx=\'100\' cy=\'59\' r=\'5\' fill=\'%23ffffff\'/><circle cx=\'88\' cy=\'82\' r=\'4\' fill=\'%23333\'/><circle cx=\'112\' cy=\'82\' r=\'4\' fill=\'%23333\'/><ellipse cx=\'100\' cy=\'91\' rx=\'3\' ry=\'2\' fill=\'%23ff9999\'/><path d=\'M60 50 Q45 30 50 60\' stroke=\'%23ffffff\' stroke-width=\'3\' fill=\'none\' stroke-linecap=\'round\'/><path d=\'M140 50 Q155 30 150 60\' stroke=\'%23ffffff\' stroke-width=\'3\' fill=\'none\' stroke-linecap=\'round\'/><path d=\'M72 45 Q30 20 40 60\' stroke=\'%23ffffff\' stroke-width=\'2\' fill=\'none\'/><path d=\'M128 45 Q170 20 160 60\' stroke=\'%23ffffff\' stroke-width=\'2\' fill=\'none\'/><path d=\'M70 140 Q100 155 130 140 L125 152 Q100 168 75 152 Z\' fill=\'%23ff9999\'/></svg>';
   }
   sfxSkin();
@@ -1965,19 +2049,19 @@ function renderSkinSelector() {
 }
 
 function checkComboMilestones(comboCount) {
-  const milestones = [10, 25, 50, 100, 250, 500, 1000, 2500, 5000];
+  const milestones = [10, 25, 50, 100, 250, 500, 1000, 2500, 5000, 7500, 10000, 15000, 25000, 50000, 100000];
   milestones.forEach(m => {
     if (comboCount >= m && !S.comboMilestones?.includes(m)) {
       if (!S.comboMilestones) S.comboMilestones = [];
       S.comboMilestones.push(m);
-      const bonus = m * 100;
+      const bonus = m * 200;
       S.coins += bonus;
       flashOverlay('gold');
       screenShake();
       fireworkCelebration();
       spawnFloat(innerWidth / 2, innerHeight / 2 - 60, `🔥 ${m} COMBO MILESTONE!`, false, '#ff9f43');
       toast(`🔥 ${m} COMBO! +${fmt(bonus)} Coin bonus!`);
-      coinRain(20);
+      coinRain(Math.min(m / 50, 50));
       sfxCombo();
     }
   });
@@ -1997,6 +2081,15 @@ const DAILY_TASKS = [
     if (!S._dailyUpgradeCount) S._dailyUpgradeCount = 0;
     return S._dailyUpgradeCount >= 10;
   }, reward: 30000, gem: 20 },
+  { id: 'dailyPvp', icon: '⚔️', name: 'PVP Savaşı Kazan', check: s => (s.pvpWins || 0) >= 1, reward: 25000, gem: 20 },
+  { id: 'dailyDungeon', icon: '🏰', name: 'Zindana Gir', check: s => (s.dungeonDaily || 0) >= 1, reward: 20000, gem: 15 },
+  { id: 'dailyRift', icon: '🌀', name: 'Zaman Yarığı', check: s => s.riftUsed === new Date().toDateString(), reward: 30000, gem: 25 },
+  { id: 'dailyTerritory', icon: '🌍', name: 'Bölge Ele Geçir', check: s => (s.territories || []).length >= 1, reward: 15000, gem: 10 },
+  { id: 'dailyArtifact', icon: '🧪', name: 'Eser Yap', check: s => (s.artifacts || []).length >= 1, reward: 15000, gem: 10 },
+  { id: 'dailyCrit', icon: '💥', name: 'Kritik Vuruş Yap', check: s => s.lastCrit === true, reward: 5000, gem: 5 },
+  { id: 'dailyEnergy', icon: '⚡', name: 'Enerji Harca (500)', check: s => (s.totalEnergySpent || 0) >= 500, reward: 10000, gem: 10 },
+  { id: 'dailyTaps2k', icon: '👆', name: '2000 Tık At', check: s => s.totalTaps >= 2000, reward: 15000, gem: 12 },
+  { id: 'dailyEarn500k', icon: '💰', name: '500K Coin Kazan', check: s => s.totalEarned >= 500000, reward: 50000, gem: 30 },
 ];
 
 function renderDailyTasks() {
@@ -2004,7 +2097,7 @@ function renderDailyTasks() {
   if (!el) return;
   const today = new Date().toDateString();
   if (!S.dailyTasks) S.dailyTasks = {};
-  if (S.dailyTasksDate !== today) { S.dailyTasks = {}; S.dailyTasksDate = today; save(); }
+  if (S.dailyTasksDate !== today) { S.dailyTasks = {}; S.dailyTasksDate = today; S._dailyUpgradeCount = 0; S._bossWonToday = false; S._spunPaid = false; save(); }
   el.innerHTML = DAILY_TASKS.map(t => {
     const done = S.dailyTasks[t.id];
     return `<div class="task" style="opacity:${done ? '.5' : '1'};">
@@ -2019,7 +2112,7 @@ function renderDailyTasks() {
 function checkDailyTasks() {
   const today = new Date().toDateString();
   if (!S.dailyTasks) S.dailyTasks = {};
-  if (S.dailyTasksDate !== today) { S.dailyTasks = {}; S.dailyTasksDate = today; save(); }
+  if (S.dailyTasksDate !== today) { S.dailyTasks = {}; S.dailyTasksDate = today; S._dailyUpgradeCount = 0; S._bossWonToday = false; S._spunPaid = false; save(); }
   DAILY_TASKS.forEach(t => {
     if (S.dailyTasks[t.id]) return;
     if (t.check(S)) {
@@ -2144,41 +2237,40 @@ $('guessComboBtn').addEventListener('click', () => {
   update();
 });
 
-/* ===== DAILY CIPHER (MORSE CODE) ===== */
+/* ===== DAILY CIPHER v2 (Touch-Friendly) ===== */
 const MORSE = {'A':'.-','B':'-...','C':'-.-.','D':'-..','E':'.','F':'..-.','G':'--.','H':'....','I':'..','J':'.---','K':'-.-','L':'.-..','M':'--','N':'-.','O':'---','P':'.--.','Q':'--.-','R':'.-.','S':'...','T':'-','U':'..-','V':'...-','W':'.--','X':'-..-','Y':'-.--','Z':'--..','0':'-----','1':'.----','2':'..---','3':'...--','4':'....-','5':'.....','6':'-....','7':'--...','8':'---..','9':'----.'};
-const CIPHER_WORDS = ["BTC","SOL","TON","RAT","GEM","CEO","HAMSTER","MOON","FISH","PUMP","DUMP","COIN","MINE","BOSS","GOLD","PIXEL","HAM","LUCK","TAP","HODL"];
+const CIPHER_WORDS = ["BTC","SOL","TON","RAT","GEM","CEO","HAMSTER","MOON","FISH","PUMP","DUMP","COIN","MINE","BOSS","GOLD","PIXEL","HAM","LUCK","TAP","HODL","NFT","DAO","WALLET","STAKE","SWAP","BULL","BEAR","MINT","DROP","VAULT"];
+let cipherState = { word: '', currentLetter: 0, inputBuffer: '', completed: false };
 
 function getTodayCipher() {
   const day = Math.floor(Date.now() / 86400000);
   return CIPHER_WORDS[day % CIPHER_WORDS.length];
 }
 
-let cipherState = { word: '', currentLetter: 0, inputBuffer: '', completed: false };
-
 function openCipher() {
   cipherState.word = getTodayCipher();
-  cipherState.currentLetter = 0;
-  cipherState.inputBuffer = '';
-  cipherState.completed = false;
+  cipherState.currentLetter = 0; cipherState.inputBuffer = ''; cipherState.completed = false;
   renderCipher();
   $('dailyCipherModal').classList.remove('hidden');
 }
 
 function renderCipher() {
   const w = cipherState.word;
-  const targetLetter = w[cipherState.currentLetter] || '';
-  const morseTarget = MORSE[targetLetter] || '';
-  $('cipherWordDisplay').textContent = w.split('').map((l, i) => i < cipherState.currentLetter ? `<span style="color:#2ed573;">${l}</span>` : `<span style="color:#8e9cb5;">${l}</span>`).join(' ');
+  $('cipherWordDisplay').innerHTML = w.split('').map((l, i) => i < cipherState.currentLetter ? `<span style="color:#2ed573;">${l}</span>` : `<span style="color:#8e9cb5;">${l}</span>`).join(' ');
   $('cipherLetters').innerHTML = w.split('').map((l, i) => {
     const m = MORSE[l] || '';
     if (i < cipherState.currentLetter) return `<div style="background:rgba(46,213,115,.2);border:1px solid #2ed573;border-radius:8px;padding:4px 8px;font-size:10px;color:#2ed573;font-family:monospace;">${l}<br>${m}</div>`;
     if (i === cipherState.currentLetter) return `<div style="background:rgba(243,186,47,.15);border:1px solid #f3ba2f;border-radius:8px;padding:4px 8px;font-size:10px;color:#f3ba2f;font-family:monospace;">${l}<br>${m}</div>`;
     return `<div style="background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:8px;padding:4px 8px;font-size:10px;color:#8e9cb5;font-family:monospace;">${l}<br>${m}</div>`;
   }).join('');
-  $('cipherInputDisplay').textContent = cipherState.inputBuffer || '⏎ bekleniyor...';
-  $('cipherInputDisplay').style.color = cipherState.inputBuffer ? '#fff' : '#8e9cb5';
-  $('cipherCharIndex').textContent = cipherState.currentLetter;
+  const buf = cipherState.inputBuffer;
+  $('cipherInputDisplay').innerHTML = buf ? buf.split('').map(ch => ch === '.' ? '<span style="color:#2ed573;font-size:28px;">•</span>' : '<span style="color:#f3ba2f;font-size:28px;">−</span>').join(' ') : '<span style="color:#8e9cb5;">⏎ bas ve bırak</span>';
+  $('cipherCharIndex').textContent = cipherState.currentLetter + 1;
   $('cipherTotalChars').textContent = w.length;
+  $('cipherInputCount').textContent = cipherState.inputBuffer.length;
+  const expected = MORSE[w[cipherState.currentLetter]] || '';
+  const hintEl = $('cipherMorseHint');
+  if (hintEl) hintEl.innerHTML = expected ? `Hedef: ${expected.split('').map(ch => ch === '.' ? '<b style="color:#2ed573;">•</b>' : '<b style="color:#f3ba2f;">−</b>').join(' ')} (${expected.length} vuruş)` : '';
 }
 
 function submitCipherChar() {
@@ -2186,72 +2278,51 @@ function submitCipherChar() {
   const w = cipherState.word;
   const expected = MORSE[w[cipherState.currentLetter]] || '';
   if (buf === expected) {
-    cipherState.currentLetter++;
-    cipherState.inputBuffer = '';
+    cipherState.currentLetter++; cipherState.inputBuffer = '';
     sfxGem();
-    spawnFloat(innerWidth / 2, innerHeight / 2 - 40, '✅', false, '#2ed573');
     if (cipherState.currentLetter >= w.length) {
       cipherState.completed = true;
-      const reward = 1000000;
-      S.coins += reward;
-      S.gems += 50;
-      toast(`🎉 ŞİFRE ÇÖZÜLDÜ! +${fmt(reward)} Coin +50💎`);
-      fireworkCelebration();
-      coinRain(30);
-      flashOverlay('rainbow');
-      save();
-      update();
-      $('cipherInputDisplay').textContent = '🎉 TEBRİKLER!';
-      $('cipherInputDisplay').style.color = '#f3ba2f';
+      const reward = 500000 + S.lvl * 2000;
+      S.coins += reward; S.gems += 50;
+      toast(`🎉 ŞİFRE: +${fmt(reward)}💰 +50💎`);
+      fireworkCelebration(); coinRain(20); flashOverlay('rainbow');
+      save(); update();
+      $('cipherInputDisplay').innerHTML = '🎉 TEBRİKLER!';
       return;
     }
     renderCipher();
   } else {
-    S.energy = Math.max(0, S.energy - 50);
-    toast(`❌ Yanlış! "${buf}" beklenen "${expected}" değil. -50 Enerji`);
+    S.energy = Math.max(0, S.energy - 30);
+    toast(`❌ "${buf}" yanlış -30⚡`);
     cipherState.inputBuffer = '';
     renderCipher();
   }
 }
 
-/* Cipher Tap Button */
-const cipherTapBtn = $('cipherTapBtn');
-let cipherTimer = null;
+/* Touch-Friendly Cipher Input */
+const cipherInputArea = $('cipherTapBtn');
 let cipherPressStart = 0;
-if (cipherTapBtn) {
-  cipherTapBtn.addEventListener('mousedown', () => { cipherPressStart = Date.now(); });
-  cipherTapBtn.addEventListener('mouseup', () => {
-    if (cipherState.completed || cipherState.currentLetter >= (cipherState.word || '').length) return;
-    const dur = Date.now() - cipherPressStart;
-    cipherState.inputBuffer += dur >= 300 ? '-' : '.';
-    renderCipher();
-    sfxMultitap();
-    const word = cipherState.word;
-    if (MORSE[word[cipherState.currentLetter]] && cipherState.inputBuffer.length >= MORSE[word[cipherState.currentLetter]].length) {
-      submitCipherChar();
-    }
-  });
-  cipherTapBtn.addEventListener('touchstart', e => { e.preventDefault(); cipherPressStart = Date.now(); });
-  cipherTapBtn.addEventListener('touchend', e => {
-    e.preventDefault();
-    if (cipherState.completed || cipherState.currentLetter >= (cipherState.word || '').length) return;
-    const dur = Date.now() - cipherPressStart;
-    cipherState.inputBuffer += dur >= 300 ? '-' : '.';
-    renderCipher();
-    sfxMultitap();
-    const word = cipherState.word;
-    if (MORSE[word[cipherState.currentLetter]] && cipherState.inputBuffer.length >= MORSE[word[cipherState.currentLetter]].length) {
-      submitCipherChar();
-    }
-  });
+let cipherTouchId = null;
+function handleCipherPress() { cipherPressStart = Date.now(); if (cipherInputArea) { cipherInputArea.style.transform = 'scale(.95)'; cipherInputArea.style.background = 'rgba(243,186,47,.2)'; } }
+function handleCipherRelease() {
+  if (cipherInputArea) { cipherInputArea.style.transform = ''; cipherInputArea.style.background = ''; }
+  if (cipherState.completed || cipherState.currentLetter >= (cipherState.word || '').length) return;
+  const dur = Date.now() - cipherPressStart; if (dur < 50) return;
+  cipherState.inputBuffer += dur >= 250 ? '-' : '.';
+  renderCipher(); sfxMultitap();
+  const word = cipherState.word;
+  if (MORSE[word[cipherState.currentLetter]] && cipherState.inputBuffer.length >= MORSE[word[cipherState.currentLetter]].length) submitCipherChar();
 }
-$('cipherResetBtn')?.addEventListener('click', () => {
-  cipherState.currentLetter = 0;
-  cipherState.inputBuffer = '';
-  $('cipherInputDisplay').textContent = '⏎ bekleniyor...';
-  $('cipherInputDisplay').style.color = '#8e9cb5';
-  renderCipher();
-});
+if (cipherInputArea) {
+  cipherInputArea.addEventListener('mousedown', handleCipherPress);
+  cipherInputArea.addEventListener('mouseup', handleCipherRelease);
+  cipherInputArea.addEventListener('mouseleave', () => { if (cipherPressStart) handleCipherRelease(); });
+  cipherInputArea.addEventListener('touchstart', e => { e.preventDefault(); handleCipherPress(); }, {passive:false});
+  cipherInputArea.addEventListener('touchend', e => { e.preventDefault(); handleCipherRelease(); }, {passive:false});
+  cipherInputArea.addEventListener('touchcancel', () => handleCipherRelease());
+}
+$('cipherResetBtn')?.addEventListener('click', () => { cipherState.currentLetter = 0; cipherState.inputBuffer = ''; renderCipher(); });
+$('cipherDeleteBtn')?.addEventListener('click', () => { cipherState.inputBuffer = cipherState.inputBuffer.slice(0,-1); renderCipher(); });
 $('closeCipherModal')?.addEventListener('click', () => $('dailyCipherModal').classList.add('hidden'));
 
 /* ===== LUCKY SPIN WHEEL ===== */
@@ -2378,7 +2449,7 @@ function spinWheel(paid) {
 $('spinBtn')?.addEventListener('click', spinWheel);
 $('spinExtraBtn')?.addEventListener('click', () => {
   if ((S.gems || 0) < 20) { toast('❌ 20💎 gerekli!'); return; }
-  S.gems -= 20;
+  S.gems -= 20; S._spunPaid = true;
   spinWheel(true);
 });
 $('closeWheelModal')?.addEventListener('click', () => $('wheelModal').classList.add('hidden'));
@@ -3099,7 +3170,7 @@ function checkOffline() {
   const diff = Date.now() - stamp;
   if (diff < 30000) return;
   const sec = Math.min(Math.floor(diff / 1000), 10800);
-  const earned = Math.floor(sec * (S.perSec / 3600) * getX2Mult());
+  const earned = Math.floor(sec * S.perSec * getX2Mult());
   const gemBonus = Math.min(Math.floor(sec / 600), 50);
   if (earned < 1 && gemBonus < 1) return;
   S.totalOffline = (S.totalOffline || 0) + earned;
@@ -3289,7 +3360,7 @@ function importSave() {
       try {
         const data = JSON.parse(ev.target.result);
         Object.assign(S, data);
-        saveState();
+        save();
         location.reload();
       } catch (_) { toast('❌ Geçersiz kayıt dosyası'); }
     };
@@ -3326,6 +3397,22 @@ document.addEventListener('keydown', e => {
   if (e.key === '3') switchTab('tab-friends');
   if (e.key === '4') switchTab('tab-earn');
   if (e.key === '5') switchTab('tab-boss');
+  if (e.key === 'r' || e.key === 'R') openRift();
+  if (e.key === 'p' || e.key === 'P') openPvpArena();
+  if (e.key === 'd' || e.key === 'D') openDungeon();
+  if (e.key === 'w' || e.key === 'W') openWorldMap();
+  if (e.key === 'a' || e.key === 'A') openAlchemy();
+  if (e.key === 'c' || e.key === 'C') openCipher();
+  if (e.key === 'z' || e.key === 'Z') openWheel();
+  if (e.key === 's' || e.key === 'S') {$('settingsModal')?.classList.remove('hidden'); initSettingsUI();}
+  if (e.key === 'o' || e.key === 'O') openAirdrop();
+  if (e.key === 'h' || e.key === 'H') openShop();
+  if (e.key === 't' || e.key === 'T') startTutorial();
+  if (e.key === 'n' || e.key === 'N') openNamePicker();
+  if (e.key === 'l' || e.key === 'L') toggleAutoBuy();
+  if (e.key === 'k' || e.key === 'K') openCardMerge();
+  if (e.key === 'u' || e.key === 'U') openPrestigeShop();
+  if (e.key === 'i' || e.key === 'I') {$('statModal')?.classList.remove('hidden');}
 });
 
 /* ===== SWIPE NAV ===== */
@@ -3349,15 +3436,16 @@ document.addEventListener('touchend', e => {
 function doPrestige() {
   if (S.lvl < 250) return toast('❌ Prestige için level 250 gerekli!');
   const gainGems = Math.floor(S.lvl / 10) + Math.floor(S.totalEarned / 1e8) * 10;
-  S.gems = (S.gems || 0) + gainGems;
-  S.prestige = (S.prestige || 0) + 1;
+  const savedPrestige = S.prestige || 0;
+  const savedUsername = S.username || '';
+  const savedSettings = { ...S.settings };
   const oldLvl = S.lvl;
   Object.assign(S, defState());
-  S.gems += gainGems;
-  S.prestige = (S.prestige || 0) + 1;
-  S.refCode = Math.random().toString(36).substring(2, 10).toUpperCase();
-  S.username = S.username;
-  S.settings = S.settings;
+  S.gems = (S.gems || 0) + gainGems;
+  S.prestige = savedPrestige + 1;
+  S.username = savedUsername;
+  S.settings = savedSettings;
+  sessionStart = Date.now();
   checkAch();
   save();
   update();
@@ -3692,12 +3780,7 @@ function conquerTerritory(idx) {
   sfxBuy();
 }
 function applyTerritoryBonus(bonus) {
-  switch (bonus.type) {
-    case 'perClick': S.perClick += bonus.val; break;
-    case 'perSec': S.perSec += bonus.val; break;
-    case 'maxEnergy': S.maxEnergy += bonus.val; break;
-    case 'energyRegenBonus': S.energyRegenBonus = (S.energyRegenBonus || 0) + bonus.val; break;
-  }
+  if (bonus.type === 'energyRegenBonus') S.energyRegenBonus = (S.energyRegenBonus || 0) + bonus.val;
 }
 
 /* ===== ALCHEMY ===== */
