@@ -951,11 +951,6 @@ function getEnergyRestoreTime() {
   return Math.floor(sec / 3600) + 's ' + Math.floor((sec % 3600) / 60) + 'dk';
 }
 
-/* ===== TOTAL CARD LEVELS ===== */
-function getTotalCardLevels() {
-  return CARDS.reduce((sum, c) => sum + getItemLevel(c.id), 0);
-}
-
 /* ===== MODAL CLOSE ON OVERLAY ===== */
 document.querySelectorAll('.modal-overlay').forEach(m => {
   m.addEventListener('click', e => { if (e.target === m) m.classList.add('hidden'); });
@@ -2380,12 +2375,16 @@ function importSave() {
 
 /* ===== TOTAL CARD LEVELS ===== */
 function getTotalCardLevels() {
+  return CARDS.reduce((sum, c) => sum + getItemLevel(c.id), 0);
+}
+
+/* ===== KEYBOARD SHORTCUTS ===== */
 document.addEventListener('keydown', e => {
-  const tabs = ['tab-borsa', 'tab-mine', 'tab-friends', 'tab-earn', 'tab-boss'];
-  const cur = document.querySelector('.tab:not(.hidden)');
-  const idx = cur ? tabs.indexOf(cur.id) : 0;
-  if (e.key === 'ArrowRight' && idx < tabs.length - 1) switchTab(tabs[idx + 1]);
-  if (e.key === 'ArrowLeft' && idx > 0) switchTab(tabs[idx - 1]);
+  const tabs3 = ['tab-borsa', 'tab-mine', 'tab-friends', 'tab-earn', 'tab-boss'];
+  const cur3 = document.querySelector('.tab.active');
+  const idx3 = cur3 ? tabs3.indexOf(cur3.id) : 0;
+  if (e.key === 'ArrowRight' && idx3 < tabs3.length - 1) switchTab(tabs3[idx3 + 1]);
+  if (e.key === 'ArrowLeft' && idx3 > 0) switchTab(tabs3[idx3 - 1]);
   if (e.key === ' ' || e.key === 'Enter') {
     e.preventDefault();
     handleTap(innerWidth / 2, innerHeight / 2);
@@ -2405,11 +2404,11 @@ document.addEventListener('touchend', e => {
   const dx = e.changedTouches[0].screenX - touchStartX;
   const dy = e.changedTouches[0].screenY - touchStartY;
   if (Math.abs(dx) < 50 || Math.abs(dy) > Math.abs(dx) * 0.5) return;
-  const tabs = ['tab-borsa', 'tab-mine', 'tab-friends', 'tab-earn', 'tab-boss'];
-  const cur = document.querySelector('.tab:not(.hidden)');
-  const idx = cur ? tabs.indexOf(cur.id) : 0;
-  if (dx > 0 && idx > 0) switchTab(tabs[idx - 1]);
-  else if (dx < 0 && idx < tabs.length - 1) switchTab(tabs[idx + 1]);
+  const tabs2 = ['tab-borsa', 'tab-mine', 'tab-friends', 'tab-earn', 'tab-boss'];
+  const cur2 = document.querySelector('.tab.active');
+  const idx2 = cur2 ? tabs2.indexOf(cur2.id) : 0;
+  if (dx > 0 && idx2 > 0) switchTab(tabs2[idx2 - 1]);
+  else if (dx < 0 && idx2 < tabs2.length - 1) switchTab(tabs2[idx2 + 1]);
 }, {passive: true});
 
 function doPrestige() {
