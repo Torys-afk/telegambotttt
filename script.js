@@ -13,6 +13,7 @@ function defState() {
     comboGuess: [], comboGuessedToday: '', tutorialDone: false, dailyInvites: 0, inviteDate: '', refCode: '',
     multiTap: 1, energyRegenBonus: 0, offlineStamp: 0, dailyStreak: 0, dailyLastClaim: '',
     totalOffline: 0, comboMilestones: [], lvlMilestones: [], prestige: 0, autoBuyOn: false, favorites: [],
+    wheelFreeDate: '', dailyTasks: {}, gemsSpent: 0, achieved: [],
   };
 }
 
@@ -37,7 +38,7 @@ function initVars() {
       else Object.keys(d.settings).forEach(sk => { if (S.settings[sk] === undefined) S.settings[sk] = d.settings[sk]; });
     } else if (S[k] === undefined) S[k] = d[k];
   });
-  if (S.energy < S.perClick || S.energy <= 0) S.energy = S.maxEnergy;
+  if (S.energy < 1 || S.energy <= 0) S.energy = S.maxEnergy;
   if (!S.refCode) S.refCode = Math.random().toString(36).substring(2, 10).toUpperCase();
 }
 initVars();
@@ -273,6 +274,7 @@ function sfxBossHit() { playTone(200, 0.12, 'sawtooth', 0.25); }
 
 function sfxBossKill() {
   [200, 300, 400, 500].forEach((f, i) => setTimeout(() => playTone(f, 0.12, 'square', 0.3), i * 60)); }
+function sfxMultitap() { playTone(1800, 0.03, 'sine', 0.15); }
 /* ===== NOTIFICATION SYSTEM ===== */
 function updateBadge() {
   const earnBtn = document.querySelector('.nav-btn[data-tab="tab-earn"] .nav-icon');
@@ -404,12 +406,12 @@ function update() {
   $('statTaps').textContent = fmt(S.totalTaps || 0);
   $('statEarned').textContent = fmt(S.totalEarned || 0);
   $('statCombo').textContent = S.bestCombo || 0;
-  $('statRegen').textContent = (1 + (S.energyRegenBonus || 0)).toFixed(1) + '/s';
+  $('statRegen').textContent = (2 + (S.energyRegenBonus || 0)).toFixed(1) + '/s';
   $('statMulti').textContent = (S.multiTap || 1) + 'x';
   $('statBoss').textContent = S.bossWins || 0;
   $('multiTapDesc').textContent = S.multiTap || 1;
   $('multiTapCostBtn').textContent = '💎 ' + fmt(getMultiTapCost());
-  $('regenDesc').textContent = (1 + (S.energyRegenBonus || 0)).toFixed(1);
+  $('regenDesc').textContent = (2 + (S.energyRegenBonus || 0)).toFixed(1);
   $('regenCostBtn').textContent = '💎 ' + fmt(getRegenCost());
   const streakBadge = $('dailyStreakBadge');
   if (streakBadge) streakBadge.textContent = `🔥 ${S.dailyStreak || 0} gün`;
@@ -449,10 +451,14 @@ function fmt(n) {
 }
 
 function rankTitle(lvl) {
-  if (lvl >= 50) return '💎 Elmas';
-  if (lvl >= 40) return '🏆 Platin';
-  if (lvl >= 30) return '⭐ Altın';
-  if (lvl >= 20) return '🥈 Gümüş';
+  if (lvl >= 400) return '🌈 Gökkuşağı';
+  if (lvl >= 300) return '👿 Karanlık Lord';
+  if (lvl >= 250) return '🎮 Retro Efsane';
+  if (lvl >= 200) return '💎 Elmas';
+  if (lvl >= 150) return '🤖 Siber';
+  if (lvl >= 100) return '⭐ Altın';
+  if (lvl >= 50) return '🥇 Platin';
+  if (lvl >= 25) return '🥈 Gümüş';
   return '🥉 Bronz';
 }
 
@@ -564,22 +570,24 @@ function updateCombo() {
 /* ===== PARTICLES ===== */
 function spawnParticles(x, y, color) {
   const colors = color ? [color] : ['#f3ba2f', '#ff9f43', '#ff4757', '#2ed573', '#3498db', '#9b59b6', '#fff'];
-  for (let i = 0; i < 10; i++) {
+  const count = color && color !== '#ff4757' ? 15 : 10;
+  for (let i = 0; i < count; i++) {
     setTimeout(() => {
       const p = document.createElement('div');
       p.className = 'particle';
       const angle = Math.random() * 360;
-      const dist = 40 + Math.random() * 100;
+      const dist = 40 + Math.random() * 120;
       p.style.setProperty('--px', Math.cos(angle * Math.PI / 180) * dist + 'px');
       p.style.setProperty('--py', Math.sin(angle * Math.PI / 180) * dist + 'px');
       p.style.background = colors[Math.floor(Math.random() * colors.length)];
       p.style.left = (x || innerWidth / 2) + 'px';
       p.style.top = (y || innerHeight / 2) + 'px';
-      p.style.width = (3 + Math.random() * 7) + 'px';
+      p.style.width = (3 + Math.random() * 8) + 'px';
       p.style.height = p.style.width;
+      p.style.borderRadius = Math.random() > 0.5 ? '50%' : '2px';
       document.body.appendChild(p);
-      setTimeout(() => p.remove(), 750);
-    }, i * 20);
+      setTimeout(() => p.remove(), 800);
+    }, i * 15);
   }
 }
 
@@ -677,7 +685,7 @@ let tapTimestamps = [];
 
 function processTap(cx, cy) {
   try {
-    if (S.energy < S.perClick) {
+    if (S.energy < 1) {
       if (S.energy > 0) {
         toast(`⚡ Sadece ${Math.floor(S.energy)} enerjin kaldı (${getEnergyRestoreTime()})`);
       } else {
@@ -686,7 +694,7 @@ function processTap(cx, cy) {
       return;
     }
     const taps = S.multiTap || 1;
-    S.energy -= S.perClick * taps;
+    S.energy -= taps;
     tapCount += taps;
     for (let t = 0; t < taps; t++) tapTimestamps.push(Date.now());
     if (tapTimestamps.length > 60) tapTimestamps.shift();
@@ -737,6 +745,12 @@ function processTap(cx, cy) {
     tz.classList.remove('shockwave');
     void tz.offsetWidth;
     tz.classList.add('shockwave');
+    const ti = document.querySelector('.tap-inner img');
+    if (ti) {
+      ti.style.transition = 'transform .08s cubic-bezier(.34,1.56,.64,1)';
+      ti.style.transform = 'scale(0.92)';
+      setTimeout(() => { if (ti) ti.style.transform = 'scale(1)'; }, 80);
+    }
     sfxTap();
     if (isCrit) {
       screenShake();
@@ -987,7 +1001,7 @@ function addXp(amount) {
 let lastEnergyFullNotif = 0;
 setInterval(() => {
   if (S.energy < S.maxEnergy) {
-    const regen = 0.5 + (S.energyRegenBonus || 0);
+    const regen = 2 + (S.energyRegenBonus || 0);
     S.energy = Math.min(S.maxEnergy, S.energy + regen);
     if (S.energy >= S.maxEnergy && Date.now() - lastEnergyFullNotif > 60000) {
       lastEnergyFullNotif = Date.now();
@@ -1007,13 +1021,13 @@ $('quickBoostBtn').addEventListener('click', () => {
     toast(`⏳ ${sec}s bekle`);
     return;
   }
-  S.boostCD = now + 20000;
-  S.energy = Math.min(S.maxEnergy, S.energy + 500);
+  S.boostCD = now + 10000;
+  S.energy = S.maxEnergy;
   $('energyFill').style.animation = 'none'; void $('energyFill').offsetWidth; $('energyFill').style.animation = 'energyPulse .5s ease-out';
   sfxBuy();
   flashOverlay('gold');
   spawnParticles(innerWidth / 2, innerHeight / 2, '#2ed573');
-  toast('🚀 +500 Enerji!');
+  toast('🚀 ENERJİ FULLENDİ!');
   update();
   const btn = $('quickBoostBtn');
   btn.style.opacity = '.4';
@@ -1326,15 +1340,15 @@ function upgradeMultiTap() {
 
 /* ===== ENERGY REGEN UPGRADE ===== */
 function getRegenCost() {
-  return 30 + (S.energyRegenBonus || 0) * 40;
+  return 30 + (S.energyRegenBonus || 0) * 30;
 }
 
 function upgradeRegen() {
   const cost = getRegenCost();
   if ((S.gems || 0) < cost) { toast(`❌ ${fmt(cost)} Elmas gerekli`); return; }
   S.gems -= cost;
-  S.energyRegenBonus = (S.energyRegenBonus || 0) + 0.5;
-  toast(`⚡ Enerji yenilenme hızı +0.5/s (toplam ${1 + S.energyRegenBonus}/s)`);
+  S.energyRegenBonus = (S.energyRegenBonus || 0) + 1;
+  toast(`⚡ Enerji yenilenme hızı +1/s (toplam ${2 + S.energyRegenBonus}/s)`);
   save();
   update();
 }
@@ -1614,6 +1628,290 @@ $('guessComboBtn').addEventListener('click', () => {
   update();
 });
 
+/* ===== DAILY CIPHER (MORSE CODE) ===== */
+const MORSE = {'A':'.-','B':'-...','C':'-.-.','D':'-..','E':'.','F':'..-.','G':'--.','H':'....','I':'..','J':'.---','K':'-.-','L':'.-..','M':'--','N':'-.','O':'---','P':'.--.','Q':'--.-','R':'.-.','S':'...','T':'-','U':'..-','V':'...-','W':'.--','X':'-..-','Y':'-.--','Z':'--..','0':'-----','1':'.----','2':'..---','3':'...--','4':'....-','5':'.....','6':'-....','7':'--...','8':'---..','9':'----.'};
+const CIPHER_WORDS = ["BTC","SOL","TON","RAT","GEM","CEO","HAMSTER","MOON","FISH","PUMP","DUMP","COIN","MINE","BOSS","GOLD","PIXEL","HAM","LUCK","TAP","HODL"];
+
+function getTodayCipher() {
+  const day = Math.floor(Date.now() / 86400000);
+  return CIPHER_WORDS[day % CIPHER_WORDS.length];
+}
+
+let cipherState = { word: '', currentLetter: 0, inputBuffer: '', completed: false };
+
+function openCipher() {
+  cipherState.word = getTodayCipher();
+  cipherState.currentLetter = 0;
+  cipherState.inputBuffer = '';
+  cipherState.completed = false;
+  renderCipher();
+  $('dailyCipherModal').classList.remove('hidden');
+}
+
+function renderCipher() {
+  const w = cipherState.word;
+  const targetLetter = w[cipherState.currentLetter] || '';
+  const morseTarget = MORSE[targetLetter] || '';
+  $('cipherWordDisplay').textContent = w.split('').map((l, i) => i < cipherState.currentLetter ? `<span style="color:#2ed573;">${l}</span>` : `<span style="color:#8e9cb5;">${l}</span>`).join(' ');
+  $('cipherLetters').innerHTML = w.split('').map((l, i) => {
+    const m = MORSE[l] || '';
+    if (i < cipherState.currentLetter) return `<div style="background:rgba(46,213,115,.2);border:1px solid #2ed573;border-radius:8px;padding:4px 8px;font-size:10px;color:#2ed573;font-family:monospace;">${l}<br>${m}</div>`;
+    if (i === cipherState.currentLetter) return `<div style="background:rgba(243,186,47,.15);border:1px solid #f3ba2f;border-radius:8px;padding:4px 8px;font-size:10px;color:#f3ba2f;font-family:monospace;">${l}<br>${m}</div>`;
+    return `<div style="background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:8px;padding:4px 8px;font-size:10px;color:#8e9cb5;font-family:monospace;">${l}<br>${m}</div>`;
+  }).join('');
+  $('cipherInputDisplay').textContent = cipherState.inputBuffer || '⏎ bekleniyor...';
+  $('cipherInputDisplay').style.color = cipherState.inputBuffer ? '#fff' : '#8e9cb5';
+  $('cipherCharIndex').textContent = cipherState.currentLetter;
+  $('cipherTotalChars').textContent = w.length;
+}
+
+function submitCipherChar() {
+  const buf = cipherState.inputBuffer;
+  const w = cipherState.word;
+  const expected = MORSE[w[cipherState.currentLetter]] || '';
+  if (buf === expected) {
+    cipherState.currentLetter++;
+    cipherState.inputBuffer = '';
+    sfxGem();
+    spawnFloat(innerWidth / 2, innerHeight / 2 - 40, '✅', false, '#2ed573');
+    if (cipherState.currentLetter >= w.length) {
+      cipherState.completed = true;
+      const reward = 1000000;
+      S.coins += reward;
+      S.gems += 50;
+      toast(`🎉 ŞİFRE ÇÖZÜLDÜ! +${fmt(reward)} Coin +50💎`);
+      fireworkCelebration();
+      coinRain(30);
+      flashOverlay('rainbow');
+      save();
+      update();
+      $('cipherInputDisplay').textContent = '🎉 TEBRİKLER!';
+      $('cipherInputDisplay').style.color = '#f3ba2f';
+      return;
+    }
+    renderCipher();
+  } else {
+    S.energy = Math.max(0, S.energy - 50);
+    toast(`❌ Yanlış! "${buf}" beklenen "${expected}" değil. -50 Enerji`);
+    cipherState.inputBuffer = '';
+    renderCipher();
+  }
+}
+
+/* Cipher Tap Button */
+const cipherTapBtn = $('cipherTapBtn');
+let cipherTimer = null;
+let cipherPressStart = 0;
+if (cipherTapBtn) {
+  cipherTapBtn.addEventListener('mousedown', () => { cipherPressStart = Date.now(); });
+  cipherTapBtn.addEventListener('mouseup', () => {
+    if (cipherState.completed || cipherState.currentLetter >= (cipherState.word || '').length) return;
+    const dur = Date.now() - cipherPressStart;
+    cipherState.inputBuffer += dur >= 300 ? '-' : '.';
+    renderCipher();
+    sfxMultitap();
+    const word = cipherState.word;
+    if (MORSE[word[cipherState.currentLetter]] && cipherState.inputBuffer.length >= MORSE[word[cipherState.currentLetter]].length) {
+      submitCipherChar();
+    }
+  });
+  cipherTapBtn.addEventListener('touchstart', e => { e.preventDefault(); cipherPressStart = Date.now(); });
+  cipherTapBtn.addEventListener('touchend', e => {
+    e.preventDefault();
+    if (cipherState.completed || cipherState.currentLetter >= (cipherState.word || '').length) return;
+    const dur = Date.now() - cipherPressStart;
+    cipherState.inputBuffer += dur >= 300 ? '-' : '.';
+    renderCipher();
+    sfxMultitap();
+    const word = cipherState.word;
+    if (MORSE[word[cipherState.currentLetter]] && cipherState.inputBuffer.length >= MORSE[word[cipherState.currentLetter]].length) {
+      submitCipherChar();
+    }
+  });
+}
+$('cipherResetBtn')?.addEventListener('click', () => {
+  cipherState.currentLetter = 0;
+  cipherState.inputBuffer = '';
+  $('cipherInputDisplay').textContent = '⏎ bekleniyor...';
+  $('cipherInputDisplay').style.color = '#8e9cb5';
+  renderCipher();
+});
+$('closeCipherModal')?.addEventListener('click', () => $('dailyCipherModal').classList.add('hidden'));
+
+/* ===== LUCKY SPIN WHEEL ===== */
+const WHEEL_SLICES = [
+  { label: '50K 💰', coins: 50000, gems: 0, color: '#2ed573' },
+  { label: '10💎', coins: 0, gems: 10, color: '#3498db' },
+  { label: '250K 💰', coins: 250000, gems: 0, color: '#9b59b6' },
+  { label: '🔥 2x', coins: 0, gems: 0, boost: true, color: '#ff9f43' },
+  { label: '100K 💰', coins: 100000, gems: 0, color: '#1dd1a1' },
+  { label: '25💎', coins: 0, gems: 25, color: '#f3ba2f' },
+  { label: '⚡ Full', coins: 0, gems: 0, refill: true, color: '#ff4757' },
+  { label: '1M 🌟', coins: 1000000, gems: 100, color: '#f368e0' },
+];
+
+let wheelAngle = 0;
+let wheelSpinning = false;
+
+function drawWheel(ctx, angle) {
+  const cx = 140, cy = 140, r = 130;
+  const sliceAngle = (2 * Math.PI) / WHEEL_SLICES.length;
+  ctx.clearRect(0, 0, 280, 280);
+  WHEEL_SLICES.forEach((s, i) => {
+    const start = angle + i * sliceAngle;
+    const end = start + sliceAngle;
+    ctx.beginPath();
+    ctx.moveTo(cx, cy);
+    ctx.arc(cx, cy, r, start, end);
+    ctx.closePath();
+    ctx.fillStyle = s.color;
+    ctx.fill();
+    ctx.strokeStyle = 'rgba(0,0,0,.3)';
+    ctx.lineWidth = 2;
+    ctx.stroke();
+    const mid = start + sliceAngle / 2;
+    const tx = cx + Math.cos(mid) * r * 0.6;
+    const ty = cy + Math.sin(mid) * r * 0.6;
+    ctx.fillStyle = '#fff';
+    ctx.font = 'bold 11px sans-serif';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText(s.label, tx, ty);
+  });
+  ctx.beginPath();
+  ctx.arc(cx, cy - r + 10, 18, 0, 2 * Math.PI);
+  ctx.fillStyle = '#fff';
+  ctx.fill();
+  ctx.strokeStyle = '#333';
+  ctx.lineWidth = 3;
+  ctx.stroke();
+  ctx.fillStyle = '#ff4757';
+  ctx.font = 'bold 16px sans-serif';
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.fillText('▼', cx, cy - r + 6);
+}
+
+let wheelCtx = null;
+
+function initWheel() {
+  const canvas = $('wheelCanvas');
+  if (!canvas) return;
+  wheelCtx = canvas.getContext('2d');
+  drawWheel(wheelCtx, wheelAngle);
+}
+
+function spinWheel(paid) {
+  if (wheelSpinning) return;
+  const today = new Date().toDateString();
+  const isFree = !paid && S.wheelFreeDate !== today;
+  if (!isFree && !paid) {
+    if ((S.gems || 0) < 20) { toast('❌ 20💎 gerekli!'); return; }
+    S.gems -= 20;
+  }
+  if (isFree) S.wheelFreeDate = today;
+  wheelSpinning = true;
+  const spins = 5 + Math.floor(Math.random() * 5);
+  const targetAngle = wheelAngle + spins * 2 * Math.PI + Math.random() * 2 * Math.PI;
+  const startAngle = wheelAngle;
+  const duration = 3000;
+  const startTime = Date.now();
+  save();
+  function animate() {
+    const elapsed = Date.now() - startTime;
+    const p = Math.min(1, elapsed / duration);
+    const eased = 1 - Math.pow(1 - p, 3);
+    const curr = startAngle + (targetAngle - startAngle) * eased;
+    wheelAngle = curr;
+    if (wheelCtx) drawWheel(wheelCtx, curr);
+    if (elapsed % 200 < 20) sfxMultitap();
+    if (p < 1) requestAnimationFrame(animate);
+    else {
+      wheelSpinning = false;
+      wheelAngle = curr;
+      const sliceAngle = (2 * Math.PI) / WHEEL_SLICES.length;
+      const norm = ((curr % (2 * Math.PI)) + 2 * Math.PI) % (2 * Math.PI);
+      const idx = Math.floor(norm / sliceAngle);
+      const prize = WHEEL_SLICES[idx];
+      if (prize) {
+        S.coins += prize.coins || 0;
+        S.gems += prize.gems || 0;
+        if (prize.boost) startX2(120);
+        if (prize.refill) S.energy = S.maxEnergy;
+        let msg = `🎡 ${prize.label}`;
+        if (prize.coins) msg = `🎡 +${fmt(prize.coins)} Coin!`;
+        if (prize.gems) msg = `🎡 +${prize.gems}💎!`;
+        if (prize.boost) msg = '🎡 🔥 2x Çarpan 2dk!';
+        if (prize.refill) msg = '🎡 ⚡ Enerji Fullendi!';
+        toast(msg);
+        if (prize.gems > 30 || prize.coins >= 500000) { fireworkCelebration(); coinRain(20); flashOverlay('rainbow'); }
+      }
+      update();
+      if ($('wheelFreeCount')) $('wheelFreeCount').textContent = '0';
+      save();
+    }
+  }
+  animate();
+}
+
+$('spinBtn')?.addEventListener('click', spinWheel);
+$('spinExtraBtn')?.addEventListener('click', () => {
+  if ((S.gems || 0) < 20) { toast('❌ 20💎 gerekli!'); return; }
+  S.gems -= 20;
+  spinWheel(true);
+});
+$('closeWheelModal')?.addEventListener('click', () => $('wheelModal').classList.add('hidden'));
+
+/* ===== AIRDROP DASHBOARD ===== */
+function openAirdrop() {
+  const pph = S.perSec * 3600;
+  const keys = (S.bossWins || 0) + Math.floor((S.crates || 0) / 3);
+  const leagues = ['Bronz','Gümüş','Altın','Platin','Elmas'];
+  const leagueIdx = Math.min(4, Math.floor(S.lvl / 50));
+  const league = leagues[leagueIdx];
+  const leagueMult = 1 + leagueIdx * 0.5;
+  const tokens = Math.floor(pph * keys * leagueMult / 1000);
+  const totalTasks = Object.keys(DAILY_TASKS || {}).length || 5;
+  const doneTasks = (S.dailyTasks ? Object.values(S.dailyTasks).filter(v => v).length : 0);
+  const progress = totalTasks > 0 ? Math.round((doneTasks / totalTasks) * 100) : 0;
+  $('airdropPph').textContent = fmt(pph);
+  $('airdropKeys').textContent = keys;
+  $('airdropLeague').textContent = league;
+  $('airdropTokens').textContent = fmt(tokens);
+  $('airdropProgress').textContent = progress + '%';
+  $('airdropModal').classList.remove('hidden');
+}
+
+/* Airdrop Countdown Timer */
+setInterval(() => {
+  const el = $('airdropCountdown');
+  if (!el) return;
+  const now = Date.now();
+  const target = new Date();
+  target.setDate(target.getDate() + (7 - target.getDay()) % 7 || 7);
+  target.setHours(12, 0, 0, 0);
+  const diff = target - now;
+  if (diff <= 0) { el.textContent = '🟢 Canlı!'; return; }
+  const h = Math.floor(diff / 3600000);
+  const m = Math.floor((diff % 3600000) / 60000);
+  const s = Math.floor((diff % 60000) / 1000);
+  el.textContent = `${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+}, 1000);
+$('closeAirdropModal')?.addEventListener('click', () => $('airdropModal').classList.add('hidden'));
+
+/* ===== DAILY CARD CLICKS ===== */
+document.querySelectorAll('.daily-card').forEach(card => {
+  const text = card.textContent.toLowerCase();
+  if (text.includes('cipher') || text.includes('şifre')) {
+    card.style.cursor = 'pointer';
+    card.addEventListener('click', openCipher);
+  }
+  if (text.includes('reward') || text.includes('ödül')) {
+    card.style.cursor = 'pointer';
+    card.addEventListener('click', () => $('dailyModal').classList.remove('hidden'));
+  }
+});
+
 /* ===== CRATES (Tiered) ===== */
 const CRATE_TIERS = [
   { name: 'Tahta Kasa', icon: '🪵', color: '#85827d', min: 2000, max: 8000, gemMin: 3, gemMax: 8, energy: 300, weight: 60 },
@@ -1755,7 +2053,7 @@ function buyShopItem(item) {
       let tapsDone = 0;
       const maxTaps = 3600;
       autoTapInterval = setInterval(() => {
-        if (tapsDone >= maxTaps || S.energy < S.perClick) {
+        if (tapsDone >= maxTaps || S.energy < 1) {
           clearInterval(autoTapInterval);
           autoTapInterval = null;
           toast('🤖 Otomatik tık bitti!');
@@ -1787,6 +2085,12 @@ const bgm = $('bgm');
 bgm.src = 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3';
 bgm.volume = S.settings.musicVol || 0.5;
 
+$('wheelBtn')?.addEventListener('click', () => {
+  initWheel();
+  if ($('wheelFreeCount')) $('wheelFreeCount').textContent = S.wheelFreeDate === new Date().toDateString() ? '0' : '1';
+  $('wheelModal').classList.remove('hidden');
+});
+$('airdropBtn')?.addEventListener('click', openAirdrop);
 $('skinBtn')?.addEventListener('click', () => {
   $('skinModal').classList.remove('hidden');
   renderSkinSelector();
@@ -1808,7 +2112,7 @@ $('statBtn')?.addEventListener('click', () => {
     ['📅 Streak', (S.dailyStreak || 0) + ' gün'],
     ['⚡ Max Enerji', fmt(S.maxEnergy)],
     ['👆 Çoklu Tık', (S.multiTap || 1) + 'x'],
-    ['⚡ Yenilenme', (1 + (S.energyRegenBonus || 0)).toFixed(1) + '/s'],
+    ['⚡ Yenilenme', (2 + (S.energyRegenBonus || 0)).toFixed(1) + '/s'],
     ['🎨 Aktif Skin', SKINS.find(s => s.id === (S.activeSkin || 'default'))?.name || 'Klasik'],
     ['💰 Offline Kazanç', fmt(S.totalOffline || 0)],
   ];
@@ -2280,6 +2584,7 @@ renderAch();
 checkAch();
 checkOffline();
 startTutorial();
+applySkin(S.activeSkin || 'default');
 /* ===== LAST ACTIVE TIMESTAMP ===== */
 function updateLastActive() {
   const el = $('lastActive');
