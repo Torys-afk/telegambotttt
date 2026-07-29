@@ -2787,12 +2787,48 @@ $('quickWheelBtn')?.addEventListener('click', () => {
 });
 $('quickCipherBtn')?.addEventListener('click', openCipher);
 $('quickAirdropBtn')?.addEventListener('click', openAirdrop);
+function openSkinModal() {
+  const modal = $('skinModal');
+  if (modal) { modal.classList.remove('hidden'); renderSkins(); }
+}
+$('skinBtn2')?.addEventListener('click', openSkinModal);
 $('skinBtn')?.addEventListener('click', () => {
   $('skinModal').classList.remove('hidden');
   renderSkinSelector();
 });
 $('closeSkinModal')?.addEventListener('click', () => { $('skinModal').classList.add('hidden'); });
 
+$('statBtn2')?.addEventListener('click', () => {
+  $('statModal').classList.remove('hidden');
+  const el = $('statContent');
+  if (!el) return;
+  const stats = [
+    ['👆 Toplam Tık', fmt(S.totalTaps || 0)],
+    ['💰 Toplam Kazanç', fmt(S.totalEarned || 0)],
+    ['🏆 Boss Galibiyet', fmt(S.bossWins || 0)],
+    ['🔥 En İyi Combo', (S.bestCombo || 0) + 'x'],
+    ['📦 Açılan Kasa', fmt(S.crates || 0)],
+    ['👥 Davet Edilen', fmt(S.friends || 0)],
+    ['💎 Harcanan Elmas', fmt((S.gemsSpent || 0))],
+    ['📅 Streak', (S.dailyStreak || 0) + ' gün'],
+    ['⚡ Max Enerji', fmt(S.maxEnergy)],
+    ['👆 Çoklu Tık', (S.multiTap || 1) + 'x'],
+    ['⚡ Yenilenme', (2 + (S.energyRegenBonus || 0)).toFixed(1) + '/s'],
+    ['🎨 Aktif Skin', SKINS.find(s => s.id === (S.activeSkin || 'default'))?.name || 'Klasik'],
+    ['💰 Offline Kazanç', fmt(S.totalOffline || 0)],
+    ['🔄 Prestige', (S.prestige || 0) + 'x'],
+    ['⏱️ Session', getSessionTime()],
+    ['💾 Auto Save', 'Aktif (15sn)'],
+    ['📦 Kasa Sayısı', fmt(S.crates || 0)],
+    ['🎮 Sürüm', 'v2.0 (100+ yenilik)'],
+    ['⚡ Harcanan Enerji', fmt(S.totalEnergySpent || 0)],
+    ['🚀 En Hızlı Tık', (S.bestTapSpeed || 0) + 'x/tık'],
+    ['📅 İlk Oynanış', S._firstPlayDate || 'Bugün'],
+  ];
+  el.innerHTML = stats.map(([label, val]) =>
+    `<div style="display:flex;justify-content:space-between;padding:8px 10px;background:rgba(255,255,255,.04);border-radius:8px;"><span style="color:#8e9cb5;">${label}</span><span style="font-weight:700;">${val}</span></div>`
+  ).join('');
+});
 $('statBtn')?.addEventListener('click', () => {
   $('statModal').classList.remove('hidden');
   const el = $('statContent');
@@ -2871,13 +2907,6 @@ function showCardDetail(id) {
 }
 $('closeCardDetail')?.addEventListener('click', () => { $('cardDetailModal').classList.add('hidden'); });
 
-document.querySelector('.settings-icon')?.addEventListener('dblclick', () => {
-  toast(`⚡ ${S.energy.toFixed(0)}/${S.maxEnergy} · 👆${S.perClick}/tık · 💰${fmt(S.perSec)}/s`);
-});
-document.querySelector('.settings-icon')?.addEventListener('click', () => {
-  $('settingsModal').classList.remove('hidden');
-  initSettingsUI();
-});
 $('closeSettingsModal').addEventListener('click', () => { $('settingsModal').classList.add('hidden'); });
 
 function initSettingsUI() {
@@ -2893,6 +2922,8 @@ function initSettingsUI() {
   $('sfxSlider').value = (S.settings.sfxVol || 0.5) * 100;
   const verEl = $('gameVersionDisplay');
   if (verEl) verEl.textContent = '🚀 v4.0.0 - 231+ özellik!';
+  const verEl2 = $('gameVersionDisplay2');
+  if (verEl2) verEl2.textContent = '🚀 v4.0.0 - 231+ özellik!';
   const shakeToggle = $('shakeToggle');
   if (shakeToggle) { shakeToggle.textContent = S._shakeOn === false ? 'Kapalı' : 'Açık'; shakeToggle.style.background = S._shakeOn === false ? 'rgba(255,255,255,.08)' : ''; }
   const partDensity = $('particleDensity');
@@ -3491,9 +3522,13 @@ $('tStartBtn').addEventListener('click', () => {
 });
 
 /* ===== QUICK SFX TOGGLE ===== */
+const sfxBtn = $('sfxToggleQuick');
+if (sfxBtn) { sfxBtn.textContent = S.settings.sfxOn ? 'Açık 🔊' : 'Kapalı 🔇'; }
 $('sfxToggleQuick')?.addEventListener('click', () => {
   S.settings.sfxOn = !S.settings.sfxOn;
   save();
+  const btn = $('sfxToggleQuick');
+  if (btn) { btn.textContent = S.settings.sfxOn ? 'Açık 🔊' : 'Kapalı 🔇'; btn.style.background = S.settings.sfxOn ? '' : 'rgba(255,255,255,.08)'; btn.style.color = S.settings.sfxOn ? '' : '#8e9cb5'; }
   toast(S.settings.sfxOn ? '🔊 Ses açık' : '🔇 Ses kapalı');
 });
 
@@ -3559,7 +3594,7 @@ function getTotalCardLevels() {
 /* ===== KEYBOARD SHORTCUTS ===== */
 document.addEventListener('keydown', e => {
   if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
-  const tabs3 = ['tab-borsa', 'tab-mine', 'tab-friends', 'tab-earn', 'tab-boss'];
+  const tabs3 = ['tab-exchange', 'tab-mine', 'tab-friends', 'tab-earn', 'tab-boss', 'tab-settings'];
   const cur3 = document.querySelector('.tab.active');
   const idx3 = cur3 ? tabs3.indexOf(cur3.id) : 0;
   if (e.key === 'ArrowRight' && idx3 < tabs3.length - 1) switchTab(tabs3[idx3 + 1]);
@@ -3574,11 +3609,12 @@ document.addEventListener('keydown', e => {
   if (e.key === 'e' || e.key === 'E') switchTab('tab-earn');
   if (e.key === 'x' || e.key === 'X') switchTab('tab-boss');
   if (e.key === 'q' || e.key === 'Q') quickUpgrade(10);
-  if (e.key === '1') switchTab('tab-borsa');
+  if (e.key === '1') switchTab('tab-exchange');
   if (e.key === '2') switchTab('tab-mine');
   if (e.key === '3') switchTab('tab-friends');
   if (e.key === '4') switchTab('tab-earn');
   if (e.key === '5') switchTab('tab-boss');
+  if (e.key === '6') switchTab('tab-settings');
   if (e.key === 'r' || e.key === 'R') openRift();
   if (e.key === 'p' || e.key === 'P') openPvpArena();
   if (e.key === 'd' || e.key === 'D') openDungeon();
@@ -3608,7 +3644,7 @@ document.addEventListener('touchend', e => {
   const dx = e.changedTouches[0].screenX - touchStartX;
   const dy = e.changedTouches[0].screenY - touchStartY;
   if (Math.abs(dx) < 50 || Math.abs(dy) > Math.abs(dx) * 0.5) return;
-  const tabs2 = ['tab-borsa', 'tab-mine', 'tab-friends', 'tab-earn', 'tab-boss'];
+  const tabs2 = ['tab-exchange', 'tab-mine', 'tab-friends', 'tab-earn', 'tab-boss'];
   const cur2 = document.querySelector('.tab.active');
   const idx2 = cur2 ? tabs2.indexOf(cur2.id) : 0;
   if (dx > 0 && idx2 > 0) switchTab(tabs2[idx2 - 1]);
