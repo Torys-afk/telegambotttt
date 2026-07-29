@@ -206,6 +206,7 @@ body{background:#0a0a0f;display:flex;justify-content:center;align-items:center;m
 .flash-overlay.gold{background:radial-gradient(circle,rgba(243,186,47,.5),transparent 60%);}
 .flash-overlay.red{background:radial-gradient(circle,rgba(255,71,87,.5),transparent 60%);}
 .flash-overlay.rainbow{background:conic-gradient(red,orange,yellow,green,blue,purple,red);opacity:.12;animation:flashFade .8s ease-out forwards;}
+.flash-overlay.blue{background:radial-gradient(circle,rgba(52,152,219,.5),transparent 60%);}
 @keyframes flashFade{0%{opacity:1}100%{opacity:0}}
 
 /* ===== COMBO FIRE RING ===== */

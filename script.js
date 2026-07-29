@@ -22,6 +22,8 @@ function defState() {
     _maxComboEver: 0, _totalPrestigeGems: 0, _skinsOwned: 0, _totalShopSpent: 0,
     _totalMerges: 0, _cipherSolved: 0, _wheelSpins: 0, _totalBoosts: 0,
     _xpFromCrits: 0, _totalDungeonRuns: 0, _bossMaxDmg: 0,
+    bossPoints: 0, bossUpgrades: [], bossAbilityActive: '', bossAbilityTimer: 0,
+    _boss10xTap: false, _bossAutoStart: false, _bossDmgMult: 1, _bossTimeBonus: 0,
   };
 }
 
@@ -3071,62 +3073,123 @@ function renderFriends() {
 renderFriends();
 
 /* ===== BOSS (Scaling) ===== */
-$('startBossBtn').addEventListener('click', startBoss);
+/* ===== BOSS OVERHAUL v2 ===== */
+const BOSS_TIERS = [
+  { name: 'Karanlık CEO', icon: '💼', color: '#8e9cb5', hpBase: 15000, hpScale: 5000, time: 30, ability: null, desc: 'Standart boss' },
+  { name: 'Maden Canavarı', icon: '👹', color: '#2ed573', hpBase: 30000, hpScale: 8000, time: 30, ability: 'regen', desc: 'Her 5s\'de can yeniler', abilityDesc: '🔄 Can yeniliyor!' },
+  { name: 'Kripto Kraken', icon: '🐙', color: '#3498db', hpBase: 60000, hpScale: 12000, time: 25, ability: 'weaken', desc: 'Vuruşlarını zayıflatır', abilityDesc: '💫 Vuruşların zayıfladı!' },
+  { name: 'Shadow CEO', icon: '👤', color: '#9b59b6', hpBase: 100000, hpScale: 20000, time: 25, ability: 'steal', desc: 'Coin çalar', abilityDesc: '💰 Coinlerin çalınıyor!' },
+  { name: 'Efsanevi Hamster', icon: '🐹', color: '#ff4757', hpBase: 200000, hpScale: 35000, time: 20, ability: 'enrage', desc: 'Zamanla güçlenir', abilityDesc: '🔥 Öfkelendi! Hasarlıyor!' },
+  { name: 'Alev İblisi', icon: '🔥', color: '#ff6348', hpBase: 400000, hpScale: 50000, time: 20, ability: 'burn', desc: 'Enerji yakarak can alır', abilityDesc: '🔥 Enerjin yanıyor!' },
+  { name: 'Buz Devi', icon: '🧊', color: '#00d2d3', hpBase: 700000, hpScale: 80000, time: 25, ability: 'freeze', desc: 'Tıklamalarını yavaşlatır', abilityDesc: '❄️ Donuyorsun!' },
+  { name: 'Yıldırım Lordu', icon: '⚡', color: '#ffd32a', hpBase: 1200000, hpScale: 150000, time: 18, ability: 'lightning', desc: 'Ani yüksek hasar', abilityDesc: '⚡ Yıldırım çarptı!' },
+  { name: 'Kara Delik', icon: '🕳️', color: '#2d3436', hpBase: 2000000, hpScale: 250000, time: 20, ability: 'vortex', desc: 'Canını emer', abilityDesc: '🌀 Canın emiliyor!' },
+  { name: 'Tanrı Hamster', icon: '🗿', color: '#ffd700', hpBase: 5000000, hpScale: 500000, time: 15, ability: 'godmode', desc: 'Tüm yetenekler!', abilityDesc: '☠️ TANRI GÜCÜ!' },
+];
+const BOSS_SHOP = [
+  { id: '10xTap', icon: '👆', name: '10x Tık Modu', desc: 'Savaşta 10x tıkla (30sn)', cost: 50, apply: () => { S._boss10xTap = true; } },
+  { id: 'bossAuto', icon: '🤖', name: 'Oto-Başlat', desc: 'Boss otomatik başlasın', cost: 100, apply: () => { S._bossAutoStart = true; } },
+  { id: 'bossDmg50', icon: '💥', name: '+50% Hasar', desc: 'Boss vuruş hasarı +%50', cost: 75, apply: () => { S._bossDmgMult = (S._bossDmgMult || 1) + 0.5; } },
+  { id: 'bossTime', icon: '⏱️', name: '+10sn Süre', desc: 'Boss süresi +10sn', cost: 60, apply: () => { S._bossTimeBonus = (S._bossTimeBonus || 0) + 10; } },
+  { id: 'bossShield', icon: '🛡️', name: 'Kalkan', desc: 'İlk hiti emer', cost: 80, apply: () => { S._bossShield = true; } },
+  { id: 'bossGem', icon: '💎', name: '+5💎/kill', desc: 'Her boss için +5 elmas', cost: 120, apply: () => { S._bossGemBonus = (S._bossGemBonus || 0) + 5; } },
+  { id: 'bossBp50', icon: '🪙', name: '+50% BP', desc: 'Kazanılan BP +%50', cost: 90, apply: () => { S._bossBpMult = (S._bossBpMult || 1) + 0.5; } },
+  { id: 'bossHeal', icon: '❤️', name: 'Can Doldurma', desc: 'Her vuruşta +1 can', cost: 150, apply: () => { S._bossLifeSteal = (S._bossLifeSteal || 0) + 1; } },
+];
 
-function getBossLevel() { return 1 + Math.floor((S.bossWins || 0) / 5); }
+function getBossTier() { return Math.min(Math.floor((S.bossWins || 0) / 5), BOSS_TIERS.length - 1); }
+function getBossLevel() { return 1 + getBossTier(); }
+function getBossData() { return BOSS_TIERS[getBossTier()]; }
+function getBossHp() { const d = getBossData(); return d.hpBase + getBossTier() * d.hpScale; }
+
+$('startBossBtn').addEventListener('click', startBoss);
 
 function startBoss() {
   if (S.lvl < 15) { toast('❌ Level 15 gerekli'); return; }
   if (S.bossActive) { toast('⚔️ Boss zaten aktif!'); return; }
   S.bossActive = true;
+  S.bossAbilityActive = '';
+  S.bossAbilityTimer = 0;
+  const tier = getBossTier();
+  const bData = getBossData();
   const bLvl = getBossLevel();
-  S.bossMaxHp = 15000 + (bLvl - 1) * 5000;
+  S.bossMaxHp = getBossHp();
   S.bossHp = S.bossMaxHp;
-  S.bossTimer = 30;
+  S.bossTimer = bData.time + (S._bossTimeBonus || 0);
   updateBossUI();
-  $('startBossBtn').textContent = `⚔️ Savaş Sürüyor (Seviye ${bLvl})`;
+  $('startBossBtn').textContent = `⚔️ ${bData.icon} Savaş Sürüyor (Seviye ${bLvl})`;
   $('startBossBtn').disabled = true;
-  const bossNames = ['Karanlık CEO', 'Maden Canavarı', 'Kripto Kraken', 'Shadow CEO', 'Efsanevi Hamster'];
-  const bName = bossNames[Math.min(bLvl - 1, bossNames.length - 1)];
   const bossLevelTag = $('bossLevelTag');
-  if (bossLevelTag) bossLevelTag.textContent = `Seviye ${bLvl}`;
-  const bossColors = ['#8e9cb5', '#2ed573', '#3498db', '#9b59b6', '#ff4757'];
-  const bColor = bossColors[Math.min(bLvl - 1, bossColors.length - 1)];
+  if (bossLevelTag) bossLevelTag.textContent = `Seviye ${bLvl} · ${bData.name}`;
   const bossH3 = document.querySelector('.b-head h3');
-  bossH3.textContent = bName;
-  bossH3.style.color = bColor;
-  bossH3.style.textShadow = `0 0 15px ${bColor}44`;
+  bossH3.textContent = `${bData.icon} ${bData.name}`;
+  bossH3.style.color = bData.color;
+  bossH3.style.textShadow = `0 0 20px ${bData.color}66`;
+  const bossDesc = $('bossDesc');
+  if (bossDesc) bossDesc.textContent = bData.desc;
+  if (bData.ability) {
+    const abilEl = $('bossAbilityIndicator');
+    if (abilEl) { abilEl.textContent = `⚠️ ${bData.abilityDesc}`; abilEl.style.color = bData.color; abilEl.classList.remove('hidden'); }
+  }
+  let abilityTick = 0;
+  let regenUsed = false;
   const iv = setInterval(() => {
     S.bossTimer -= 0.1;
+    abilityTick += 0.1;
+    if (bData.ability === 'regen' && abilityTick >= 5 && !regenUsed) {
+      if (S.bossHp > 0 && S.bossHp < S.bossMaxHp) { S.bossHp = Math.min(S.bossMaxHp, S.bossHp + S.bossMaxHp * 0.1); toast(`🔄 ${bData.name} can yeniledi!`); }
+      regenUsed = true;
+    }
+    if (bData.ability === 'enrage' && abilityTick >= 3) {
+      const dmg = Math.floor(S.maxEnergy * 0.02 * (abilityTick / 3));
+      S.energy = Math.max(0, S.energy - dmg);
+      if (abilityTick % 3 < 0.2) toast(`🔥 ${bData.name} öfkelendi! -${dmg}⚡`);
+    }
+    if (bData.ability === 'burn' && abilityTick >= 2) {
+      const dmg = Math.floor(S.energy * 0.05);
+      S.energy = Math.max(0, S.energy - dmg);
+      if (abilityTick % 2 < 0.2) toast(`🔥 ${bData.name} enerjini yakıyor! -${dmg}⚡`);
+    }
+    if (bData.ability === 'lightning' && abilityTick >= 4) {
+      const ldmg = Math.floor(S.bossMaxHp * 0.03);
+      S.bossHp = Math.max(0, S.bossHp - ldmg);
+      flashOverlay('blue');
+      abilityTick = 0;
+    }
+    if (bData.ability === 'vortex' && abilityTick >= 3) {
+      const sdmg = Math.floor(S.bossHp * 0.02);
+      S.bossHp = Math.min(S.bossMaxHp, S.bossHp + sdmg);
+      S.energy = Math.max(0, S.energy - sdmg);
+      if (abilityTick % 3 < 0.2) toast(`🌀 Kara delik canını emiyor! -${sdmg}⚡`);
+    }
     if (S.bossTimer <= 0 || S.bossHp <= 0) {
       clearInterval(iv);
-      S.bossActive = false;
+      S.bossActive = false; S.bossAbilityActive = '';
+      const abilEl = $('bossAbilityIndicator');
+      if (abilEl) abilEl.classList.add('hidden');
       $('startBossBtn').textContent = '⚔️ Başlat';
       $('startBossBtn').disabled = false;
       if (S.bossHp <= 0) {
-        S.bossWins++;
-        S._bossWonToday = true;
-        const bLvlWon = getBossLevel();
+        S.bossWins++; S._bossWonToday = true;
         const reward = S.lvl * 1000 + S.bossWins * 500;
-        const gemReward = 15 + S.bossWins * 3;
-        S.coins += reward;
-        S.gems += gemReward;
+        const gemReward = 15 + S.bossWins * 3 + (S._bossGemBonus || 0);
+        const bpGain = Math.floor(10 + tier * 5 * (S._bossBpMult || 1));
+        S.coins += reward; S.gems += gemReward;
+        S.bossPoints = (S.bossPoints || 0) + bpGain;
         S.maxEnergy += 10;
-        sfxBossKill();
-        fireworkCelebration();
-        flashOverlay('rainbow');
-        coinRain(30);
+        if (tier >= 3) { S.perClick += 1; toast('👆 Kalıcı +1/tık!'); }
+        if (tier >= 6) { S.perSec += 50; }
+        sfxBossKill(); fireworkCelebration();
+        flashOverlay('rainbow'); coinRain(30);
         spawnParticles(innerWidth / 2, innerHeight / 2, '#f3ba2f');
-        spawnParticles(innerWidth / 3, innerHeight / 3, '#ff4757');
-        toast(`🏆 BOSS YENİLDİ! +${fmt(reward)} Coin +${gemReward}💎 +10 max enerji!`);
-        checkAch();
-        checkLevelMilestones();
+        toast(`🏆 ${bData.icon} ${bData.name} YENİLDİ! +${fmt(reward)}💰 +${gemReward}💎 +${bpGain}BP`);
+        update();
+        if (S._bossAutoStart) setTimeout(startBoss, 500);
       } else {
-        toast('💀 Süre doldu! Boss yenilendi.');
+        toast(`💀 ${bData.icon} ${bData.name} kaçtı! Bir dahakine.`);
         S.bossHp = S.bossMaxHp;
       }
-      updateBossUI();
-      update();
+      updateBossUI(); update();
     }
     updateBossUI();
   }, 100);
@@ -3134,22 +3197,68 @@ function startBoss() {
 
 $('bossTapTarget').addEventListener('click', e => {
   if (!S.bossActive) { toast('⚔️ Boss başlat!'); return; }
+  const tier = getBossTier();
+  const bData = getBossData();
   const isCrit = Math.random() < 0.25;
-  const dmg = Math.floor((S.perClick * 3 + Math.floor(S.perSec * 0.1)) * (isCrit ? 3 : 1) * (S.multiTap || 1));
+  let dmgMult = S._bossDmgMult || 1;
+  if (bData.ability === 'weaken' && Math.random() < 0.3) dmgMult *= 0.5;
+  if (S._boss10xTap) dmgMult *= 10;
+  const taps = S.multiTap || 1;
+  const dmg = Math.floor((S.perClick * 3 + Math.floor(S.perSec * 0.1)) * (isCrit ? 3 : 1) * dmgMult * taps);
   S.bossHp = Math.max(0, S.bossHp - dmg);
+  if (S._bossLifeSteal) S.energy = Math.min(S.maxEnergy * 1.1, S.energy + (S._bossLifeSteal || 0) * dmg);
   sfxBossHit();
-  spawnParticles(e.clientX || innerWidth / 2, e.clientY || innerHeight / 2, '#ff4757');
+  spawnParticles(e.clientX || innerWidth / 2, e.clientY || innerHeight / 2, bData.color || '#ff4757');
   spawnFloat((e.clientX || innerWidth / 2) - 40, (e.clientY || innerHeight / 2) - 40, (isCrit ? '💥 ' : '') + '-' + dmg, isCrit);
   if (dmg > 100) {
     const a = document.querySelector('.arena');
-    a.classList.remove('shake');
-    void a.offsetWidth;
-    a.classList.add('shake');
-    setTimeout(() => a.classList.remove('shake'), 250);
+    if (a) { a.classList.remove('shake'); void a.offsetWidth; a.classList.add('shake'); setTimeout(() => a.classList.remove('shake'), 250); }
   }
   try { navigator.vibrate(15); } catch (_) { }
+  if (bData.ability === 'freeze') {
+    const freezeChance = Math.random();
+    if (freezeChance < 0.15) { toast('❄️ Dondu! Tık kaçtı!'); return; }
+  }
+  if (bData.ability === 'steal' && Math.random() < 0.1) {
+    const stolen = Math.floor(S.coins * 0.01);
+    S.coins = Math.max(0, S.coins - stolen);
+    toast(`💰 ${bData.name} ${fmt(stolen)} coin çaldı!`);
+  }
   updateBossUI();
 });
+
+/* ===== BOSS SHOP ===== */
+$('bossShopBtn')?.addEventListener('click', openBossShop);
+$('closeBossShopModal')?.addEventListener('click', () => $('bossShopModal').classList.add('hidden'));
+
+function openBossShop() {
+  if (!S.bossPoints) S.bossPoints = 0;
+  if (!S.bossUpgrades) S.bossUpgrades = [];
+  $('bossShopBp').textContent = S.bossPoints;
+  const el = $('bossShopList'); el.innerHTML = '';
+  BOSS_SHOP.forEach((item) => {
+    const owned = S.bossUpgrades.includes(item.id);
+    const d = document.createElement('div');
+    d.style.cssText = `display:flex;align-items:center;gap:8px;padding:8px;border-radius:10px;background:${owned ? 'rgba(46,213,115,.1)' : 'rgba(255,255,255,.04)'};border:1px solid ${owned ? '#2ed573' : 'transparent'};margin:2px 0;opacity:${owned ? '.6' : '1'};`;
+    d.innerHTML = `<span style="font-size:20px;">${item.icon}</span>
+      <div style="flex:1;"><div style="font-weight:700;font-size:12px;">${item.name}</div>
+      <div style="font-size:10px;color:#8e9cb5;">${item.desc}</div></div>
+      <div style="text-align:right;"><div style="font-size:10px;color:#f3ba2f;">${item.cost}BP</div>
+      <button class="btn btn-gold btn-xs" ${owned||S.bossPoints<item.cost?'disabled':''}>${owned?'✓':(S.bossPoints<item.cost?'❌':'Al')}</button></div>`;
+    if (!owned) d.querySelector('button').addEventListener('click', () => {
+      if (S.bossPoints < item.cost) return toast('❌ Yetersiz BP');
+      S.bossPoints -= item.cost;
+      if (!S.bossUpgrades) S.bossUpgrades = [];
+      S.bossUpgrades.push(item.id);
+      item.apply();
+      save(); update();
+      toast(`✅ ${item.name} satın alındı!`);
+      openBossShop();
+    });
+    el.appendChild(d);
+  });
+  $('bossShopModal').classList.remove('hidden');
+}
 
 function updateBossUI() {
   $('bossHpDisplay').textContent = `${Math.max(0, Math.floor(S.bossHp))}/${S.bossMaxHp}`;
@@ -3162,6 +3271,8 @@ function updateBossUI() {
     bossTapEl.style.filter = hpPct < 25 ? 'hue-rotate(180deg) brightness(1.3)' : 'none';
   }
   $('bossTimerDisplay').textContent = Math.max(0, Math.ceil(S.bossTimer)) + 's';
+  const bpEl = $('bossPointsDisplay');
+  if (bpEl) bpEl.textContent = `🪙 ${S.bossPoints || 0} BP`;
 }
 
 /* ===== OFFLINE EARNINGS ===== */
