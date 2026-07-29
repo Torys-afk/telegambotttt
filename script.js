@@ -2939,6 +2939,31 @@ $('particleDensity')?.addEventListener('input', e => {
   save();
 });
 
+/* ===== FEEDBACK ===== */
+$('feedbackSendBtn')?.addEventListener('click', () => {
+  const inp = $('feedbackInput');
+  const msg = (inp?.value || '').trim();
+  if (!msg) { $('feedbackStatus').textContent = '❌ Boş mesaj gönderilemez'; return; }
+  const full = `💬 *Geri Bildirim* (${S.username || 'İsimsiz'})\n${msg}`;
+  try { if (window.Telegram?.WebApp) Telegram.WebApp.sendData(full); }
+  catch (_) {}
+  S._lastFeedback = msg;
+  S._feedbackDate = Date.now();
+  save();
+  inp.value = '';
+  $('feedbackStatus').textContent = '✅ Gönderildi! Teşekkürler 🎉';
+  setTimeout(() => { $('feedbackStatus').textContent = ''; }, 3000);
+});
+$('feedbackCopyBtn')?.addEventListener('click', () => {
+  const inp = $('feedbackInput');
+  const msg = (inp?.value || '').trim();
+  if (!msg) { $('feedbackStatus').textContent = '❌ Önce mesaj yaz'; return; }
+  const full = `💬 Geri Bildirim: ${msg}`;
+      try { navigator.clipboard.writeText(full); $('feedbackStatus').textContent = "📋 Panoya kopyalandı! Bot'a yapıştır: @Rat_combatbot"; }
+  catch (_) { $('feedbackStatus').textContent = '❌ Kopyalanamadı'; }
+  setTimeout(() => { $('feedbackStatus').textContent = ''; }, 4000);
+});
+
 /* ===== NAME PICKER ===== */
 const PRESET_NAMES = [
   '🐹 HamsterKing', '⚡ CryptoCEO', '💎 ElmasKral', '🔥 AteşTopu', '🌀 HızlıFare',

@@ -563,6 +563,18 @@
                 <span id="gameVersionDisplay" style="display:block;color:#f3ba2f;font-weight:700;font-size:12px;">v2.0.0</span>
                 🤖 Bot: @Rat_combatbot
             </div>
+            <div style="border-top:1px solid rgba(255,255,255,.06);padding-top:10px;">
+                <div style="display:flex;align-items:center;gap:6px;margin-bottom:6px;">
+                    <span style="color:#fff;font-weight:600;font-size:13px;">💬 Geri Bildirim</span>
+                    <span style="font-size:10px;color:#8e9cb5;">/feedback</span>
+                </div>
+                <textarea id="feedbackInput" rows="2" style="width:100%;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:8px;color:#fff;font-size:12px;padding:8px;resize:none;outline:none;box-sizing:border-box;" placeholder="Öneri, hata bildirimi veya fikir..."></textarea>
+                <div style="display:flex;gap:6px;margin-top:6px;">
+                    <button id="feedbackSendBtn" class="btn btn-gold" style="flex:1;padding:6px;font-size:11px;">📤 Gönder</button>
+                    <button id="feedbackCopyBtn" class="btn btn-secondary" style="flex:1;padding:6px;font-size:11px;background:rgba(52,152,219,.15);color:#3498db;">📋 Kopyala</button>
+                </div>
+                <div id="feedbackStatus" style="font-size:10px;color:#2ed573;text-align:center;margin-top:4px;min-height:16px;"></div>
+            </div>
         </div>
     </div>
 </div>
