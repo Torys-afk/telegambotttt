@@ -2889,7 +2889,7 @@ function initSettingsUI() {
   $('volumeSlider').value = (S.settings.musicVol || 0.5) * 100;
   $('sfxSlider').value = (S.settings.sfxVol || 0.5) * 100;
   const verEl = $('gameVersionDisplay');
-  if (verEl) verEl.textContent = 'v2.0.0 - 100+ yenilik!';
+  if (verEl) verEl.textContent = '🚀 v4.0.0 - 231+ özellik!';
   const shakeToggle = $('shakeToggle');
   if (shakeToggle) { shakeToggle.textContent = S._shakeOn === false ? 'Kapalı' : 'Açık'; shakeToggle.style.background = S._shakeOn === false ? 'rgba(255,255,255,.08)' : ''; }
   const partDensity = $('particleDensity');
