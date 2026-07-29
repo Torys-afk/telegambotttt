@@ -49,7 +49,7 @@ function initVars() {
       else Object.keys(d.settings).forEach(sk => { if (S.settings[sk] === undefined) S.settings[sk] = d.settings[sk]; });
     } else if (S[k] === undefined) S[k] = d[k];
   });
-  if (S.energy < 1 || S.energy <= 0) S.energy = S.maxEnergy;
+  if (S.energy <= 0) S.energy = 1;
   if (!S.refCode) S.refCode = Math.random().toString(36).substring(2, 10).toUpperCase();
 }
 initVars();
@@ -1574,8 +1574,9 @@ $('quickBoostBtn').addEventListener('click', () => {
     toast(`⏳ ${sec}s bekle`);
     return;
   }
-  S.boostCD = now + 10000;
+  S.boostCD = now + 30000;
   S.energy = S.maxEnergy * 1.1;
+  save();
   $('energyFill').style.animation = 'none'; void $('energyFill').offsetWidth; $('energyFill').style.animation = 'energyPulse .5s ease-out';
   sfxBuy();
   flashOverlay('gold');
@@ -2715,6 +2716,7 @@ function buyShopItem(item) {
     case 'megaBoost5':
       S.energy = Math.min(S.maxEnergy, S.energy + 5000);
       S.boostCD = Date.now() + 300000;
+      save();
       toast('🚀 Mega Boost! +5000 Enerji +5dk hızlı regen!');
       break;
     case 'rainbowCrate':
@@ -3403,10 +3405,9 @@ function checkOffline() {
     S.coins += earned;
     S.totalEarned += earned;
     S.gems += gemBonus || 0;
-    S.energy = S.maxEnergy;
     S.offlineStamp = Date.now();
     $('offlineModal').classList.add('hidden');
-    toast(`💰 Uzaktayken +${fmt(earned)}${gemBonus > 0 ? ' +' + gemBonus + '💎' : ''} kazandın! Enerji fullendi!`);
+    toast(`💰 Uzaktayken +${fmt(earned)}${gemBonus > 0 ? ' +' + gemBonus + '💎' : ''} kazandın!`);
     update();
   };
 }
