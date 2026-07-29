@@ -2085,12 +2085,16 @@ const bgm = $('bgm');
 bgm.src = 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3';
 bgm.volume = S.settings.musicVol || 0.5;
 
-$('wheelBtn')?.addEventListener('click', () => {
+$('quickWheelBtn')?.addEventListener('click', () => {
   initWheel();
+  const free = S.wheelFreeDate === new Date().toDateString() ? '0 bedava' : '1 bedava';
+  const fc = $('wheelFreeCountSmall');
+  if (fc) fc.textContent = `(${free})`;
   if ($('wheelFreeCount')) $('wheelFreeCount').textContent = S.wheelFreeDate === new Date().toDateString() ? '0' : '1';
   $('wheelModal').classList.remove('hidden');
 });
-$('airdropBtn')?.addEventListener('click', openAirdrop);
+$('quickCipherBtn')?.addEventListener('click', openCipher);
+$('quickAirdropBtn')?.addEventListener('click', openAirdrop);
 $('skinBtn')?.addEventListener('click', () => {
   $('skinModal').classList.remove('hidden');
   renderSkinSelector();

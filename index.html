@@ -31,8 +31,6 @@
                 </div>
             </div>
             <div style="display:flex;align-items:center;gap:6px;">
-                <span style="font-size:16px;cursor:pointer;" id="wheelBtn" title="Şans Çarkı">🎡</span>
-                <span style="font-size:16px;cursor:pointer;" id="airdropBtn" title="Airdrop & Cüzdan">🪂</span>
                 <span style="font-size:16px;cursor:pointer;" id="skinBtn" title="Görünüm Seç">🎨</span>
                 <span style="font-size:14px;cursor:pointer;" id="statBtn" title="İstatistikler">📊</span>
                 <span style="font-size:14px;cursor:pointer;" id="gemDisplay" title="Elmas Dükkanı">💎 <span id="gemCount" style="color:#3498db;font-weight:800;">0</span></span>
@@ -215,6 +213,22 @@
             <span style="flex:1;font-weight:600;">Günlük Takvim</span>
             <span id="dailyStreakBadge" style="font-size:11px;color:#ff9f43;">🔥 0 gün</span>
             <span style="color:#8e9cb5;">▶️</span>
+        </div>
+        <div class="section-label" style="margin-top:14px;">🎡 Özel</div>
+        <div class="task" id="quickWheelBtn" style="cursor:pointer;">
+            <span style="font-size:20px;">🎡</span>
+            <span style="flex:1;font-weight:600;">Şans Çarkı <span style="font-size:10px;color:#8e9cb5;" id="wheelFreeCountSmall">(1 bedava)</span></span>
+            <button class="btn btn-gold btn-xs">Döndür</button>
+        </div>
+        <div class="task" id="quickCipherBtn" style="cursor:pointer;">
+            <span style="font-size:20px;">🔐</span>
+            <span style="flex:1;font-weight:600;">Günlük Şifre <span style="font-size:10px;color:#8e9cb5;">(Mors Kodu)</span></span>
+            <button class="btn btn-gold btn-xs">Çöz</button>
+        </div>
+        <div class="task" id="quickAirdropBtn" style="cursor:pointer;">
+            <span style="font-size:20px;">🪂</span>
+            <span style="flex:1;font-weight:600;">Airdrop & Cüzdan</span>
+            <button class="btn btn-gold btn-xs">Gör</button>
         </div>
         <div class="section-label" style="margin-top:14px;">🎁 Ödüller</div>
         <div class="task" onclick="quickReward('coin')">
