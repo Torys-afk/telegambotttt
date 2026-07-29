@@ -17,7 +17,7 @@
         <!-- TOP BAR -->
         <div class="top-bar">
             <div class="user-info">
-                <div class="hamster-icon">🐹</div>
+                <div class="hamster-icon" id="secretEasterEgg" style="cursor:pointer;">🐹</div>
                 <span class="user-name">CEO Hamster</span>
             </div>
             <div class="profit-display">
@@ -35,7 +35,9 @@
                 <span style="font-size:14px;cursor:pointer;" id="statBtn" title="İstatistikler">📊</span>
                 <span style="font-size:14px;cursor:pointer;" id="gemDisplay" title="Elmas Dükkanı">💎 <span id="gemCount" style="color:#3498db;font-weight:800;">0</span></span>
                 <span style="font-size:14px;cursor:pointer;" id="exchangeBtn" title="Coin → Elmas" onclick="exchangeCoins()">🔄</span>
+                <span id="saveIndicator" style="font-size:10px;color:#2ed573;opacity:0;transition:opacity .3s;">💾</span>
                 <span class="settings-icon">⚙️</span>
+                <span id="sfxToggleQuick" style="font-size:14px;cursor:pointer;color:#8e9cb5;" title="Sesi aç/kapat">🔊</span>
             </div>
         </div>
 
@@ -123,7 +125,7 @@
     <!-- TAB 2: MINE -->
     <section id="tab-mine" class="tab">
         <div class="mine-header" style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:4px;">
-            <div><h2>⛏️ Madencilik</h2><p>Kartları yükselterek güçlen</p><span id="totalCards" style="font-size:10px;color:#8e9cb5;"></span></div>
+            <div><h2>⛏️ Madencilik</h2><p>Kartları yükselterek güçlen</p><span id="totalCards" style="font-size:10px;color:#8e9cb5;"></span><br><span id="mineCompletion" style="font-size:9px;color:#8e9cb5;"></span></div>
             <div style="display:flex;gap:4px;flex-wrap:wrap;justify-content:flex-end;">
                 <input id="cardSearch" placeholder="🔍 Ara..." style="width:80px;padding:4px 8px;border-radius:8px;border:1px solid rgba(255,255,255,.1);background:rgba(255,255,255,.04);color:#fff;font-size:11px;" oninput="renderGrid(document.querySelector('.chip.active')?.dataset?.f || 'all')">
                 <button class="btn btn-xs" style="background:rgba(255,255,255,.08);padding:4px 6px;" onclick="setCardSort('default')" title="Varsayılan">📋</button>
@@ -201,7 +203,7 @@
             <button class="shop-up-btn" id="regenCostBtn">💎 30</button>
         </div>
 
-        <div class="section-label" style="margin-top:12px;">📋 Günlük Görevler</div>
+        <div class="section-label" style="margin-top:12px;">📋 Günlük Görevler <span id="dailyTaskCount" style="color:#8e9cb5;font-size:10px;font-weight:400;">0/5</span></div>
         <div id="dailyTasks"></div>
 
         <div class="section-label" style="margin-top:12px;">🏅 Başarımlar</div>
@@ -229,6 +231,50 @@
             <span style="font-size:20px;">🪂</span>
             <span style="flex:1;font-weight:600;">Airdrop & Cüzdan</span>
             <button class="btn btn-gold btn-xs">Gör</button>
+        </div>
+        <div class="section-label" style="margin-top:14px;">🎮 Mini Oyunlar</div>
+        <div class="task" id="slotTask" style="cursor:pointer;">
+            <span style="font-size:20px;">🎰</span>
+            <span style="flex:1;font-weight:600;">Slot Makinesi</span>
+            <span style="font-size:10px;color:#8e9cb5;">5💎</span>
+            <button class="btn btn-gold btn-xs" onclick="event.stopPropagation();openSlotMachine()">Oyna</button>
+        </div>
+        <div class="task" id="coinFlipTask" style="cursor:pointer;">
+            <span style="font-size:20px;">🪙</span>
+            <span style="flex:1;font-weight:600;">Yazı Tura</span>
+            <span style="font-size:10px;color:#8e9cb5;">x2</span>
+            <button class="btn btn-gold btn-xs" onclick="event.stopPropagation();openCoinFlip()">Oyna</button>
+        </div>
+        <div class="task" id="numGuessTask" style="cursor:pointer;">
+            <span style="font-size:20px;">🔢</span>
+            <span style="flex:1;font-weight:600;">Sayı Tahmini</span>
+            <span style="font-size:10px;color:#8e9cb5;">x2-x10</span>
+            <button class="btn btn-gold btn-xs" onclick="event.stopPropagation();openNumberGuess()">Oyna</button>
+        </div>
+        <div class="task" id="reactionTask" style="cursor:pointer;">
+            <span style="font-size:20px;">⚡</span>
+            <span style="flex:1;font-weight:600;">Refleks Testi</span>
+            <span style="font-size:10px;color:#8e9cb5;">Hızlı ol!</span>
+            <button class="btn btn-gold btn-xs" onclick="event.stopPropagation();openReactionGame()">Oyna</button>
+        </div>
+        <div class="section-label" style="margin-top:14px;">🛠️ Gelişmiş</div>
+        <div class="task" id="mergeTask" style="cursor:pointer;">
+            <span style="font-size:20px;">🔄</span>
+            <span style="flex:1;font-weight:600;">Kart Birleştir</span>
+            <span style="font-size:10px;color:#8e9cb5;">2 seviye → 1</span>
+            <button class="btn btn-gold btn-xs" onclick="event.stopPropagation();openCardMerge()">Birleştir</button>
+        </div>
+        <div class="task" style="cursor:pointer;">
+            <span style="font-size:20px;">⚡</span>
+            <span style="flex:1;font-weight:600;">Enerji → Coin</span>
+            <span style="font-size:10px;color:#8e9cb5;">%50 enerjin dönüşsün</span>
+            <button class="btn btn-gold btn-xs" id="energyConvertBtn">Dönüştür</button>
+        </div>
+        <div class="task" id="prestigeShopTask" style="cursor:pointer;">
+            <span style="font-size:20px;">🔄</span>
+            <span style="flex:1;font-weight:600;">Prestige Dükkanı</span>
+            <span style="font-size:10px;color:#8e9cb5;">PP harca</span>
+            <button class="btn btn-gold btn-xs" onclick="event.stopPropagation();openPrestigeShop()">Git</button>
         </div>
         <div class="section-label" style="margin-top:14px;">🎁 Ödüller</div>
         <div class="task" onclick="quickReward('coin')">
@@ -267,8 +313,11 @@
         <div id="bossUnlocked" class="hidden">
             <div class="arena">
                 <div class="b-head">
-                    <div><h3 style="color:#ff4757;">Karanlık CEO</h3><span class="b-tag">Efsanevi</span></div>
+                    <div><h3 style="color:#ff4757;">Karanlık CEO</h3><span class="b-tag" id="bossLevelTag">Seviye 1</span></div>
                     <div class="b-timer" id="bossTimerDisplay">30s</div>
+                </div>
+                <div style="display:flex;justify-content:space-between;font-size:10px;color:#8e9cb5;margin-bottom:4px;">
+                    <span id="bossAttempts">⚔️ 0 galibiyet</span>
                 </div>
                 <div class="b-hp"><span>HP</span><span id="bossHpDisplay">15000/15000</span></div>
                 <div class="bar-track"><div class="bar-fill hp-fill" id="bossHpFill" style="width:100%"></div></div>
@@ -283,6 +332,87 @@
             <div id="setBonusList"></div>
         </div>
     </section>
+
+    <!-- MINI-GAME MODALS -->
+    <div class="modal-overlay hidden" id="slotModal">
+        <div class="modal-card">
+            <button class="modal-x" id="closeSlotModal">✕</button>
+            <div style="font-size:40px;">🎰</div>
+            <h3>Slot Makinesi</h3>
+            <p style="font-size:11px;">5💎 ile dene, büyük kazan!</p>
+            <div id="slotReels" style="font-size:42px;letter-spacing:12px;padding:16px;background:rgba(0,0,0,.3);border-radius:12px;margin:8px 0;">🍒 | 🍋 | 🍊</div>
+            <div id="slotResult" style="font-size:13px;color:#8e9cb5;margin-bottom:8px;">🎰 Çevir ve kazan!</div>
+            <button class="btn btn-gold btn-block" id="slotSpinBtn">🎰 Çevir (5💎)</button>
+        </div>
+    </div>
+
+    <div class="modal-overlay hidden" id="coinFlipModal">
+        <div class="modal-card">
+            <button class="modal-x" id="closeCoinFlipModal">✕</button>
+            <div style="font-size:40px;">🪙</div>
+            <h3>Yazı Tura</h3>
+            <p style="font-size:11px;">10.000 Coin yatır, 2 katını kazan!</p>
+            <div id="coinFlipResult" style="font-size:14px;color:#8e9cb5;margin:8px 0;">🪙 Yazı mı tura mı?</div>
+            <div style="display:flex;gap:8px;">
+                <button class="btn btn-gold" id="coinFlipYazi" style="flex:1;font-size:16px;">👑 Yazı</button>
+                <button class="btn btn-gold" id="coinFlipTura" style="flex:1;font-size:16px;">🦅 Tura</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-overlay hidden" id="numberGuessModal">
+        <div class="modal-card">
+            <button class="modal-x" id="closeNumberGuessModal">✕</button>
+            <div style="font-size:40px;">🔢</div>
+            <h3>Sayı Tahmini</h3>
+            <p style="font-size:11px;">5.000 Coin yatır, 1-10 arası bil, x2-x10 kazan!</p>
+            <div id="numberGuessResult" style="font-size:14px;color:#8e9cb5;margin:8px 0;">🔢 1-10 arası tahmin et</div>
+            <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:4px;">
+                <button class="btn btn-secondary num-guess-btn" data-num="1">1</button>
+                <button class="btn btn-secondary num-guess-btn" data-num="2">2</button>
+                <button class="btn btn-secondary num-guess-btn" data-num="3">3</button>
+                <button class="btn btn-secondary num-guess-btn" data-num="4">4</button>
+                <button class="btn btn-secondary num-guess-btn" data-num="5">5</button>
+                <button class="btn btn-secondary num-guess-btn" data-num="6">6</button>
+                <button class="btn btn-secondary num-guess-btn" data-num="7">7</button>
+                <button class="btn btn-secondary num-guess-btn" data-num="8">8</button>
+                <button class="btn btn-secondary num-guess-btn" data-num="9">9</button>
+                <button class="btn btn-secondary num-guess-btn" data-num="10">10</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-overlay hidden" id="reactionModal">
+        <div class="modal-card">
+            <button class="modal-x" id="closeReactionModal">✕</button>
+            <div style="font-size:40px;">⚡</div>
+            <h3>Refleks Testi</h3>
+            <p style="font-size:11px;">Yeşil olunca tıkla! Hızlı ol, çok kazan!</p>
+            <div id="reactionStatus" style="font-size:16px;font-weight:700;color:#f39c12;margin:8px 0;">🟡 Hazır ol...</div>
+            <button class="btn btn-gold btn-block hidden" id="reactionBtn" style="padding:20px;font-size:24px;">👆 TIKLA!</button>
+            <div id="reactionResult" style="font-size:14px;color:#8e9cb5;margin-top:8px;"></div>
+        </div>
+    </div>
+
+    <div class="modal-overlay hidden" id="mergeModal">
+        <div class="modal-card" style="max-width:350px;">
+            <button class="modal-x" id="closeMergeModal">✕</button>
+            <div style="font-size:40px;">🔄</div>
+            <h3>Kart Birleştir</h3>
+            <p style="font-size:11px;">2 seviye harca, 1 seviye yükselt (%30 maliyetle)</p>
+            <div id="mergeCardList" style="display:flex;flex-direction:column;gap:4px;max-height:250px;overflow-y:auto;margin-top:6px;"></div>
+        </div>
+    </div>
+
+    <div class="modal-overlay hidden" id="prestigeShopModal">
+        <div class="modal-card">
+            <button class="modal-x" id="closePrestigeShopModal">✕</button>
+            <div style="font-size:40px;">🔄</div>
+            <h3>Prestige Dükkanı</h3>
+            <p style="font-size:11px;">Prestige puanlarınla (PP) kalıcı güçlenmeler satın al</p>
+            <div id="prestigeShopList" style="display:flex;flex-direction:column;gap:4px;margin-top:6px;"></div>
+        </div>
+    </div>
 
     <!-- BOTTOM NAV -->
     <nav class="bottom-nav">
@@ -370,7 +500,16 @@
                 <span style="color:#8e9cb5;font-size:11px;">Efekt Seviyesi</span>
                 <input type="range" id="sfxSlider" min="0" max="100" style="width:100%;accent-color:#f3ba2f;">
             </div>
+            <div style="display:flex;align-items:center;justify-content:space-between;">
+                <span style="color:#fff;font-weight:600;">📳 Sarsıntı</span>
+                <button id="shakeToggle" class="btn btn-gold" style="min-width:60px;padding:6px 12px;">Açık</button>
+            </div>
+            <div style="display:flex;flex-direction:column;gap:4px;">
+                <span style="color:#8e9cb5;font-size:11px;">✨ Parçacık Yoğunluğu (%<span id="partDensityVal">100</span>)</span>
+                <input type="range" id="particleDensity" min="0" max="200" value="100" style="width:100%;accent-color:#f3ba2f;">
+            </div>
             <div style="border-top:1px solid rgba(255,255,255,.06);margin:4px 0;color:#8e9cb5;font-size:10px;text-align:center;">
+                <span id="gameVersionDisplay" style="display:block;color:#f3ba2f;font-weight:700;font-size:12px;">v2.0.0</span>
                 🤖 Bot: @Rat_combatbot
             </div>
         </div>

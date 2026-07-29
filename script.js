@@ -80,6 +80,48 @@ const CARDS = [
   { id: 'game_cart', name: 'Oyun Kartuşu', icon: '📼', cat: 'retro', b: 200000, baseCombo: 0.3, rarity: 'legendary', desc: '+0.3x combo çarpanı', levelReq: 250 },
   { id: 'arcade', name: 'Atari Makinesi', icon: '🕹️', cat: 'retro', b: 250000, baseCrit: 0.05, rarity: 'legendary', desc: '+%5 kritik şansı', levelReq: 250 },
   { id: 'gold_joystick', name: 'Altın Joystick', icon: '🎮', cat: 'retro', b: 500000, baseClick: 3, baseSec: 100, rarity: 'legendary', desc: '+3/tık +100/s', levelReq: 250 },
+  /* NEW CARDS v2 */
+  { id: 'sonicdrill', name: 'Sonic Matkap', icon: '🔊', cat: 'miners', b: 1200, baseSec: 30, rarity: 'rare', desc: 'Ses dalgasıyla deler' },
+  { id: 'gravitymine', name: 'Yerçekimi Madeni', icon: '🌍', cat: 'miners', b: 2500, baseSec: 55, rarity: 'rare', desc: 'Yerçekimi alanı oluşturur' },
+  { id: 'antimatter', name: 'Antimadde', icon: '⚛️', cat: 'miners', b: 6000, baseSec: 120, rarity: 'epic', desc: 'Anti-parçacık enerjisi' },
+  { id: 'spacetime', name: 'Uzayzaman Kırıcı', icon: '🌌', cat: 'miners', b: 15000, baseSec: 200, rarity: 'epic', desc: 'Uzay-zamanı bükerek maden' },
+  { id: 'singularity', name: 'Tekillik Delici', icon: '🕳️', cat: 'miners', b: 40000, baseSec: 500, rarity: 'legendary', desc: 'Kara delik enerjisi toplar' },
+  { id: 'nebula', name: 'Nebula Toplayıcı', icon: '🌟', cat: 'miners', b: 80000, baseSec: 900, rarity: 'legendary', desc: 'Yıldız bulutlarından enerji' },
+  { id: 'cosmos', name: 'Kozmik Matkap', icon: '☄️', cat: 'miners', b: 150000, baseSec: 2000, rarity: 'legendary', desc: 'Evren ötesi madencilik' },
+  { id: 'infinity_drill', name: 'Sonsuzluk Matkabı', icon: '♾️', cat: 'miners', b: 300000, baseSec: 5000, rarity: 'legendary', desc: 'Sonsuz derinliklerde kazar' },
+  { id: 'nightvision', name: 'Gece Görüşü', icon: '🥽', cat: 'items', b: 200, baseCrit: 0.02, rarity: 'rare', desc: '+%2 kritik' },
+  { id: 'speedboots', name: 'Hız Botları', icon: '👢', cat: 'items', b: 150, baseClick: 1, rarity: 'rare', desc: '+1/tık' },
+  { id: 'energyring', name: 'Enerji Yüzüğü', icon: '💍', cat: 'items', b: 300, bonusMaxEnergy: 100, rarity: 'epic', desc: '+100 max enerji' },
+  { id: 'amulet', name: 'Koruma Muskası', icon: '📿', cat: 'items', b: 500, baseCombo: 0.05, rarity: 'epic', desc: '+0.05x combo çarpanı' },
+  { id: 'shadowcloak', name: 'Gölge Pelerini', icon: '🌑', cat: 'items', b: 1000, baseCrit: 0.04, rarity: 'epic', desc: '+%4 kritik' },
+  { id: 'crown', name: 'Kraliyet Tacı', icon: '👑', cat: 'items', b: 3000, baseClick: 3, baseSec: 100, rarity: 'legendary', desc: '+3/tık +100/s' },
+  { id: 'wings', name: 'Işık Kanatları', icon: '🕊️', cat: 'items', b: 5000, bonusMaxEnergy: 500, rarity: 'legendary', desc: '+500 max enerji' },
+  { id: 'scepter', name: 'Büyü Asası', icon: '🔮', cat: 'items', b: 10000, baseSec: 500, baseClick: 5, rarity: 'legendary', desc: '+5/tık +500/s' },
+  { id: 'nuclear', name: 'Nükleer Batarya', icon: '☢️', cat: 'boosts', b: 500, bonusEnergy: 2000, rarity: 'rare', desc: '+2000 Enerji' },
+  { id: 'darkenergy', name: 'Karanlık Enerji', icon: '🌑', cat: 'boosts', b: 1200, bonusEnergy: 3000, rarity: 'rare', desc: '+3000 Enerji' },
+  { id: 'zeropoint', name: 'Sıfır Noktası', icon: '✨', cat: 'boosts', b: 2500, bonusEnergy: 5000, rarity: 'epic', desc: '+5000 Enerji' },
+  { id: 'quantumcell', name: 'Kuantum Hücre', icon: '🧬', cat: 'boosts', b: 5000, bonusEnergy: 8000, rarity: 'epic', desc: '+8000 Enerji' },
+  { id: 'suncore', name: 'Güneş Çekirdeği', icon: '☀️', cat: 'boosts', b: 12000, bonusEnergy: 15000, rarity: 'legendary', desc: '+15000 Enerji' },
+  { id: 'voidenergy', name: 'Boşluk Enerjisi', icon: '🌀', cat: 'boosts', b: 25000, bonusEnergy: 25000, rarity: 'legendary', desc: '+25000 Enerji' },
+  { id: 'cosmicboost', name: 'Kozmik Güç', icon: '🌠', cat: 'boosts', b: 50000, bonusEnergy: 50000, rarity: 'legendary', desc: '+50000 Enerji' },
+  { id: 'godmode', name: 'Tanrı Modu', icon: '🗿', cat: 'boosts', b: 100000, bonusEnergy: 100000, rarity: 'legendary', desc: '+100000 Enerji' },
+  { id: 'floppy', name: 'Disket', icon: '💾', cat: 'retro', b: 120000, baseSec: 200, rarity: 'legendary', desc: '+200/s', levelReq: 250 },
+  { id: 'tetris_brick', name: 'Tetris Taşı', icon: '🔲', cat: 'retro', b: 180000, baseClick: 4, rarity: 'legendary', desc: '+4/tık', levelReq: 250 },
+  { id: 'gameboy', name: 'Game Boy', icon: '🎮', cat: 'retro', b: 220000, bonusMaxEnergy: 300, rarity: 'legendary', desc: '+300 max enerji', levelReq: 250 },
+  { id: 'sega_cart', name: 'Sega Kartuşu', icon: '🎰', cat: 'retro', b: 300000, baseSec: 300, baseClick: 2, rarity: 'legendary', desc: '+2/tık +300/s', levelReq: 250 },
+  { id: 'nintendo', name: 'Nintendo', icon: '🕹️', cat: 'retro', b: 400000, baseCombo: 0.5, rarity: 'legendary', desc: '+0.5x combo', levelReq: 250 },
+  { id: 'playstation', name: 'PlayStation', icon: '📀', cat: 'retro', b: 500000, baseCrit: 0.1, rarity: 'legendary', desc: '+%10 kritik', levelReq: 250 },
+  /* NEW WAVE 3 */
+  { id: 'titan_drill', name: 'Titan Matkabı', icon: '🏋️', cat: 'miners', b: 500000, baseSec: 10000, rarity: 'legendary', desc: 'Dev titan gücüyle kazar' },
+  { id: 'galaxy_rig', name: 'Galaksi Tesisi', icon: '🌌', cat: 'miners', b: 1000000, baseSec: 25000, rarity: 'legendary', desc: 'Galaktik madencilik ünitesi' },
+  { id: 'multiverse', name: 'Çoklu Evren', icon: '🌀', cat: 'miners', b: 5000000, baseSec: 100000, rarity: 'legendary', desc: 'Paralel evrenlerden enerji' },
+  { id: 'goggles', name: 'Gelişmiş Gözlük', icon: '👓', cat: 'items', b: 20000, baseCrit: 0.08, rarity: 'legendary', desc: '+%8 kritik' },
+  { id: 'thunder_boots', name: 'Yıldırım Botu', icon: '⚡', cat: 'items', b: 30000, baseClick: 8, rarity: 'legendary', desc: '+8/tık' },
+  { id: 'divine_shield', name: 'İlahi Kalkan', icon: '🛡️', cat: 'items', b: 50000, bonusMaxEnergy: 2000, rarity: 'legendary', desc: '+2000 max enerji' },
+  { id: 'wormhole', name: 'Solucan Deliği', icon: '🕳️', cat: 'boosts', b: 200000, bonusEnergy: 200000, rarity: 'legendary', desc: '+200000 Enerji' },
+  { id: 'bigbang', name: 'Büyük Patlama', icon: '💥', cat: 'boosts', b: 500000, bonusEnergy: 500000, rarity: 'legendary', desc: '+500000 Enerji' },
+  { id: 'dreamcast', name: 'Dreamcast', icon: '🎮', cat: 'retro', b: 600000, baseClick: 5, baseSec: 500, rarity: 'legendary', desc: '+5/tık +500/s', levelReq: 250 },
+  { id: 'atari2600', name: 'Atari 2600', icon: '🕹️', cat: 'retro', b: 700000, baseCombo: 0.8, rarity: 'legendary', desc: '+0.8x combo', levelReq: 250 },
 ];
 
 function getItemLevel(cardId) {
@@ -134,6 +176,27 @@ const ACH = [
   { id: 'maxcard', icon: '💫', name: 'Maksimum Kart', desc: 'Bir kartı max seviye (9999) yap', check: s => CARDS.some(c => getItemLevel(c.id) >= 9999), gem: 5000 },
   { id: 'earn10m', icon: '💎', name: '10M Coin', desc: 'Toplam 10.000.000 Coin kazan', check: s => s.totalEarned >= 1e7, gem: 150 },
   { id: 'allretro', icon: '🕹️', name: 'Retro Koleksiyon', desc: 'Tüm retro kartlara sahip ol', check: s => CARDS.filter(c => c.cat === 'retro').every(c => getItemLevel(c.id) > 0), gem: 2000 },
+  { id: 'tap1m', icon: '👆', name: '1M Tık', desc: 'Toplam 1.000.000 tık yap', check: s => s.totalTaps >= 1000000, gem: 1000 },
+  { id: 'tap10m', icon: '⚡', name: '10M Tık', desc: 'Toplam 10.000.000 tık yap', check: s => s.totalTaps >= 10000000, gem: 5000 },
+  { id: 'earn10b', icon: '🏦', name: '10B Coin', desc: 'Toplam 10.000.000.000 Coin kazan', check: s => s.totalEarned >= 1e10, gem: 2000 },
+  { id: 'earn1t', icon: '🌌', name: '1T Coin', desc: 'Toplam 1.000.000.000.000 Coin kazan', check: s => s.totalEarned >= 1e12, gem: 10000 },
+  { id: 'lvl150', icon: '💎', name: 'Level 150', desc: 'Level 150 ol', check: s => s.lvl >= 150, gem: 2000 },
+  { id: 'lvl200', icon: '👑', name: 'Level 200', desc: 'Level 200 ol', check: s => s.lvl >= 200, gem: 3000 },
+  { id: 'lvl300', icon: '👿', name: 'Level 300', desc: 'Level 300 ol', check: s => s.lvl >= 300, gem: 5000 },
+  { id: 'lvl400', icon: '🌈', name: 'Level 400', desc: 'Level 400 ol', check: s => s.lvl >= 400, gem: 10000 },
+  { id: 'combo200', icon: '🔥', name: '200 Combo', desc: '200 combo ya ulaş', check: s => s.bestCombo >= 200, gem: 500 },
+  { id: 'combo500', icon: '💥', name: '500 Combo', desc: '500 combo ya ulaş', check: s => s.bestCombo >= 500, gem: 1000 },
+  { id: 'prestige3', icon: '🔄', name: '3. Prestige', desc: '3 kere prestige yap', check: s => (s.prestige || 0) >= 3, gem: 2000 },
+  { id: 'prestige5', icon: '🔄', name: '5. Prestige', desc: '5 kere prestige yap', check: s => (s.prestige || 0) >= 5, gem: 5000 },
+  { id: 'friends50', icon: '👥', name: 'Sosyal Medya Fenomeni', desc: '50 arkadaş davet et', check: s => s.friends >= 50, gem: 500 },
+  { id: 'boss50', icon: '⚔️', name: 'Boss Efsanesi', desc: 'Boss 50 kere yen', check: s => s.bossWins >= 50, gem: 1000 },
+  { id: 'boss100', icon: '🏆', name: 'Boss Tanrısı', desc: 'Boss 100 kere yen', check: s => s.bossWins >= 100, gem: 2000 },
+  { id: 'gem1000', icon: '💎', name: 'Elmas Koleksiyoncusu', desc: 'Toplam 1000 elmas kazan', check: s => ACH.filter(a => (S.achieved || []).includes(a.id)).reduce((sum, a) => sum + (a.gem || 0), 0) >= 1000, gem: 500 },
+  { id: 'allminers', icon: '⛏️', name: 'Maden İmparatoru', desc: 'Tüm madenci kartlarına sahip ol', check: s => CARDS.filter(c => c.cat === 'miners').every(c => getItemLevel(c.id) > 0), gem: 3000 },
+  { id: 'allboosts', icon: '⚡', name: 'Boost Ustası', desc: 'Tüm boost kartlarına sahip ol', check: s => CARDS.filter(c => c.cat === 'boosts').every(c => getItemLevel(c.id) > 0), gem: 3000 },
+  { id: 'allitems', icon: '🎒', name: 'Ekipman Koleksiyoncusu', desc: 'Tüm ekipman kartlarına sahip ol', check: s => CARDS.filter(c => c.cat === 'items').every(c => getItemLevel(c.id) > 0), gem: 3000 },
+  { id: 'tap100m', icon: '🏅', name: '100M Tık', desc: '100 milyon tık yap', check: s => s.totalTaps >= 100000000, gem: 10000 },
+  { id: 'earn100t', icon: '🌌', name: '100T Coin', desc: '100 trilyon coin kazan', check: s => s.totalEarned >= 1e14, gem: 50000 },
 ];
 
 function checkAch() {
@@ -192,6 +255,36 @@ function getAchProgress(a) {
     const owned = CARDS.filter(c => getItemLevel(c.id) > 0).length;
     return Math.min(100, (owned / CARDS.length) * 100);
   }
+  if (a.id === 'allretro') {
+    const retroCards = CARDS.filter(c => c.cat === 'retro');
+    const owned = retroCards.filter(c => getItemLevel(c.id) > 0).length;
+    return Math.min(100, (owned / retroCards.length) * 100);
+  }
+  if (a.id === 'allminers') {
+    const miners = CARDS.filter(c => c.cat === 'miners');
+    const owned = miners.filter(c => getItemLevel(c.id) > 0).length;
+    return Math.min(100, (owned / miners.length) * 100);
+  }
+  if (a.id === 'tap1m') return Math.min(100, ((S.totalTaps||0) / 1000000) * 100);
+  if (a.id === 'tap10m') return Math.min(100, ((S.totalTaps||0) / 10000000) * 100);
+  if (a.id === 'earn10b') return Math.min(100, ((S.totalEarned||0) / 1e10) * 100);
+  if (a.id === 'earn1t') return Math.min(100, ((S.totalEarned||0) / 1e12) * 100);
+  if (a.id === 'lvl150') return Math.min(100, (S.lvl / 150) * 100);
+  if (a.id === 'lvl200') return Math.min(100, (S.lvl / 200) * 100);
+  if (a.id === 'lvl300') return Math.min(100, (S.lvl / 300) * 100);
+  if (a.id === 'lvl400') return Math.min(100, (S.lvl / 400) * 100);
+  if (a.id === 'combo200') return Math.min(100, ((S.bestCombo||0) / 200) * 100);
+  if (a.id === 'combo500') return Math.min(100, ((S.bestCombo||0) / 500) * 100);
+  if (a.id === 'prestige3') return Math.min(100, ((S.prestige||0) / 3) * 100);
+  if (a.id === 'prestige5') return Math.min(100, ((S.prestige||0) / 5) * 100);
+  if (a.id === 'friends50') return Math.min(100, ((S.friends||0) / 50) * 100);
+  if (a.id === 'boss50') return Math.min(100, ((S.bossWins||0) / 50) * 100);
+  if (a.id === 'boss100') return Math.min(100, ((S.bossWins||0) / 100) * 100);
+  if (a.id === 'gem1000') return Math.min(100, (ACH.filter(ax => (S.achieved || []).includes(ax.id)).reduce((sum, a) => sum + (a.gem || 0), 0) / 1000) * 100);
+  if (a.id === 'allboosts') return Math.min(100, (CARDS.filter(c => c.cat === 'boosts').filter(c => getItemLevel(c.id) > 0).length / Math.max(1, CARDS.filter(c => c.cat === 'boosts').length)) * 100);
+  if (a.id === 'allitems') return Math.min(100, (CARDS.filter(c => c.cat === 'items').filter(c => getItemLevel(c.id) > 0).length / Math.max(1, CARDS.filter(c => c.cat === 'items').length)) * 100);
+  if (a.id === 'tap100m') return Math.min(100, ((S.totalTaps||0) / 100000000) * 100);
+  if (a.id === 'earn100t') return Math.min(100, ((S.totalEarned||0) / 1e14) * 100);
   return 0;
 }
 
@@ -253,7 +346,7 @@ function sfxCombo() { playTone(500, 0.06, 'triangle', 0.25);
   setTimeout(() => playTone(900, 0.06, 'triangle', 0.25), 100); }
 
 function sfxLevelUp() {
-  [523, 659, 784, 1047, 1319].forEach((f, i) => setTimeout(() => playTone(f, 0.15, 'sine', 0.4), i * 80)); }
+  [523, 659, 784, 1047, 1319, 1568].forEach((f, i) => setTimeout(() => playTone(f, 0.12, 'sine', 0.35), i * 60)); }
 
 function sfxBuy() { playTone(660, 0.08, 'sine', 0.3);
   setTimeout(() => playTone(880, 0.08, 'sine', 0.3), 60);
@@ -301,7 +394,8 @@ function animateCoin() {
   const step = () => {
     const diff = coinDisplayTarget - coinDisplayCurrent;
     if (Math.abs(diff) < 1) { coinDisplayCurrent = coinDisplayTarget; $('coinDisplay').textContent = fmt(coinDisplayTarget); return; }
-    coinDisplayCurrent += Math.max(1, Math.floor(diff * 0.15));
+    const stepSize = Math.max(1, Math.floor(Math.abs(diff) * 0.15));
+    coinDisplayCurrent += diff > 0 ? stepSize : -stepSize;
     $('coinDisplay').textContent = fmt(Math.floor(coinDisplayCurrent));
     coinAnimId = requestAnimationFrame(step);
   };
@@ -380,7 +474,12 @@ function update() {
   const xpPct = Math.min(100, (S.xp / S.xpNext) * 100);
   $('lvlProgressFill').style.width = xpPct + '%';
   const xpEl = $('xpText');
-  if (xpEl) xpEl.textContent = `${Math.floor(S.xp)}/${S.xpNext} XP`;
+  if (xpEl) {
+    const ps = S.perSec || 1;
+    const xpRemain = S.xpNext - S.xp;
+    const timeToLvl = xpRemain > 0 && ps > 0 ? Math.ceil(xpRemain / ps) : 0;
+    xpEl.textContent = `${Math.floor(S.xp)}/${S.xpNext} XP${timeToLvl > 0 && timeToLvl < 3600 ? ` ⏱️${timeToLvl}s` : ''}`;
+  }
   const rnk = rankTitle(S.lvl);
   S.rank = rnk;
   $('rankTitle').textContent = rnk;
@@ -409,6 +508,13 @@ function update() {
   $('statRegen').textContent = (2 + (S.energyRegenBonus || 0)).toFixed(1) + '/s';
   $('statMulti').textContent = (S.multiTap || 1) + 'x';
   $('statBoss').textContent = S.bossWins || 0;
+  const bossAttempts = $('bossAttempts');
+  if (bossAttempts) bossAttempts.textContent = `⚔️ ${S.bossWins || 0} galibiyet · Seviye ${getBossLevel()}`;
+  const dailyTaskCount = $('dailyTaskCount');
+  if (dailyTaskCount && S.dailyTasks) {
+    const done = Object.values(S.dailyTasks).filter(v => v).length;
+    dailyTaskCount.textContent = `${done}/${DAILY_TASKS.length} görev tamam`;
+  }
   $('multiTapDesc').textContent = S.multiTap || 1;
   $('multiTapCostBtn').textContent = '💎 ' + fmt(getMultiTapCost());
   $('regenDesc').textContent = (2 + (S.energyRegenBonus || 0)).toFixed(1);
@@ -420,7 +526,15 @@ function update() {
   renderDailyTasks();
   checkDailyTasks();
   const autoInd = $('autoTapIndicator');
-  if (autoInd) autoInd.style.display = autoTapInterval ? 'inline' : 'none';
+  if (autoInd) {
+    if (autoTapInterval) { autoInd.style.display = 'inline'; autoInd.textContent = '🤖 Otomatik Tık AKTİF'; }
+    else autoInd.style.display = 'none';
+  }
+  const autoTimer = $('autoTapTimer');
+  if (autoTimer && autoTapInterval) {
+    const remaining = Math.max(0, 3600 - (tapsDone || 0));
+    autoTimer.textContent = `⏱️ ${Math.floor(remaining / 60)}:${String(remaining % 60).padStart(2, '0')}`;
+  } else if (autoTimer) autoTimer.textContent = '';
   updateBadge();
   const mineBtn = document.querySelector('.nav-btn[data-tab="tab-mine"] .nav-icon');
   if (mineBtn) {
@@ -553,7 +667,8 @@ function updateCombo() {
       ring.style.background = `conic-gradient(hsl(${hue},100%,60%) ${fill}%, transparent ${fill}%)`;
       ring.style.opacity = 0.3 + intensity * 0.7;
     }
-    const nextMs = [10, 25, 50, 100, 250, 500].find(m => !S.comboMilestones?.includes(m));
+    const allMilestones = [10, 25, 50, 100, 250, 500, 1000, 2500, 5000];
+  const nextMs = allMilestones.find(m => !S.comboMilestones?.includes(m));
     const progEl = $('comboProg');
     if (nextMs) {
       const pct = Math.min(100, (combo / nextMs) * 100);
@@ -570,7 +685,8 @@ function updateCombo() {
 /* ===== PARTICLES ===== */
 function spawnParticles(x, y, color) {
   const colors = color ? [color] : ['#f3ba2f', '#ff9f43', '#ff4757', '#2ed573', '#3498db', '#9b59b6', '#fff'];
-  const count = color && color !== '#ff4757' ? 15 : 10;
+  const density = (S._particleDensity || 100) / 100;
+  const count = Math.floor((color && color !== '#ff4757' ? 15 : 10) * density);
   for (let i = 0; i < count; i++) {
     setTimeout(() => {
       const p = document.createElement('div');
@@ -672,7 +788,9 @@ function fireworkCelebration() {
 
 /* ===== SHAKE ===== */
 function screenShake() {
+  if (S._shakeOn === false) return;
   const gs = document.querySelector('.gold-section');
+  if (!gs) return;
   gs.classList.remove('shake');
   void gs.offsetWidth;
   gs.classList.add('shake');
@@ -735,8 +853,11 @@ function processTap(cx, cy) {
     const critMult = isCrit ? 2 + Math.random() : 1;
     const gain = Math.floor((S.perClick + Math.floor(S.perSec * 0.02)) * comboMult * critMult * getX2Mult() * taps);
     S.coins += gain;
+    if (gain > 100000) coinRain(Math.min(Math.floor(gain / 50000), 20));
     S.totalTaps += taps;
     S.totalEarned += gain;
+    S.totalEnergySpent = (S.totalEnergySpent || 0) + taps;
+    if (taps > (S.bestTapSpeed || 0)) S.bestTapSpeed = taps;
     addXp(gain);
   spawnParticles(cx, cy, isCrit ? '#ff4757' : null);
   spawnRipple(cx, cy);
@@ -772,6 +893,8 @@ function processTap(cx, cy) {
     const colors = ['#f3ba2f','#2ed573','#3498db','#9b59b6','#ff9f43'];
     const label = isCrit ? '🔥 CRIT! +' + fmt(gain) : '+' + fmt(gain);
     spawnFloat(cx, cy, label, isCrit, isCrit ? '#ff4757' : colors[Math.floor(Math.random() * colors.length)]);
+    if (combo >= 25) spawnParticles(cx + (Math.random()-0.5)*30, cy + (Math.random()-0.5)*30, '#ff9f43');
+    if (combo >= 50) { spawnParticles(cx + (Math.random()-0.5)*60, cy + (Math.random()-0.5)*60, '#ff4757'); spawnParticles(cx + (Math.random()-0.5)*60, cy + (Math.random()-0.5)*60, '#f3ba2f'); }
     if (combo >= 5) spawnFloat(cx - 20, cy - 60, '+' + Math.floor(gain * 0.05) + 'XP', false, '#2ed573');
     if (Math.random() < 0.0005) spawnCrate();
     try { navigator.vibrate(isCrit ? 25 : 10); } catch (_) { }
@@ -923,6 +1046,7 @@ function updateEnergyBar() {
   fill.style.background = pct > 50 ? `hsl(${hue}, 80%, 50%)` : pct > 25 ? '#f39c12' : '#ff4757';
   fill.style.boxShadow = pct > 90 ? '0 0 18px rgba(46,213,115,.5)' : pct > 50 ? '0 0 8px rgba(46,213,115,.2)' : pct > 25 ? '0 0 8px rgba(243,156,18,.2)' : '0 0 12px rgba(255,71,87,.4)';
   if (pct < 25) fill.style.animation = 'energyLow 1s ease-in-out infinite';
+  else if (pct > 90) fill.style.animation = 'glowPulse 2s ease-in-out infinite';
   else fill.style.animation = 'none';
 }
 
@@ -943,8 +1067,190 @@ function getSessionTime() {
   return Math.floor(sec / 3600) + 's ' + Math.floor((sec % 3600) / 60) + 'dk';
 }
 
+/* ===== MINI-GAMES ===== */
+
+/* SLOT MACHINE */
+const SLOT_SYMBOLS = ['🍒', '🍋', '🍊', '🍇', '💎', '7️⃣', '⭐', '🔔'];
+const SLOT_PAYOUTS = {
+  '🍒🍒🍒': 5000, '🍋🍋🍋': 10000, '🍊🍊🍊': 15000, '🍇🍇🍇': 25000,
+  '💎💎💎': 100000, '7️⃣7️⃣7️⃣': 500000, '⭐⭐⭐': 1000000, '🔔🔔🔔': 200000,
+  '7️⃣7️⃣🍒': 50000, '💎💎7️⃣': 250000, '⭐⭐7️⃣': 500000,
+};
+let slotReels = ['🍒', '🍋', '🍊'];
+let slotSpinning = false;
+
+function openSlotMachine() {
+  $('slotModal').classList.remove('hidden');
+  renderSlotReels();
+  $('slotResult').textContent = '🎰 Çevir ve kazan!';
+  $('slotResult').style.color = '#8e9cb5';
+}
+
+function renderSlotReels() {
+  const el = $('slotReels');
+  if (!el) return;
+  el.innerHTML = slotReels.map((s, i) =>
+    `<span style="font-size:48px;display:inline-block;animation:${slotSpinning ? `slotSpin${i} .1s linear infinite` : 'none'}">${s}</span>`
+  ).join(' | ');
+}
+
+function spinSlot() {
+  if (slotSpinning) return;
+  if ((S.gems || 0) < 5) { toast('❌ 5💎 gerekli!'); return; }
+  S.gems -= 5;
+  slotSpinning = true;
+  const resultEl = $('slotResult');
+  resultEl.textContent = '🎰 Çevriliyor...';
+  resultEl.style.color = '#f3ba2f';
+  const spins = 10 + Math.floor(Math.random() * 10);
+  let count = 0;
+  const iv = setInterval(() => {
+    slotReels = [
+      SLOT_SYMBOLS[Math.floor(Math.random() * SLOT_SYMBOLS.length)],
+      SLOT_SYMBOLS[Math.floor(Math.random() * SLOT_SYMBOLS.length)],
+      SLOT_SYMBOLS[Math.floor(Math.random() * SLOT_SYMBOLS.length)]
+    ];
+    renderSlotReels();
+    sfxMultitap();
+    count++;
+    if (count >= spins) {
+      clearInterval(iv);
+      slotSpinning = false;
+      const key = slotReels.join('');
+      const payout = SLOT_PAYOUTS[key] || 0;
+      if (payout > 0) {
+        S.coins += payout;
+        resultEl.textContent = `🎉 KAZANDIN! ${key} = +${fmt(payout)} Coin!`;
+        resultEl.style.color = '#2ed573';
+        if (payout >= 100000) { fireworkCelebration(); coinRain(20); flashOverlay('rainbow'); }
+        else { coinRain(8); flashOverlay('gold'); }
+      } else {
+        resultEl.textContent = `😢 ${slotReels.join(' ')} - Kaybettin!`;
+        resultEl.style.color = '#ff4757';
+      }
+      update();
+      S.gemsSpent = (S.gemsSpent || 0) + 5;
+      save();
+    }
+  }, 80);
+}
+$('slotSpinBtn')?.addEventListener('click', spinSlot);
+$('closeSlotModal')?.addEventListener('click', () => $('slotModal').classList.add('hidden'));
+
+/* COIN FLIP */
+function openCoinFlip() {
+  $('coinFlipModal').classList.remove('hidden');
+  $('coinFlipResult').textContent = '🪙 Yazı mı tura mı?';
+  $('coinFlipResult').style.color = '#8e9cb5';
+}
+
+function doCoinFlip(choice) {
+  const bet = 10000;
+  if (S.coins < bet) { toast(`❌ ${fmt(bet)} Coin gerekli!`); return; }
+  S.coins -= bet;
+  const result = Math.random() < 0.5 ? 'yazi' : 'tura';
+  const resultEmoji = result === 'yazi' ? '👑 Yazı' : '🦅 Tura';
+  const el = $('coinFlipResult');
+  if (choice === result) {
+    const win = bet * 2;
+    S.coins += win;
+    el.textContent = `🎉 ${resultEmoji}! ${fmt(win)} Coin kazandın!`;
+    el.style.color = '#2ed573';
+    coinRain(6);
+    sfxBuy();
+  } else {
+    el.textContent = `😢 ${resultEmoji}! ${fmt(bet)} Coin kaybettin!`;
+    el.style.color = '#ff4757';
+  }
+  update();
+}
+$('coinFlipYazi')?.addEventListener('click', () => doCoinFlip('yazi'));
+$('coinFlipTura')?.addEventListener('click', () => doCoinFlip('tura'));
+$('closeCoinFlipModal')?.addEventListener('click', () => $('coinFlipModal').classList.add('hidden'));
+
+/* NUMBER GUESSER */
+function openNumberGuess() {
+  $('numberGuessModal').classList.remove('hidden');
+  $('numberGuessResult').textContent = '🔢 1-10 arası tahmin et';
+  $('numberGuessResult').style.color = '#8e9cb5';
+  S._numGuessTarget = Math.floor(Math.random() * 10) + 1;
+}
+
+function guessNumber(n) {
+  const cost = 5000;
+  if (S.coins < cost) { toast(`❌ ${fmt(cost)} Coin gerekli!`); return; }
+  S.coins -= cost;
+  const target = S._numGuessTarget || Math.floor(Math.random() * 10) + 1;
+  const el = $('numberGuessResult');
+  if (n === target) {
+    const mult = 2 + Math.floor(Math.random() * 9);
+    const win = cost * mult;
+    S.coins += win;
+    el.textContent = `🎉 BİLDİN! Sayı ${target} idi! ${mult}x = ${fmt(win)} Coin!`;
+    el.style.color = '#2ed573';
+    fireworkCelebration();
+    coinRain(15);
+    sfxLevelUp();
+  } else {
+    el.textContent = `😢 ${n} değildi! Sayı ${target} idi. ${fmt(cost)} Coin kaybettin.`;
+    el.style.color = '#ff4757';
+  }
+  S._numGuessTarget = Math.floor(Math.random() * 10) + 1;
+  update();
+}
+document.querySelectorAll('.num-guess-btn').forEach(btn => {
+  btn.addEventListener('click', () => guessNumber(parseInt(btn.dataset.num)));
+});
+$('closeNumberGuessModal')?.addEventListener('click', () => $('numberGuessModal').classList.add('hidden'));
+
+/* REACTION GAME */
+let reactionTimeout = null;
+let reactionStart = 0;
+let reactionActive = false;
+
+function openReactionGame() {
+  $('reactionModal').classList.remove('hidden');
+  $('reactionStatus').textContent = '🟡 Hazır ol...';
+  $('reactionStatus').style.color = '#f39c12';
+  $('reactionBtn').classList.add('hidden');
+  $('reactionBtn').textContent = '👆 TIKLA!';
+  $('reactionBtn').style.background = '#2ed573';
+  reactionActive = false;
+  setTimeout(() => {
+    $('reactionStatus').textContent = '🟢 TIKLA!';
+    $('reactionStatus').style.color = '#2ed573';
+    $('reactionBtn').classList.remove('hidden');
+    reactionStart = Date.now();
+    reactionActive = true;
+  }, 1000 + Math.random() * 3000);
+}
+
+function hitReaction() {
+  if (!reactionActive) return;
+  reactionActive = false;
+  const ms = Date.now() - reactionStart;
+  const el = $('reactionResult');
+  const reward = Math.max(1000, Math.floor(50000 / ms));
+  S.coins += reward;
+  el.textContent = `⚡ ${ms}ms! +${fmt(reward)} Coin!`;
+  el.style.color = ms < 200 ? '#2ed573' : ms < 400 ? '#f3ba2f' : '#ff9f43';
+  if (ms < 150) { fireworkCelebration(); coinRain(20); }
+  else coinRain(5);
+  sfxBuy();
+  update();
+  $('reactionStatus').textContent = '✅ Tamamlandı!';
+  $('reactionStatus').style.color = '#8e9cb5';
+}
+$('reactionBtn')?.addEventListener('click', hitReaction);
+$('closeReactionModal')?.addEventListener('click', () => { clearTimeout(reactionTimeout); $('reactionModal').classList.add('hidden'); });
+
 /* ===== QUICK ELMAS SHOP OPEN ===== */
 $('gemCount')?.addEventListener('dblclick', () => { $('shopModal').classList.remove('hidden'); toast('💎 Elmas Dükkanı açıldı'); });
+
+/* ===== QUICK SESSION STATS ===== */
+$('coinDisplay')?.addEventListener('dblclick', () => {
+  toast(`⏱️ ${getSessionTime()} | 👆${fmt(S.totalTaps||0)} | 💰${fmt(S.totalEarned||0)} | 🔥${S.bestCombo||0}x`);
+});
 function getEnergyRestoreTime() {
   if (S.energy >= S.maxEnergy) return '';
   const regen = 0.5 + (S.energyRegenBonus || 0);
@@ -997,12 +1303,33 @@ function addXp(amount) {
   update();
 }
 
+/* ===== SECRET EASTER EGG ===== */
+$('secretEasterEgg')?.addEventListener('click', () => {
+  const easterMsgs = ['🐹 Hamster gücü!', '⚡ +1000 Enerji!', '💰 +1M Coin!', '💎 +100 Elmas!', '🔥 COMBO BOOST!', '🎮 RETRO gücü!'];
+  const msg = easterMsgs[Math.floor(Math.random() * easterMsgs.length)];
+  if (Math.random() < 0.2) {
+    S.coins += 1000000; S.gems += 100; S.energy = S.maxEnergy;
+    fireworkCelebration(); coinRain(30); flashOverlay('rainbow');
+    toast(`🎉 JACKPOT! ${msg} +1M Coin +100💎`);
+  } else {
+    S.coins += 5000; S.gems += 2;
+    toast(`🎁 ${msg} +5K Coin +2💎`);
+    spawnFloat(innerWidth/2, innerHeight/2, msg, false, '#f3ba2f');
+  }
+  sfxGem();
+  update();
+});
+
 /* ===== ENERGY REGEN ===== */
 let lastEnergyFullNotif = 0;
+let energySaverActive = false;
 setInterval(() => {
-  if (S.energy < S.maxEnergy) {
-    const regen = 2 + (S.energyRegenBonus || 0);
-    S.energy = Math.min(S.maxEnergy, S.energy + regen);
+  if (S.energy < S.maxEnergy * 1.1) {
+    let regen = 2 + (S.energyRegenBonus || 0);
+    const isLow = S.energy < S.maxEnergy * 0.1;
+    if (isLow) { regen *= 2; if (!energySaverActive) { energySaverActive = true; toast('⚡ Tasarruf modu: çift yenilenme!'); } }
+    else energySaverActive = false;
+    S.energy = Math.min(S.maxEnergy * 1.1, S.energy + regen);
     if (S.energy >= S.maxEnergy && Date.now() - lastEnergyFullNotif > 60000) {
       lastEnergyFullNotif = Date.now();
       toast('⚡ Enerji fullendi!');
@@ -1014,6 +1341,131 @@ setInterval(() => {
 }, 1000);
 
 /* ===== ENERGY BOOST ===== */
+/* ===== CARD MERGE ===== */
+function openCardMerge() {
+  const el = $('mergeCardList');
+  if (!el) return;
+  const owned = CARDS.filter(c => getItemLevel(c.id) > 0 && getItemLevel(c.id) >= 2 && getItemLevel(c.id) < 9999);
+  if (owned.length === 0) { toast('❌ Birleştirilecek kart yok (en az seviye 2 gerekli)'); return; }
+  $('mergeModal').classList.remove('hidden');
+  el.innerHTML = owned.map(c => {
+    const lvl = getItemLevel(c.id);
+    return `<div class="merge-card" data-id="${c.id}" style="display:flex;align-items:center;gap:8px;padding:8px;border-radius:8px;background:rgba(255,255,255,.04);cursor:pointer;border:1px solid transparent;">
+      <span style="font-size:24px;">${c.icon}</span>
+      <span style="flex:1;font-weight:600;">${c.name} Lv.${lvl}</span>
+      <span style="font-size:10px;color:#8e9cb5;">→ Lv.${lvl+1}</span>
+    </div>`;
+  }).join('');
+  el.querySelectorAll('.merge-card').forEach(card => {
+    card.addEventListener('click', () => {
+      const id = card.dataset.id;
+      const c = CARDS.find(x => x.id === id);
+      if (!c) return;
+      const lvl = getItemLevel(id);
+      if (lvl < 2) { toast('❌ En az seviye 2 gerekli'); return; }
+      const cost = Math.floor(cardCost(c) * 0.3);
+      if (S.coins < cost) { toast(`❌ ${fmt(cost)} Coin gerekli`); return; }
+      S.coins -= cost;
+      setItemLevel(id, lvl + 1);
+      sfxLevelUp();
+      toast(`🔄 ${c.icon} ${c.name} birleşti! Lv.${lvl} → Lv.${lvl+1} (💰${fmt(cost)})`);
+      spawnParticles(innerWidth/2, innerHeight/2, '#9b59b6');
+      update();
+      openCardMerge();
+    });
+    card.addEventListener('mouseenter', () => { card.style.borderColor = '#9b59b6'; card.style.background = 'rgba(155,89,182,.1)'; });
+    card.addEventListener('mouseleave', () => { card.style.borderColor = 'transparent'; card.style.background = 'rgba(255,255,255,.04)'; });
+  });
+}
+$('closeMergeModal')?.addEventListener('click', () => $('mergeModal').classList.add('hidden'));
+
+/* ===== ENERGY CONVERTER ===== */
+$('energyConvertBtn')?.addEventListener('click', () => {
+  const rate = S.perClick || 2;
+  const maxConvert = Math.floor(S.energy * 0.5);
+  if (maxConvert < 10) { toast('⚡ Yeterli enerji yok'); return; }
+  const convert = Math.floor(maxConvert / 10) * 10;
+  if (convert < 10) return;
+  S.energy -= convert;
+  const coins = convert * rate;
+  S.coins += coins;
+  toast(`⚡ ${convert} enerji → ${fmt(coins)} Coin dönüştü!`);
+  spawnFloat(innerWidth/2, innerHeight/2, `⚡→💰 +${fmt(coins)}`, false, '#f3ba2f');
+  sfxBuy();
+  update();
+});
+
+/* ===== PRESTIGE SHOP ===== */
+function openPrestigeShop() {
+  const prestigePoints = S.prestige || 0;
+  if (prestigePoints < 1) { toast('❌ En az 1 prestige gerekli!'); return; }
+  $('prestigeShopModal').classList.remove('hidden');
+  const el = $('prestigeShopList');
+  const upgrades = [
+    { id: 'multStart', name: 'Başlangıç Çoklu Tık +2', cost: 1, desc: 'Prestige sonrası +2 multiTap ile başla', apply: () => { S.prestigeMultStart = (S.prestigeMultStart || 0) + 2; } },
+    { id: 'regenStart', name: 'Başlangıç Regen +2/s', cost: 1, desc: 'Prestige sonrası +2/s regen ile başla', apply: () => { S.prestigeRegenStart = (S.prestigeRegenStart || 0) + 2; } },
+    { id: 'coinStart', name: 'Başlangıç Coin x2', cost: 2, desc: 'Prestige sonrası 2x coin ile başla', apply: () => { S.prestigeCoinMult = (S.prestigeCoinMult || 1) * 2; } },
+    { id: 'energyStart', name: 'Başlangıç Enerji +1000', cost: 2, desc: 'Prestige sonrası +1000 max enerji', apply: () => { S.prestigeEnergyBonus = (S.prestigeEnergyBonus || 0) + 1000; } },
+    { id: 'diamondBonus', name: 'Prestige 💎 Bonus x2', cost: 3, desc: 'Prestige ödül elmasları 2 kat', apply: () => { S.prestigeGemMult = (S.prestigeGemMult || 1) * 2; } },
+    { id: 'autoPrestige', name: 'Otomatik Prestige Lv.500', cost: 5, desc: 'Level 500\'de otomatik prestige', apply: () => { S.autoPrestige = true; }, special: true },
+  ];
+  const purchased = S.prestigeUpgrades || [];
+  el.innerHTML = upgrades.map(u => {
+    const bought = purchased.includes(u.id);
+    return `<div class="task" style="opacity:${bought ? '.4' : '1'};${bought ? 'pointer-events:none;' : ''}">
+      <span style="font-size:16px;">${bought ? '✅' : '🔄'}</span>
+      <span style="flex:1;"><strong>${u.name}</strong><br><span style="font-size:10px;color:#8e9cb5;">${u.desc}</span></span>
+      <span style="color:${prestigePoints >= u.cost ? '#f3ba2f' : '#ff4757'};font-weight:700;">${u.cost} PP</span>
+    </div>`;
+  }).join('');
+  el.querySelectorAll('.task').forEach((task, i) => {
+    task.addEventListener('click', () => {
+      const u = upgrades[i];
+      const purchased2 = S.prestigeUpgrades || [];
+      if (purchased2.includes(u.id)) { toast('✅ Zaten satın alındı'); return; }
+      if ((S.prestige||0) < u.cost) { toast(`❌ ${u.cost} prestige puanı gerekli`); return; }
+      S.prestige = (S.prestige||0) - u.cost;
+      if (!S.prestigeUpgrades) S.prestigeUpgrades = [];
+      S.prestigeUpgrades.push(u.id);
+      u.apply();
+      toast(`🔄 ${u.name} satın alındı!`);
+      sfxLevelUp();
+      save();
+      openPrestigeShop();
+    });
+  });
+}
+$('closePrestigeShopModal')?.addEventListener('click', () => $('prestigeShopModal').classList.add('hidden'));
+
+$('openPrestigeShopBtn')?.addEventListener('click', openPrestigeShop);
+
+/* ===== CRATE TIERS (Enhanced) ===== */
+const CRATE_TIERS = [
+  { name: 'Tahta Kasa', icon: '🪵', color: '#85827d', min: 2000, max: 8000, gemMin: 3, gemMax: 8, energy: 300, weight: 60 },
+  { name: 'Gümüş Kasa', icon: '🥈', color: '#c0c0c0', min: 10000, max: 40000, gemMin: 8, gemMax: 20, energy: 600, weight: 30 },
+  { name: 'Altın Kasa', icon: '🥇', color: '#f3ba2f', min: 50000, max: 200000, gemMin: 20, gemMax: 50, energy: 1000, weight: 9 },
+  { name: 'Platin Kasa', icon: '🏆', color: '#e5e4e2', min: 200000, max: 800000, gemMin: 40, gemMax: 100, energy: 2000, weight: 3 },
+  { name: 'Elmas Kasa', icon: '💎', color: '#3498db', min: 500000, max: 2000000, gemMin: 80, gemMax: 200, energy: 3500, weight: 1 },
+  { name: 'Mistik Kasa', icon: '🔮', color: '#9b59b6', min: 2000000, max: 10000000, gemMin: 200, gemMax: 500, energy: 5000, weight: 0.3 },
+];
+
+/* ===== QUICK COIN BREAKDOWN ===== */
+$('coinBigIcon')?.addEventListener('click', () => {
+  const breakdown = [
+    `💰 ${fmt(S.coins)} toplam`,
+    `👆 ${fmt(S.perClick)}/tık (${S.multiTap||1}x = ${fmt(S.perClick * (S.multiTap||1))}/dokunuş)`,
+    `⚡ ${fmt(S.perSec)}/s (${fmt(S.perSec*3600)}/saat)${isX2() ? ' 🔥x2' : ''}`,
+    `🔥 ${combo}x combo (${combo > 0 ? `${Math.min(1 + combo*0.08, 5).toFixed(1)}x çarpan` : 'beklemede'})`,
+    `🏆 ${S.bossWins} boss | ⭐${S.lvl} | ${S.rank}`,
+  ].join('<br>');
+  const el = document.createElement('div');
+  el.style.cssText = 'position:fixed;top:80px;left:50%;transform:translateX(-50%);background:#1e2028;border:1px solid #f3ba2f44;border-radius:12px;padding:14px;z-index:9999;font-size:11px;color:#fff;text-align:center;line-height:1.6;box-shadow:0 10px 30px rgba(0,0,0,.5);animation:modalSlide .2s ease-out;pointer-events:none;';
+  el.innerHTML = breakdown;
+  document.body.appendChild(el);
+  setTimeout(() => { el.style.transition = 'opacity .3s'; el.style.opacity = '0'; setTimeout(() => el.remove(), 300); }, 3000);
+  sfxGem();
+});
+
 $('quickBoostBtn').addEventListener('click', () => {
   const now = Date.now();
   if (S.boostCD > now) {
@@ -1022,7 +1474,7 @@ $('quickBoostBtn').addEventListener('click', () => {
     return;
   }
   S.boostCD = now + 10000;
-  S.energy = S.maxEnergy;
+  S.energy = S.maxEnergy * 1.1;
   $('energyFill').style.animation = 'none'; void $('energyFill').offsetWidth; $('energyFill').style.animation = 'energyPulse .5s ease-out';
   sfxBuy();
   flashOverlay('gold');
@@ -1104,12 +1556,25 @@ function renderGrid(filter) {
   if (filter === 'all') arr = arr.filter(c => c.cat !== 'retro' || S.lvl >= 250);
   else if (filter === 'retro') { if (S.lvl < 250) { g.innerHTML = '<div class="empty" style="text-align:center;padding:30px;">🔒 Level 250\'de açılır</div>'; return; } else arr = arr.filter(c => c.cat === 'retro'); }
   else arr = arr.filter(c => c.cat === filter);
-  const searchVal = ($('cardSearch')?.value || '').toLowerCase().trim();
+  const searchInput = $('cardSearch');
+  if (searchInput && !searchInput._listener) {
+    searchInput._listener = true;
+    searchInput.addEventListener('input', () => {
+      S._cardSearch = searchInput.value;
+      save();
+      renderGrid(document.querySelector('.chip.active')?.dataset?.f || 'all');
+    });
+  }
+  if (searchInput && S._cardSearch) searchInput.value = S._cardSearch;
+  const searchVal = (searchInput?.value || '').toLowerCase().trim();
   if (searchVal) arr = arr.filter(c => c.name.toLowerCase().includes(searchVal) || c.icon.includes(searchVal));
   arr = sortCards(arr);
   const ownedCount = arr.filter(c => getItemLevel(c.id) > 0).length;
   const totalCards = $('totalCards');
   if (totalCards) totalCards.textContent = `📊 ${ownedCount}/${arr.length} kart sahibi`;
+  const totalLevels = CARDS.reduce((s, c) => s + getItemLevel(c.id), 0);
+  const completionEl = $('mineCompletion');
+  if (completionEl) completionEl.textContent = `📊 ${ownedCount}/${arr.length} kart · ${fmt(totalLevels)} toplam seviye`;
   arr.forEach(c => {
     const lvl = getItemLevel(c.id);
     const cost = cardCost(c);
@@ -1184,12 +1649,14 @@ function buyCard(id) {
   S.coins -= cost;
   const lvl = getItemLevel(id);
   setItemLevel(id, lvl + 1);
+  if (!S._dailyUpgradeCount) S._dailyUpgradeCount = 0;
+  S._dailyUpgradeCount++;
   if (c.bonusEnergy) {
-    S.energy = Math.min(S.maxEnergy, S.energy + c.bonusEnergy);
+    S.energy = Math.min(S.maxEnergy * 1.1, S.energy + c.bonusEnergy);
     toast(`⚡ +${c.bonusEnergy} Enerji!`);
   } else {
     const refill = 50 + lvl * 10;
-    S.energy = Math.min(S.maxEnergy, S.energy + refill);
+    S.energy = Math.min(S.maxEnergy * 1.1, S.energy + refill);
     toast(`⚡ +${refill} Enerji (yükseltme)`);
   }
   const retroBonus = lvl >= 5 && c.cat === 'retro' ? 1 + Math.floor(lvl / 5) : 0;
@@ -1234,6 +1701,13 @@ const DAILY_REWARDS = [
   { day: 5, coin: 20000, gem: 18, label: '20K', icon: '⭐' },
   { day: 6, coin: 35000, gem: 25, label: '35K', icon: '🔥' },
   { day: 7, coin: 50000, gem: 40, label: '50K', icon: '🏆' },
+  { day: 8, coin: 75000, gem: 50, label: '75K', icon: '🔥' },
+  { day: 9, coin: 100000, gem: 65, label: '100K', icon: '💎' },
+  { day: 10, coin: 200000, gem: 80, label: '200K', icon: '👑' },
+  { day: 11, coin: 350000, gem: 100, label: '350K', icon: '⭐' },
+  { day: 12, coin: 500000, gem: 125, label: '500K', icon: '🌟' },
+  { day: 13, coin: 750000, gem: 150, label: '750K', icon: '💫' },
+  { day: 14, coin: 1000000, gem: 200, label: '1M', icon: '🏆' },
 ];
 
 function renderDaily() {
@@ -1245,7 +1719,7 @@ function renderDaily() {
   DAILY_REWARDS.forEach((r, i) => {
     const d = document.createElement('div');
     d.className = 'daily-tile';
-    const isToday = S.dailyStreak % 7 === i;
+    const isToday = S.dailyStreak % 14 === i;
     const claimed = S.dailyLastClaim === today && S.dailyClaimed > i;
     const ready = S.dailyLastClaim !== today && isToday;
     if (claimed) d.classList.add('claimed');
@@ -1267,7 +1741,7 @@ renderDaily();
 function claimDaily() {
   const today = new Date().toDateString();
   if (S.dailyLastClaim === today) { toast('❌ Bugün zaten aldın!'); return; }
-  const day = S.dailyStreak % 7;
+  const day = S.dailyStreak % 14;
   const r = DAILY_REWARDS[day];
   const streakMult = 1 + Math.min(S.dailyStreak, 30) * 0.05;
   const bonus = Math.floor(r.coin * (streakMult - 1));
@@ -1389,6 +1863,16 @@ const SKINS = [
   { id: 'retro_skin', name: 'Retro Pixel', icon: '🎮', lvlReq: 250, svg: `<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 200'><rect x='30' y='20' width='140' height='140' rx='10' fill='%23ff00ff' stroke='%23800080' stroke-width='2'/><rect x='60' y='60' width='80' height='60' rx='5' fill='%23ff00ff' stroke='%23800080' stroke-width='2'/><rect x='70' y='70' width='20' height='20' fill='%2300ffff'/><rect x='110' y='70' width='20' height='20' fill='%2300ffff'/><rect x='85' y='95' width='30' height='10' fill='%23ff0000'/></svg>`, desc: '8-bit pixel görünüm' },
   { id: 'dark', name: 'Karanlık Lord', icon: '👿', lvlReq: 300, svg: `<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 200'><circle cx='100' cy='90' r='70' fill='%232d2d2d' stroke='%23ff4757' stroke-width='2'/><ellipse cx='100' cy='160' rx='42' ry='18' fill='%232d2d2d' stroke='%23ff4757' stroke-width='2'/><circle cx='100' cy='80' r='38' fill='%232d2d2d' stroke='%23ff4757' stroke-width='2'/><ellipse cx='86' cy='68' rx='12' ry='18' fill='%232d2d2d' stroke='%23ff4757' stroke-width='2'/><ellipse cx='114' cy='68' rx='12' ry='18' fill='%232d2d2d' stroke='%23ff4757' stroke-width='2'/><circle cx='100' cy='56' r='6' fill='%23ff0000'/><circle cx='88' cy='82' r='4' fill='%23ff0000'/><circle cx='112' cy='82' r='4' fill='%23ff0000'/><ellipse cx='100' cy='91' rx='3' ry='2' fill='%23ff0000'/></svg>`, desc: 'Karanlık güçlerin efendisi' },
   { id: 'rainbow', name: 'Gökkuşağı', icon: '🌈', lvlReq: 400, svg: null, desc: 'Renkli gökkuşağı efekti' },
+  { id: 'fire', name: 'Ateş Hamster', icon: '🔥', lvlReq: 50, svg: `<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 200'><circle cx='100' cy='90' r='70' fill='%23ff4500' stroke='%23ff0000' stroke-width='2'/><ellipse cx='100' cy='160' rx='42' ry='18' fill='%23ff4500' stroke='%23ff0000' stroke-width='2'/><circle cx='100' cy='80' r='38' fill='%23ff6347' stroke='%23ff0000' stroke-width='2'/><ellipse cx='86' cy='68' rx='12' ry='18' fill='%23ff6347' stroke='%23ff0000' stroke-width='2'/><ellipse cx='114' cy='68' rx='12' ry='18' fill='%23ff6347' stroke='%23ff0000' stroke-width='2'/><circle cx='100' cy='56' r='6' fill='%23ffff00'/><circle cx='88' cy='82' r='4' fill='%23333'/><circle cx='112' cy='82' r='4' fill='%23333'/></svg>`, desc: 'Alev alev yanan hamster' },
+  { id: 'ice', name: 'Buz Hamster', icon: '❄️', lvlReq: 75, svg: `<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 200'><circle cx='100' cy='90' r='70' fill='%23b0e0e6' stroke='%2300bfff' stroke-width='2'/><ellipse cx='100' cy='160' rx='42' ry='18' fill='%23b0e0e6' stroke='%2300bfff' stroke-width='2'/><circle cx='100' cy='80' r='38' fill='%23e0ffff' stroke='%2300bfff' stroke-width='2'/><ellipse cx='86' cy='68' rx='12' ry='18' fill='%23e0ffff' stroke='%2300bfff' stroke-width='2'/><ellipse cx='114' cy='68' rx='12' ry='18' fill='%23e0ffff' stroke='%2300bfff' stroke-width='2'/><circle cx='100' cy='56' r='6' fill='%23ffffff'/><circle cx='88' cy='82' r='4' fill='%2300bfff'/><circle cx='112' cy='82' r='4' fill='%2300bfff'/></svg>`, desc: 'Buz gibi soğuk hamster' },
+  { id: 'nature', name: 'Doğa Hamster', icon: '🌿', lvlReq: 125, svg: `<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 200'><circle cx='100' cy='90' r='70' fill='%232ed573' stroke='%231b8a3d' stroke-width='2'/><ellipse cx='100' cy='160' rx='42' ry='18' fill='%232ed573' stroke='%231b8a3d' stroke-width='2'/><circle cx='100' cy='80' r='38' fill='%2333a85e' stroke='%231b8a3d' stroke-width='2'/><ellipse cx='86' cy='68' rx='12' ry='18' fill='%2333a85e' stroke='%231b8a3d' stroke-width='2'/><ellipse cx='114' cy='68' rx='12' ry='18' fill='%2333a85e' stroke='%231b8a3d' stroke-width='2'/><circle cx='100' cy='56' r='6' fill='%23ffd700'/><circle cx='88' cy='82' r='4' fill='%231b5e20'/><circle cx='112' cy='82' r='4' fill='%231b5e20'/></svg>`, desc: 'Doğayla iç içe hamster' },
+  { id: 'ocean', name: 'Okyanus Hamster', icon: '🌊', lvlReq: 175, svg: `<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 200'><circle cx='100' cy='90' r='70' fill='%231e90ff' stroke='%230064b0' stroke-width='2'/><ellipse cx='100' cy='160' rx='42' ry='18' fill='%231e90ff' stroke='%230064b0' stroke-width='2'/><circle cx='100' cy='80' r='38' fill='%234169e1' stroke='%230064b0' stroke-width='2'/><ellipse cx='86' cy='68' rx='12' ry='18' fill='%234169e1' stroke='%230064b0' stroke-width='2'/><ellipse cx='114' cy='68' rx='12' ry='18' fill='%234169e1' stroke='%230064b0' stroke-width='2'/><circle cx='100' cy='56' r='6' fill='%23ffffff'/><circle cx='88' cy='82' r='4' fill='%23003366'/><circle cx='112' cy='82' r='4' fill='%23003366'/></svg>`, desc: 'Derin denizlerin hakimi' },
+  { id: 'cosmic_skin', name: 'Kozmik Hamster', icon: '🌌', lvlReq: 225, svg: `<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 200'><circle cx='100' cy='90' r='70' fill='%236a0dad' stroke='%234a0080' stroke-width='2'/><ellipse cx='100' cy='160' rx='42' ry='18' fill='%236a0dad' stroke='%234a0080' stroke-width='2'/><circle cx='100' cy='80' r='38' fill='%238b5cf6' stroke='%234a0080' stroke-width='2'/><ellipse cx='86' cy='68' rx='12' ry='18' fill='%238b5cf6' stroke='%234a0080' stroke-width='2'/><ellipse cx='114' cy='68' rx='12' ry='18' fill='%238b5cf6' stroke='%234a0080' stroke-width='2'/><circle cx='100' cy='56' r='6' fill='%23ffffff'/><circle cx='88' cy='82' r='4' fill='%23ffffff'/><circle cx='112' cy='82' r='4' fill='%23ffffff'/></svg>`, desc: 'Yıldızlararası varlık' },
+  { id: 'magic_skin', name: 'Sihirli Hamster', icon: '✨', lvlReq: 275, svg: `<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 200'><circle cx='100' cy='90' r='70' fill='%23ff69b4' stroke='%23d43b8a' stroke-width='2'/><ellipse cx='100' cy='160' rx='42' ry='18' fill='%23ff69b4' stroke='%23d43b8a' stroke-width='2'/><circle cx='100' cy='80' r='38' fill='%23ff85c8' stroke='%23d43b8a' stroke-width='2'/><ellipse cx='86' cy='68' rx='12' ry='18' fill='%23ff85c8' stroke='%23d43b8a' stroke-width='2'/><ellipse cx='114' cy='68' rx='12' ry='18' fill='%23ff85c8' stroke='%23d43b8a' stroke-width='2'/><circle cx='100' cy='56' r='6' fill='%23ffff00'/><circle cx='88' cy='82' r='4' fill='%238a2e8a'/><circle cx='112' cy='82' r='4' fill='%238a2e8a'/></svg>`, desc: 'Büyülü güçlere sahip' },
+  { id: 'phantom', name: 'Hayalet Hamster', icon: '👻', lvlReq: 325, svg: `<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 200'><circle cx='100' cy='90' r='70' fill='%23e0e0e0' stroke='%23808080' stroke-width='2'/><ellipse cx='100' cy='160' rx='42' ry='18' fill='%23e0e0e0' stroke='%23808080' stroke-width='2'/><circle cx='100' cy='80' r='38' fill='%23f0f0f0' stroke='%23808080' stroke-width='2'/><ellipse cx='86' cy='68' rx='12' ry='18' fill='%23f0f0f0' stroke='%23808080' stroke-width='2'/><ellipse cx='114' cy='68' rx='12' ry='18' fill='%23f0f0f0' stroke='%23808080' stroke-width='2'/><circle cx='100' cy='56' r='6' fill='%23ffffff'/><circle cx='88' cy='82' r='4' fill='%23666666'/><circle cx='112' cy='82' r='4' fill='%23666666'/></svg>`, desc: 'Gölgeler arasında süzülen' },
+  { id: 'dragon_skin', name: 'Ejderha Hamster', icon: '🐉', lvlReq: 350, svg: `<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 200'><circle cx='100' cy='90' r='70' fill='%23ff6347' stroke='%238b0000' stroke-width='3'/><ellipse cx='100' cy='160' rx='42' ry='18' fill='%23ff6347' stroke='%238b0000' stroke-width='2'/><circle cx='100' cy='80' r='38' fill='%23dc143c' stroke='%238b0000' stroke-width='2'/><ellipse cx='86' cy='68' rx='12' ry='18' fill='%23dc143c' stroke='%238b0000' stroke-width='2'/><ellipse cx='114' cy='68' rx='12' ry='18' fill='%23dc143c' stroke='%238b0000' stroke-width='2'/><circle cx='100' cy='56' r='6' fill='%23ffd700'/><circle cx='88' cy='82' r='4' fill='%23ffd700'/><circle cx='112' cy='82' r='4' fill='%23ffd700'/></svg>`, desc: 'Ateş püskürten efsane' },
+  { id: 'angel', name: 'Melek Hamster', icon: '👼', lvlReq: 375, svg: `<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 200'><circle cx='100' cy='90' r='70' fill='%23ffffff' stroke='%23ffd700' stroke-width='2'/><ellipse cx='100' cy='160' rx='42' ry='18' fill='%23ffffff' stroke='%23ffd700' stroke-width='2'/><circle cx='100' cy='80' r='38' fill='%23f8f8ff' stroke='%23ffd700' stroke-width='2'/><ellipse cx='86' cy='68' rx='12' ry='18' fill='%23f8f8ff' stroke='%23ffd700' stroke-width='2'/><ellipse cx='114' cy='68' rx='12' ry='18' fill='%23f8f8ff' stroke='%23ffd700' stroke-width='2'/><circle cx='100' cy='56' r='6' fill='%23ffd700'/><circle cx='88' cy='82' r='4' fill='%23b8860b'/><circle cx='112' cy='82' r='4' fill='%23b8860b'/></svg>`, desc: 'Kutsal hamster' },
+  { id: 'phoenix', name: 'Anka Kuşu', icon: '🦅', lvlReq: 425, svg: `<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 200'><circle cx='100' cy='90' r='70' fill='%23ff4500' stroke='%23ff8c00' stroke-width='2'/><ellipse cx='100' cy='160' rx='42' ry='18' fill='%23ff4500' stroke='%23ff8c00' stroke-width='2'/><circle cx='100' cy='80' r='38' fill='%23ff6347' stroke='%23ff8c00' stroke-width='2'/><ellipse cx='86' cy='68' rx='12' ry='18' fill='%23ff6347' stroke='%23ff8c00' stroke-width='2'/><ellipse cx='114' cy='68' rx='12' ry='18' fill='%23ff6347' stroke='%23ff8c00' stroke-width='2'/><circle cx='100' cy='56' r='6' fill='%23ffd700'/><circle cx='88' cy='82' r='4' fill='%23ffd700'/><circle cx='112' cy='82' r='4' fill='%23ffd700'/></svg>`, desc: 'Küllerinden doğan efsane' },
 ];
 
 function getUnlockedSkins() {
@@ -1456,7 +1940,7 @@ function renderSkinSelector() {
 }
 
 function checkComboMilestones(comboCount) {
-  const milestones = [10, 25, 50, 100, 250, 500];
+  const milestones = [10, 25, 50, 100, 250, 500, 1000, 2500, 5000];
   milestones.forEach(m => {
     if (comboCount >= m && !S.comboMilestones?.includes(m)) {
       if (!S.comboMilestones) S.comboMilestones = [];
@@ -1481,6 +1965,13 @@ const DAILY_TASKS = [
   { id: 'combo20', icon: '🔥', name: '20 Combo Yap', check: s => s.bestCombo >= 20, reward: 8000, gem: 8 },
   { id: 'openCrate', icon: '📦', name: 'Kasa Aç', check: s => s.crates >= 1, reward: 5000, gem: 5 },
   { id: 'crate5', icon: '📦', name: 'Kasa Aç (5)', check: s => s.crates >= 5, reward: 20000, gem: 20 },
+  { id: 'spins', icon: '🎡', name: 'Çarkı Çevir', check: s => (s.wheelFreeDate === new Date().toDateString() || s._spunPaid === true), reward: 15000, gem: 15 },
+  { id: 'bossDaily', icon: '⚔️', name: 'Boss Yen', check: s => s._bossWonToday === true, reward: 25000, gem: 20 },
+  { id: 'earn200k', icon: '💰', name: '200K Coin Kazan', check: s => s.totalEarned >= 200000, reward: 40000, gem: 25 },
+  { id: 'upgrade10', icon: '⬆️', name: '10 Kart Yükselt', check: s => {
+    if (!S._dailyUpgradeCount) S._dailyUpgradeCount = 0;
+    return S._dailyUpgradeCount >= 10;
+  }, reward: 30000, gem: 20 },
 ];
 
 function renderDailyTasks() {
@@ -1742,11 +2233,15 @@ $('closeCipherModal')?.addEventListener('click', () => $('dailyCipherModal').cla
 const WHEEL_SLICES = [
   { label: '50K 💰', coins: 50000, gems: 0, color: '#2ed573' },
   { label: '10💎', coins: 0, gems: 10, color: '#3498db' },
-  { label: '250K 💰', coins: 250000, gems: 0, color: '#9b59b6' },
-  { label: '🔥 2x', coins: 0, gems: 0, boost: true, color: '#ff9f43' },
   { label: '100K 💰', coins: 100000, gems: 0, color: '#1dd1a1' },
-  { label: '25💎', coins: 0, gems: 25, color: '#f3ba2f' },
+  { label: '🔥 2x', coins: 0, gems: 0, boost: true, color: '#ff9f43' },
+  { label: '250K 💰', coins: 250000, gems: 0, color: '#9b59b6' },
+  { label: '15💎', coins: 0, gems: 15, color: '#f3ba2f' },
+  { label: '🍀 Şans', coins: 0, gems: 0, reroll: true, color: '#e84393' },
+  { label: '500K 💰', coins: 500000, gems: 0, color: '#00cec9' },
   { label: '⚡ Full', coins: 0, gems: 0, refill: true, color: '#ff4757' },
+  { label: '30💎', coins: 0, gems: 30, color: '#6c5ce7' },
+  { label: '🔥 2x', coins: 0, gems: 0, boost: true, color: '#fd79a8' },
   { label: '1M 🌟', coins: 1000000, gems: 100, color: '#f368e0' },
 ];
 
@@ -1837,7 +2332,8 @@ function spinWheel(paid) {
         S.coins += prize.coins || 0;
         S.gems += prize.gems || 0;
         if (prize.boost) startX2(120);
-        if (prize.refill) S.energy = S.maxEnergy;
+        if (prize.refill) S.energy = Math.min(S.maxEnergy * 1.1, S.energy + S.maxEnergy);
+        if (prize.reroll) { toast('🍀 Şans! Tekrar çeviriyorsun!'); setTimeout(() => spinWheel(paid), 500); return; }
         let msg = `🎡 ${prize.label}`;
         if (prize.coins) msg = `🎡 +${fmt(prize.coins)} Coin!`;
         if (prize.gems) msg = `🎡 +${prize.gems}💎!`;
@@ -1913,13 +2409,6 @@ document.querySelectorAll('.daily-card').forEach(card => {
 });
 
 /* ===== CRATES (Tiered) ===== */
-const CRATE_TIERS = [
-  { name: 'Tahta Kasa', icon: '🪵', color: '#85827d', min: 2000, max: 8000, gemMin: 3, gemMax: 8, energy: 300, weight: 60 },
-  { name: 'Gümüş Kasa', icon: '🥈', color: '#c0c0c0', min: 10000, max: 40000, gemMin: 8, gemMax: 20, energy: 600, weight: 30 },
-  { name: 'Altın Kasa', icon: '🥇', color: '#f3ba2f', min: 50000, max: 200000, gemMin: 20, gemMax: 50, energy: 1000, weight: 9 },
-  { name: 'Elmas Kasa', icon: '💎', color: '#3498db', min: 200000, max: 1000000, gemMin: 50, gemMax: 150, energy: 2500, weight: 1 },
-];
-
 function pickCrateTier() {
   const total = CRATE_TIERS.reduce((s, t) => s + t.weight, 0);
   let r = Math.random() * total;
@@ -1990,6 +2479,20 @@ const SHOP_ITEMS = [
   { id: 'x2_24h', icon: '🔥', name: '24s 2x Çarpan', cost: 500, desc: '24 saat boyunca 2x kazanç!', special: true },
   { id: 'autoTap', icon: '🤖', name: 'Otomatik Tık (1s)', cost: 300, desc: '1 saat boyunca saniyede 1 otomatik tık', special: true },
   { id: 'megaCrate', icon: '💎', name: 'Elmas Kasa', cost: 250, desc: 'Direkt Elmas kasa aç!', special: true },
+  { id: 'gemPouch5', icon: '💎', name: 'Mini Elmas Paketi', cost: 1, desc: '1💎 → 5💎 dönüşüm', special: true },
+  { id: 'gemPouch25', icon: '💎', name: 'Mega Elmas Paketi', cost: 5, desc: '5💎 → 25💎 dönüşüm', special: true },
+  { id: 'coinMine', icon: '⛏️', name: 'Coin Madeni (1s)', cost: 100, desc: '1 saatte +500K Coin üretir', special: true },
+  { id: 'superCrate', icon: '📦', name: 'Süper Kasa', cost: 500, desc: 'En iyi kasa ödülleri!', special: true },
+  { id: 'energyMaxPerm', icon: '⚡', name: 'Max Enerji +500', cost: 200, desc: 'Kalıcı +500 max enerji', special: true },
+  { id: 'permaMultiTap', icon: '👆', name: 'Kalıcı +2 Çoklu Tık', cost: 1000, desc: 'Her tıkta +2 ek vuruş', special: true },
+  { id: 'megaBoost5', icon: '🚀', name: 'Mega Boost 5dk', cost: 50, desc: '5dk boyunca 2x regen', special: true },
+  { id: 'rainbowCrate', icon: '🌈', name: 'Gökkuşağı Kasası', cost: 1000, desc: 'Tüm ödüller birden!', special: true },
+  { id: 'skipBoss', icon: '⚔️', name: 'Boss Atla', cost: 30, desc: 'Boss bekleme süresini atla', special: true },
+  { id: 'timeSkip2h', icon: '⏰', name: '2s Offline', cost: 75, desc: '2 saat offline kazanç simüle et', special: true },
+  { id: 'lottery', icon: '🎰', name: 'Piyango', cost: 10, desc: '%50 ihtimalle büyük ödül!', special: true },
+  { id: 'cardProtect', icon: '🛡️', name: 'Kart Koruması', cost: 150, desc: '+%20 satış değeri (kalıcı)', special: true },
+  { id: 'gemMine', icon: '💎', name: 'Elmas Madeni (24s)', cost: 500, desc: '24 saatte 10💎 üretir', special: true },
+  { id: 'prestigeBoost', icon: '🔄', name: 'Prestige+ Bonus', cost: 2000, desc: 'Prestige bonus %50 daha fazla', special: true },
 ];
 
 $('gemDisplay').addEventListener('click', () => {
@@ -2017,6 +2520,7 @@ function renderShop() {
 }
 
 let autoTapInterval = null;
+let tapsDone = 0;
 let x2End = 0;
 let x2Interval = null;
 
@@ -2050,7 +2554,7 @@ function buyShopItem(item) {
       if (autoTapInterval) { clearInterval(autoTapInterval); }
       S.gems += 1;
       save();
-      let tapsDone = 0;
+      tapsDone = 0;
       const maxTaps = 3600;
       autoTapInterval = setInterval(() => {
         if (tapsDone >= maxTaps || S.energy < 1) {
@@ -2065,17 +2569,106 @@ function buyShopItem(item) {
       toast('🤖 1 saat otomatik tık başladı!');
       break;
     case 'megaCrate':
-      currentCrate = CRATE_TIERS[3];
-      const reward = Math.floor(Math.random() * (CRATE_TIERS[3].max - CRATE_TIERS[3].min)) + CRATE_TIERS[3].min;
-      const gemReward = Math.floor(Math.random() * (CRATE_TIERS[3].gemMax - CRATE_TIERS[3].gemMin)) + CRATE_TIERS[3].gemMin;
+      currentCrate = CRATE_TIERS[4];
+      const reward = Math.floor(Math.random() * (CRATE_TIERS[4].max - CRATE_TIERS[4].min)) + CRATE_TIERS[4].min;
+      const gemReward = Math.floor(Math.random() * (CRATE_TIERS[4].gemMax - CRATE_TIERS[4].gemMin)) + CRATE_TIERS[4].gemMin;
       S.coins += reward;
       S.gems += gemReward;
-      S.energy = Math.min(S.maxEnergy, S.energy + CRATE_TIERS[3].energy);
+      S.energy = Math.min(S.maxEnergy, S.energy + CRATE_TIERS[4].energy);
       flashOverlay('#3498db');
       coinRain(30);
       toast(`💎 ELMAS KASA! +${fmt(reward)} Coin +${gemReward}💎!`);
       break;
+    case 'gemPouch5':
+      S.gems += 4;
+      toast('💎 +5 Elmas! (1 yatır, 5 al)');
+      break;
+    case 'gemPouch25':
+      S.gems += 20;
+      toast('💎 +25 Elmas! (5 yatır, 25 al)');
+      break;
+    case 'coinMine':
+      const cmReward = 500000;
+      S.coins += cmReward;
+      toast(`⛏️ Coin Madeni +${fmt(cmReward)} Coin!`);
+      break;
+    case 'superCrate':
+      currentCrate = CRATE_TIERS[5];
+      const scReward = Math.floor(Math.random() * (CRATE_TIERS[5].max - CRATE_TIERS[5].min)) + CRATE_TIERS[5].min;
+      const scGem = Math.floor(Math.random() * (CRATE_TIERS[5].gemMax - CRATE_TIERS[5].gemMin)) + CRATE_TIERS[5].gemMin;
+      S.coins += scReward;
+      S.gems += scGem;
+      S.energy = Math.min(S.maxEnergy, S.energy + CRATE_TIERS[5].energy);
+      flashOverlay('rainbow');
+      toast(`📦 SÜPER KASA! +${fmt(scReward)} Coin +${scGem}💎`);
+      coinRain(30);
+      fireworkCelebration();
+      break;
+    case 'energyMaxPerm':
+      S.maxEnergy += 500;
+      S.energy += 500;
+      toast('⚡ Kalıcı +500 Max Enerji!');
+      break;
+    case 'permaMultiTap':
+      S.multiTap = (S.multiTap || 1) + 2;
+      toast(`👆 Kalıcı +2 Çoklu Tık! Toplam ${S.multiTap}x`);
+      break;
+    case 'megaBoost5':
+      S.energy = Math.min(S.maxEnergy, S.energy + 5000);
+      S.boostCD = Date.now() + 300000;
+      toast('🚀 Mega Boost! +5000 Enerji +5dk hızlı regen!');
+      break;
+    case 'rainbowCrate':
+      [CRATE_TIERS[0], CRATE_TIERS[1], CRATE_TIERS[2], CRATE_TIERS[3], CRATE_TIERS[4], CRATE_TIERS[5]].forEach(t => {
+        const r = Math.floor(Math.random() * (t.max - t.min)) + t.min;
+        const g = Math.floor(Math.random() * (t.gemMax - t.gemMin)) + t.gemMin;
+        S.coins += r;
+        S.gems += g;
+      });
+      S.energy = S.maxEnergy;
+      flashOverlay('rainbow');
+      fireworkCelebration();
+      coinRain(40);
+      toast('🌈 GÖKKUŞAĞI KASASI! Tüm ödüller sende!');
+      break;
+    case 'skipBoss':
+      S.bossTimer = 0;
+      toast('⚔️ Boss beklemesi atlandı!');
+      break;
+    case 'timeSkip2h':
+      const tsEarned = Math.floor(7200 * (S.perSec || 1) * getX2Mult());
+      S.coins += tsEarned;
+      S.totalEarned += tsEarned;
+      S.totalOffline = (S.totalOffline || 0) + tsEarned;
+      toast(`⏰ 2s offline: +${fmt(tsEarned)} Coin simüle edildi!`);
+      break;
+    case 'lottery':
+      const win = Math.random() < 0.5;
+      if (win) {
+        const winnings = 100000 + Math.floor(Math.random() * 400000);
+        S.coins += winnings;
+        toast(`🎰 PİYANGO KAZANDIN! +${fmt(winnings)} Coin!`);
+        fireworkCelebration();
+        coinRain(20);
+      } else {
+        toast('😢 Piyango bileti kaybetti...');
+      }
+      break;
+    case 'cardProtect':
+      S.cardProtectBonus = (S.cardProtectBonus || 0) + 0.2;
+      toast('🛡️ Kart koruması aktif! Satış değeri +%20');
+      break;
+    case 'gemMine':
+      const dailyGem = 10;
+      S.gems += dailyGem;
+      toast('💎 Elmas Madeni +10💎 (günlük)');
+      break;
+    case 'prestigeBoost':
+      S.prestigeBoost = (S.prestigeBoost || 0) + 0.5;
+      toast('🔄 Prestige bonus %50 arttı!');
+      break;
   }
+  S.gemsSpent = (S.gemsSpent || 0) + item.cost;
   update();
   renderShop();
 }
@@ -2119,6 +2712,14 @@ $('statBtn')?.addEventListener('click', () => {
     ['⚡ Yenilenme', (2 + (S.energyRegenBonus || 0)).toFixed(1) + '/s'],
     ['🎨 Aktif Skin', SKINS.find(s => s.id === (S.activeSkin || 'default'))?.name || 'Klasik'],
     ['💰 Offline Kazanç', fmt(S.totalOffline || 0)],
+    ['🔄 Prestige', (S.prestige || 0) + 'x'],
+    ['⏱️ Session', getSessionTime()],
+    ['💾 Auto Save', 'Aktif (15sn)'],
+    ['📦 Kasa Sayısı', fmt(S.crates || 0)],
+    ['🎮 Sürüm', 'v2.0 (100+ yenilik)'],
+    ['⚡ Harcanan Enerji', fmt(S.totalEnergySpent || 0)],
+    ['🚀 En Hızlı Tık', (S.bestTapSpeed || 0) + 'x/tık'],
+    ['📅 İlk Oynanış', S._firstPlayDate || 'Bugün'],
   ];
   el.innerHTML = stats.map(([label, val]) =>
     `<div style="display:flex;justify-content:space-between;padding:8px 10px;background:rgba(255,255,255,.04);border-radius:8px;"><span style="color:#8e9cb5;">${label}</span><span style="font-weight:700;">${val}</span></div>`
@@ -2171,7 +2772,10 @@ function showCardDetail(id) {
 }
 $('closeCardDetail')?.addEventListener('click', () => { $('cardDetailModal').classList.add('hidden'); });
 
-document.querySelector('.settings-icon').addEventListener('click', () => {
+document.querySelector('.settings-icon')?.addEventListener('dblclick', () => {
+  toast(`⚡ ${S.energy.toFixed(0)}/${S.maxEnergy} · 👆${S.perClick}/tık · 💰${fmt(S.perSec)}/s`);
+});
+document.querySelector('.settings-icon')?.addEventListener('click', () => {
   $('settingsModal').classList.remove('hidden');
   initSettingsUI();
 });
@@ -2179,15 +2783,21 @@ $('closeSettingsModal').addEventListener('click', () => { $('settingsModal').cla
 
 function initSettingsUI() {
   const mb = $('musicToggleBtn');
-  mb.textContent = S.settings.musicOn ? 'Açık' : 'Kapalı';
+  mb.textContent = S.settings.musicOn ? 'Açık 🎵' : 'Kapalı 🔇';
   mb.style.background = S.settings.musicOn ? '' : 'rgba(255,255,255,.08)';
   mb.style.color = S.settings.musicOn ? '' : '#8e9cb5';
   const sb = $('sfxToggleBtn');
-  sb.textContent = S.settings.sfxOn ? 'Açık' : 'Kapalı';
+  sb.textContent = S.settings.sfxOn ? 'Açık 🔊' : 'Kapalı 🔇';
   sb.style.background = S.settings.sfxOn ? '' : 'rgba(255,255,255,.08)';
   sb.style.color = S.settings.sfxOn ? '' : '#8e9cb5';
   $('volumeSlider').value = (S.settings.musicVol || 0.5) * 100;
   $('sfxSlider').value = (S.settings.sfxVol || 0.5) * 100;
+  const verEl = $('gameVersionDisplay');
+  if (verEl) verEl.textContent = 'v2.0.0 - 100+ yenilik!';
+  const shakeToggle = $('shakeToggle');
+  if (shakeToggle) { shakeToggle.textContent = S._shakeOn === false ? 'Kapalı' : 'Açık'; shakeToggle.style.background = S._shakeOn === false ? 'rgba(255,255,255,.08)' : ''; }
+  const partDensity = $('particleDensity');
+  if (partDensity) partDensity.value = (S._particleDensity || 100);
 }
 
 $('musicToggleBtn').addEventListener('click', () => {
@@ -2213,6 +2823,20 @@ $('sfxToggleBtn').addEventListener('click', () => {
 
 $('sfxSlider').addEventListener('input', e => {
   S.settings.sfxVol = e.target.value / 100;
+  save();
+});
+
+$('shakeToggle')?.addEventListener('click', () => {
+  S._shakeOn = S._shakeOn === false ? true : false;
+  save();
+  initSettingsUI();
+  toast(S._shakeOn === false ? '📳 Sarsıntı kapalı' : '📳 Sarsıntı açık');
+});
+
+$('particleDensity')?.addEventListener('input', e => {
+  S._particleDensity = parseInt(e.target.value) || 100;
+  const valEl = $('partDensityVal');
+  if (valEl) valEl.textContent = S._particleDensity;
   save();
 });
 
@@ -2368,6 +2992,8 @@ function startBoss() {
   $('startBossBtn').disabled = true;
   const bossNames = ['Karanlık CEO', 'Maden Canavarı', 'Kripto Kraken', 'Shadow CEO', 'Efsanevi Hamster'];
   const bName = bossNames[Math.min(bLvl - 1, bossNames.length - 1)];
+  const bossLevelTag = $('bossLevelTag');
+  if (bossLevelTag) bossLevelTag.textContent = `Seviye ${bLvl}`;
   const bossColors = ['#8e9cb5', '#2ed573', '#3498db', '#9b59b6', '#ff4757'];
   const bColor = bossColors[Math.min(bLvl - 1, bossColors.length - 1)];
   const bossH3 = document.querySelector('.b-head h3');
@@ -2383,6 +3009,7 @@ function startBoss() {
       $('startBossBtn').disabled = false;
       if (S.bossHp <= 0) {
         S.bossWins++;
+        S._bossWonToday = true;
         const bLvlWon = getBossLevel();
         const reward = S.lvl * 1000 + S.bossWins * 500;
         const gemReward = 15 + S.bossWins * 3;
@@ -2534,7 +3161,12 @@ function spawnAmbientParticles() {
 spawnAmbientParticles();
 
 /* ===== AUTO SAVE ===== */
-setInterval(save, 15000);
+let lastSaveBlink = 0;
+setInterval(() => {
+  save();
+  const el = $('saveIndicator');
+  if (el) { el.textContent = '💾'; el.style.opacity = '1'; setTimeout(() => el.style.opacity = '0', 600); }
+}, 15000);
 
 /* ===== TOAST QUEUE ===== */
 let toastQueue = [];
@@ -2578,6 +3210,13 @@ $('tStartBtn').addEventListener('click', () => {
     openNamePicker();
   }
   toast('🐹 Hoş geldin CEO! Haydi kazanmaya başla!');
+});
+
+/* ===== QUICK SFX TOGGLE ===== */
+$('sfxToggleQuick')?.addEventListener('click', () => {
+  S.settings.sfxOn = !S.settings.sfxOn;
+  save();
+  toast(S.settings.sfxOn ? '🔊 Ses açık' : '🔇 Ses kapalı');
 });
 
 /* ===== BEFORE UNLOAD ===== */
@@ -2641,6 +3280,7 @@ function getTotalCardLevels() {
 
 /* ===== KEYBOARD SHORTCUTS ===== */
 document.addEventListener('keydown', e => {
+  if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
   const tabs3 = ['tab-borsa', 'tab-mine', 'tab-friends', 'tab-earn', 'tab-boss'];
   const cur3 = document.querySelector('.tab.active');
   const idx3 = cur3 ? tabs3.indexOf(cur3.id) : 0;
@@ -2651,7 +3291,16 @@ document.addEventListener('keydown', e => {
     handleTap(innerWidth / 2, innerHeight / 2);
   }
   if (e.key === 'b' || e.key === 'B') quickUpgrade();
-  if (e.key === 'r' || e.key === 'R') handleTap(innerWidth / 2, innerHeight / 2);
+  if (e.key === 'm' || e.key === 'M') switchTab('tab-mine');
+  if (e.key === 'f' || e.key === 'F') switchTab('tab-friends');
+  if (e.key === 'e' || e.key === 'E') switchTab('tab-earn');
+  if (e.key === 'x' || e.key === 'X') switchTab('tab-boss');
+  if (e.key === 'q' || e.key === 'Q') quickUpgrade(10);
+  if (e.key === '1') switchTab('tab-borsa');
+  if (e.key === '2') switchTab('tab-mine');
+  if (e.key === '3') switchTab('tab-friends');
+  if (e.key === '4') switchTab('tab-earn');
+  if (e.key === '5') switchTab('tab-boss');
 });
 
 /* ===== SWIPE NAV ===== */
@@ -2706,6 +3355,7 @@ function toggleAutoBuy() {
 }
 
 update();
+if (!S._firstPlayDate) S._firstPlayDate = new Date().toLocaleDateString('tr-TR');
 if (S.boostCD > Date.now()) {
   const btn = $('quickBoostBtn');
   btn.style.opacity = '.4';
