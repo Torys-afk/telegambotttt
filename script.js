@@ -14,6 +14,10 @@ function defState() {
     multiTap: 1, energyRegenBonus: 0, offlineStamp: 0, dailyStreak: 0, dailyLastClaim: '',
     totalOffline: 0, comboMilestones: [], lvlMilestones: [], prestige: 0, autoBuyOn: false, favorites: [],
     wheelFreeDate: '', dailyTasks: {}, gemsSpent: 0, achieved: [],
+    pvpScore: 0, pvpRank: 0, pvpWins: 0, pvpLosses: 0, pvpLastFight: 0,
+    dungeonFloor: 0, dungeonBuffs: [], dungeonBest: 0, dungeonDaily: 0,
+    riftUsed: '', riftReward: 0,
+    territories: [], alchemyEssence: 0, artifacts: [],
   };
 }
 
@@ -311,22 +315,33 @@ function renderAch() {
 /* ===== DOM REFS ===== */
 const $ = id => document.getElementById(id);
 
-/* ===== SOUND ENGINE ===== */
+/* ===== OPTIMIZED SOUND ENGINE v2 ===== */
 let audioCtx = null;
+let _sfxCount = 0;
+let _sfxLastReset = 0;
 
 function initAudio() {
   if (!audioCtx) audioCtx = new(window.AudioContext || window.webkitAudioContext)();
+  const now = Date.now();
+  if (now - _sfxLastReset > 1000) { _sfxCount = 0; _sfxLastReset = now; }
+}
+
+function canPlaySfx() {
+  if (!S.settings.sfxOn) return false;
+  _sfxCount++;
+  return _sfxCount < 40;
 }
 
 function playTone(freq, duration, type, vol) {
   try {
     initAudio();
-    if (!S.settings.sfxOn) return;
+    if (!canPlaySfx()) return;
     const o = audioCtx.createOscillator();
     const g = audioCtx.createGain();
     o.type = type || 'sine';
     o.frequency.setValueAtTime(freq, audioCtx.currentTime);
-    g.gain.setValueAtTime((vol || S.settings.sfxVol || 0.5) * 0.15, audioCtx.currentTime);
+    const v = (vol || S.settings.sfxVol || 0.5) * 0.12;
+    g.gain.setValueAtTime(v, audioCtx.currentTime);
     g.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + (duration || 0.15));
     o.connect(g);
     g.connect(audioCtx.destination);
@@ -335,39 +350,31 @@ function playTone(freq, duration, type, vol) {
   } catch (_) {}
 }
 
-function sfxTap() { playTone(800 + Math.random() * 200, 0.05, 'sine', 0.25); }
-
-function sfxCrit() { playTone(1200, 0.1, 'square', 0.4);
-  playTone(1600, 0.08, 'sine', 0.3);
-  playTone(2000, 0.06, 'sine', 0.2); }
-
-function sfxCombo() { playTone(500, 0.06, 'triangle', 0.25);
-  setTimeout(() => playTone(700, 0.06, 'triangle', 0.25), 50);
-  setTimeout(() => playTone(900, 0.06, 'triangle', 0.25), 100); }
-
+let _sfxTimer = null;
+function sfxTap() { if (_sfxCount > 30) return; playTone(800 + Math.random() * 200, 0.04, 'sine', 0.2); }
+function sfxCrit() { if (_sfxCount > 25) return;
+  playTone(1200, 0.08, 'square', 0.3);
+  playTone(1600, 0.06, 'sine', 0.2); }
+function sfxCombo() { if (_sfxCount > 20) return;
+  playTone(500, 0.05, 'triangle', 0.2);
+  if (!_sfxTimer) _sfxTimer = setTimeout(() => { playTone(700, 0.05, 'triangle', 0.2); _sfxTimer = null; }, 50); }
 function sfxLevelUp() {
-  [523, 659, 784, 1047, 1319, 1568].forEach((f, i) => setTimeout(() => playTone(f, 0.12, 'sine', 0.35), i * 60)); }
-
-function sfxBuy() { playTone(660, 0.08, 'sine', 0.3);
-  setTimeout(() => playTone(880, 0.08, 'sine', 0.3), 60);
-  setTimeout(() => playTone(1100, 0.08, 'sine', 0.3), 120); }
-function sfxCardBuy() { playTone(440, 0.1, 'square', 0.2);
-  setTimeout(() => playTone(660, 0.1, 'square', 0.2), 80);
-  setTimeout(() => playTone(880, 0.1, 'square', 0.2), 160);
-  setTimeout(() => playTone(1100, 0.15, 'square', 0.2), 240); }
-
-function sfxGem() { playTone(1400, 0.08, 'sine', 0.3);
-  setTimeout(() => playTone(1800, 0.08, 'sine', 0.3), 60); }
-
-function sfxSkin() { playTone(800, 0.1, 'sine', 0.3);
-  setTimeout(() => playTone(1000, 0.1, 'sine', 0.3), 80);
-  setTimeout(() => playTone(1200, 0.1, 'sine', 0.3), 160); }
-
-function sfxBossHit() { playTone(200, 0.12, 'sawtooth', 0.25); }
-
+  [523, 659, 784, 1047].forEach((f, i) => setTimeout(() => playTone(f, 0.1, 'sine', 0.3), i * 50)); }
+function sfxBuy() { playTone(660, 0.06, 'sine', 0.25);
+  setTimeout(() => playTone(880, 0.06, 'sine', 0.25), 60); }
+function sfxCardBuy() { playTone(440, 0.08, 'square', 0.15);
+  setTimeout(() => playTone(660, 0.08, 'square', 0.15), 80);
+  setTimeout(() => playTone(880, 0.1, 'square', 0.15), 160); }
+function sfxGem() { if (_sfxCount > 35) return;
+  playTone(1400, 0.06, 'sine', 0.25); }
+function sfxSkin() { playTone(800, 0.08, 'sine', 0.25);
+  setTimeout(() => playTone(1000, 0.08, 'sine', 0.25), 80); }
+function sfxBossHit() { if (_sfxCount > 30) return;
+  playTone(200, 0.1, 'sawtooth', 0.2); }
 function sfxBossKill() {
-  [200, 300, 400, 500].forEach((f, i) => setTimeout(() => playTone(f, 0.12, 'square', 0.3), i * 60)); }
-function sfxMultitap() { playTone(1800, 0.03, 'sine', 0.15); }
+  [200, 300, 400].forEach((f, i) => setTimeout(() => playTone(f, 0.1, 'square', 0.25), i * 50)); }
+function sfxMultitap() { if (_sfxCount > 40) return;
+  playTone(1800, 0.02, 'sine', 0.1); }
 /* ===== NOTIFICATION SYSTEM ===== */
 function updateBadge() {
   const earnBtn = document.querySelector('.nav-btn[data-tab="tab-earn"] .nav-icon');
@@ -682,28 +689,42 @@ function updateCombo() {
   }
 }
 
-/* ===== PARTICLES ===== */
+/* ===== DOM POOL ===== */
+const _pool = { particle: [], float: [], toast: [], rain: [] };
+function _poolGet(type) { return _pool[type].pop() || null; }
+function _poolRecycle(type, el) { if (_pool[type].length < 30) { el.remove(); _pool[type].push(el); } else el.remove(); }
+
+/* ===== PARTICLES (DOM Pool + Cap) ===== */
+let _particleTotal = 0;
 function spawnParticles(x, y, color) {
+  const density = (S._particleDensity || 70) / 100;
+  const maxCount = Math.floor((color && color !== '#ff4757' ? 10 : 6) * density);
+  if (_particleTotal > 20) return;
   const colors = color ? [color] : ['#f3ba2f', '#ff9f43', '#ff4757', '#2ed573', '#3498db', '#9b59b6', '#fff'];
-  const density = (S._particleDensity || 100) / 100;
-  const count = Math.floor((color && color !== '#ff4757' ? 15 : 10) * density);
+  const count = Math.min(maxCount, 12);
   for (let i = 0; i < count; i++) {
     setTimeout(() => {
-      const p = document.createElement('div');
-      p.className = 'particle';
+      if (_particleTotal > 25) return;
+      _particleTotal++;
+      let p = _poolGet('particle');
+      if (!p) { p = document.createElement('div'); p.className = 'particle'; }
+      else { p.style.animation = 'none'; void p.offsetWidth; p.style.display = ''; }
       const angle = Math.random() * 360;
-      const dist = 40 + Math.random() * 120;
+      const dist = 30 + Math.random() * 80;
       p.style.setProperty('--px', Math.cos(angle * Math.PI / 180) * dist + 'px');
       p.style.setProperty('--py', Math.sin(angle * Math.PI / 180) * dist + 'px');
       p.style.background = colors[Math.floor(Math.random() * colors.length)];
       p.style.left = (x || innerWidth / 2) + 'px';
       p.style.top = (y || innerHeight / 2) + 'px';
-      p.style.width = (3 + Math.random() * 8) + 'px';
+      p.style.width = (2 + Math.random() * 5) + 'px';
       p.style.height = p.style.width;
       p.style.borderRadius = Math.random() > 0.5 ? '50%' : '2px';
-      document.body.appendChild(p);
-      setTimeout(() => p.remove(), 800);
-    }, i * 15);
+      p.style.animation = 'none';
+      void p.offsetWidth;
+      if (!p.parentNode) document.body.appendChild(p);
+      p.style.animation = `particleFly ${0.5 + Math.random()*0.2}s ease-out forwards`;
+      setTimeout(() => { _particleTotal = Math.max(0, _particleTotal - 1); _poolRecycle('particle', p); }, 600);
+    }, i * 12);
   }
 }
 
@@ -859,6 +880,8 @@ function processTap(cx, cy) {
     S.totalEnergySpent = (S.totalEnergySpent || 0) + taps;
     if (taps > (S.bestTapSpeed || 0)) S.bestTapSpeed = taps;
     addXp(gain);
+    if (riftActive) { const bonus = gain * 9; S.coins += bonus; riftEarned += bonus; }
+    giveEssence();
   spawnParticles(cx, cy, isCrit ? '#ff4757' : null);
   spawnRipple(cx, cy);
   if (combo >= 10) spawnComboTrail(cx, cy, combo);
@@ -984,20 +1007,22 @@ $('tapZone').addEventListener('touchend', () => {
 });
 $('tapZone').addEventListener('touchcancel', () => { clearTimeout(holdTimeout); clearInterval(holdInterval); });
 
+let _floatCount = 0;
 function spawnFloat(x, y, text, isCrit, color) {
-  const el = document.createElement('div');
+  if (_floatCount > 8) return;
+  _floatCount++;
+  let el = _poolGet('float');
+  if (!el) { el = document.createElement('div'); el.className = 'floating-num'; }
+  else { el.style.animation = 'none'; void el.offsetWidth; el.style.display = ''; }
   el.className = 'floating-num' + (isCrit ? ' crit' : '');
-  el.textContent = text;
+  el.textContent = typeof text === 'string' ? text.substring(0, 30) : text;
   el.style.left = Math.min(Math.max(x - 50, 0), innerWidth - 80) + 'px';
   el.style.top = Math.min(Math.max(y - 50, 0), innerHeight - 60) + 'px';
   if (color) el.style.color = color;
-  const driftX = (Math.random() - 0.5) * 40;
-  const driftY = -30 - Math.random() * 40;
-  el.style.setProperty('--dx', driftX + 'px');
-  el.style.setProperty('--dy', driftY + 'px');
-  el.style.animation = `floatDrift ${0.6 + Math.random() * 0.4}s ease-out forwards`;
-  document.body.appendChild(el);
-  setTimeout(() => el.remove(), 1200);
+  else el.style.color = isCrit ? '#ff4757' : '#f3ba2f';
+  if (!el.parentNode) document.body.appendChild(el);
+  el.style.animation = `floatDrift ${0.5 + Math.random() * 0.2}s ease-out forwards`;
+  setTimeout(() => { _floatCount--; _poolRecycle('float', el); }, 700);
 }
 
 /* ===== COMBO TRAIL ===== */
@@ -3353,6 +3378,394 @@ function toggleAutoBuy() {
   }
   update();
 }
+
+/* ===== PVP ARENA ===== */
+const PVP_TIERS = ['Bronz','Gümüş','Altın','Platin','Elmas','Siber','Efsanevi','Gökkuşağı'];
+const PVP_ICONS = ['🥉','🥈','🥇','💎','🔥','⚡','👑','🌈'];
+function getPvpRank() {
+  const idx = Math.min(Math.floor(S.pvpScore / 100), PVP_TIERS.length - 1);
+  return { title: PVP_TIERS[idx], icon: PVP_ICONS[idx], idx };
+}
+function genOpponents() {
+  const rank = getPvpRank();
+  const base = 1 + rank.idx * 5 + Math.floor(S.lvl / 10);
+  const list = [];
+  for (let i = 0; i < 4; i++) {
+    const lvl = Math.max(10, base + Math.floor(Math.random() * 10) - 5);
+    const pwr = Math.floor(base * (0.8 + Math.random() * 0.4));
+    list.push({
+      name: ['KaraKorsan','ShadowKing','CryptoLord','TapMaster','CoinHunter','MegaCEO','DarkNinja','StarDust'][Math.floor(Math.random()*8)],
+      lvl, power: pwr, reward: Math.floor((pwr * 100) * (1 + S.prestige * 0.1)),
+      icon: ['⚔️','🗡️','🛡️','👹','🤖','👾','🐉','💀'][Math.floor(Math.random()*8)]
+    });
+  }
+  return list;
+}
+function openPvpArena() {
+  const rank = getPvpRank();
+  $('pvpRankDisplay').textContent = `${rank.icon} ${rank.title} · ${S.pvpScore} Puan`;
+  const cont = $('pvpOpponents'); cont.innerHTML = '';
+  $('pvpBattleArea').classList.add('hidden');
+  const opps = genOpponents();
+  opps.forEach((o,i) => {
+    const d = document.createElement('div'); d.className = 'pvp-opponent';
+    const canFight = Date.now() - (S.pvpLastFight || 0) > 5000;
+    d.innerHTML = `<div class="pvp-icon" style="background:rgba(255,255,255,.06);">${o.icon}</div>
+      <div style="flex:1;"><div style="font-weight:700;font-size:13px;">${o.name}</div>
+      <div style="font-size:10px;color:#8e9cb5;">Level ${o.lvl} · ⚡${o.power}</div></div>
+      <div style="text-align:right;"><div style="font-weight:700;color:#f3ba2f;font-size:11px;">💰${fmt(o.reward)}</div>
+      <button class="btn btn-gold btn-xs" ${canFight?'':'disabled'}>${canFight?'Savaş ⚔️':'⏳'}</button></div>`;
+    if (canFight) d.querySelector('button').addEventListener('click', () => startPvpBattle(i));
+    cont.appendChild(d);
+  });
+  $('pvpModal').classList.remove('hidden');
+}
+function startPvpBattle(idx) {
+  const opps = genOpponents();
+  const opp = opps[idx % opps.length];
+  S.pvpLastFight = Date.now();
+  const area = $('pvpBattleArea'); area.classList.remove('hidden');
+  $('pvpBattleIcon').textContent = opp.icon;
+  $('pvpBattleStatus').textContent = `⚔️ ${opp.name}'a karşı savaşıyor...`;
+  $('pvpBattleResult').textContent = '';
+  const playerPower = S.lvl + Math.floor(S.totalEarned / 1e6) + S.prestige * 10 + S.perClick;
+  const total = playerPower + opp.power;
+  const winChance = playerPower / total;
+  const btn = $('pvpOpponents').querySelectorAll('button')[idx];
+  if (btn) { btn.textContent = '⚔️'; btn.style.background = 'rgba(255,71,87,.3)'; }
+  let ticks = 0;
+  const bInt = setInterval(() => {
+    ticks++;
+    $('pvpBattleIcon').textContent = ['⚔️','💥','🔥','⚡','🗡️'][ticks % 5];
+    if (btn) btn.style.transform = `scale(${1 - ticks * 0.02})`;
+    if (ticks >= 6) {
+      clearInterval(bInt);
+      const won = Math.random() < winChance;
+      if (won) {
+        const reward = opp.reward;
+        S.coins += reward; S.pvpScore += 10 + Math.floor(Math.random() * 5);
+        S.pvpWins = (S.pvpWins || 0) + 1;
+        $('pvpBattleResult').textContent = `🏆 KAZANDIN! +${fmt(reward)}💰`;
+        $('pvpBattleResult').style.color = '#2ed573';
+        spawnParticles(null,null,'#f3ba2f');
+        area.style.background = 'rgba(46,213,115,.1)';
+        save();
+      } else {
+        S.pvpLosses = (S.pvpLosses || 0) + 1;
+        $('pvpBattleResult').textContent = '💀 Kaybettin!';
+        $('pvpBattleResult').style.color = '#ff4757';
+        area.style.background = 'rgba(255,71,87,.08)';
+      }
+      $('pvpBattleStatus').textContent = won ? '💰 Ödülü kaptın!' : '😤 Bir dahakine!';
+      update(); openPvpArena();
+    }
+  }, 300);
+}
+
+/* ===== AUTO-BATTLE DUNGEON ===== */
+const DUNGEON_ROOMS = [
+  { icon: '🕷️', desc: 'Dev örümceklerle dolu bir oda!', monster: 'Örümcek Sürüsü' },
+  { icon: '🦇', desc: 'Karanlık mağara, yarasalar saldırıyor!', monster: 'Yarasa Sürüsü' },
+  { icon: '🪦', desc: 'Antik mezar, zombiler uyanıyor!', monster: 'Zombi' },
+  { icon: '🔥', desc: 'Lav dolu bir koridor!', monster: 'Lav Şeytanı' },
+  { icon: '🧊', desc: 'Buz mağarası, donmuş devler!', monster: 'Buz Devi' },
+  { icon: '⚡', desc: 'Büyülü oda, statik enerji akıyor!', monster: 'Büyücü' },
+  { icon: '🐉', desc: 'Ejderha yuvasına girdin!', monster: 'Ejderha' },
+  { icon: '👹', desc: 'Cehennem kapısı, iblisler çıkıyor!', monster: 'İblis Lord' },
+];
+const DUNGEON_BUFFS = [
+  { icon: '⚔️', name: 'Güç', bonus: '2x hasar', stat: 'dmg' },
+  { icon: '💰', name: 'Zenginlik', bonus: '2x ödül', stat: 'coin' },
+  { icon: '⚡', name: 'Enerji', bonus: '+100 enerji', stat: 'energy' },
+  { icon: '🛡️', name: 'Savunma', bonus: '%25 can', stat: 'shield' },
+  { icon: '💎', name: 'Elmas', bonus: '+5 elmas', stat: 'gem' },
+];
+function openDungeon() {
+  const dBest = $('dunBest'); if (dBest) dBest.textContent = S.dungeonBest || 0;
+  $('dunFloor').textContent = '0';
+  $('dunIcon').textContent = '🏰'; $('dunTitle').textContent = 'Zindana girmeye hazır mısın?';
+  $('dunDesc').textContent = '50 ⚡ karşılığında maceraya atıl!';
+  $('dunBuffs').classList.add('hidden'); $('dunBuffs').innerHTML = '';
+  $('dunChoices').classList.add('hidden'); $('dunChoices').innerHTML = '';
+  $('dunEnterBtn').classList.remove('hidden');
+  $('dunExitBtn').classList.add('hidden');
+  $('dungeonModal').classList.remove('hidden');
+}
+function closeDungeon() { $('dungeonModal').classList.add('hidden'); S.dungeonFloor = 0; S.dungeonBuffs = []; }
+function enterDungeon() {
+  if (S.energy < 50) return toast('❌ Yetersiz enerji!');
+  S.energy -= 50; S.dungeonFloor = 1; S.dungeonBuffs = [];
+  $('dunEnterBtn').classList.add('hidden');
+  processDungeonRoom();
+}
+function processDungeonRoom() {
+  if (S.dungeonFloor > 10) { dungeonComplete(); return; }
+  $('dunFloor').textContent = S.dungeonFloor;
+  if (S.dungeonFloor === 10) {
+    $('dunIcon').textContent = '🐉'; $('dunTitle').textContent = '🐉 SON PATRON! Ejderha Kral!';
+    $('dunDesc').textContent = 'Tüm gücünle saldır! Bu son savaş!';
+    $('dunBuffs').classList.add('hidden');
+    $('dunChoices').classList.remove('hidden'); $('dunChoices').innerHTML = '';
+    const btn = document.createElement('div'); btn.className = 'dun-choice dun-boss';
+    btn.innerHTML = '<span class="dun-c-icon">⚔️</span><span>SALDIR! (Patron Canı: 1000)</span>';
+    btn.addEventListener('click', dungeonBoss);
+    $('dunChoices').appendChild(btn);
+  } else {
+    const room = DUNGEON_ROOMS[(S.dungeonFloor - 1) % DUNGEON_ROOMS.length];
+    $('dunIcon').textContent = room.icon;
+    $('dunTitle').textContent = `🏛️ Oda ${S.dungeonFloor}: ${room.monster}`;
+    $('dunDesc').textContent = room.desc;
+    $('dunBuffs').classList.add('hidden'); $('dunBuffs').innerHTML = '';
+    $('dunChoices').classList.remove('hidden'); $('dunChoices').innerHTML = '';
+    const buffOptions = [...DUNGEON_BUFFS].sort(() => Math.random() - 0.5).slice(0, 3);
+    buffOptions.forEach((b, i) => {
+      const d = document.createElement('div'); d.className = 'dun-choice';
+      d.innerHTML = `<span class="dun-c-icon">${b.icon}</span><span>${b.name}: ${b.bonus}</span>`;
+      d.addEventListener('click', () => chooseDungeonBuff(i, buffOptions));
+      $('dunChoices').appendChild(d);
+    });
+  }
+}
+function chooseDungeonBuff(idx, options) {
+  const b = options[idx];
+  S.dungeonBuffs.push(b);
+  const buffsEl = $('dunBuffs'); buffsEl.classList.remove('hidden');
+  const tag = document.createElement('span'); tag.className = 'dun-buff';
+  tag.textContent = `${b.icon}${b.name}`;
+  buffsEl.appendChild(tag);
+  S.dungeonFloor++;
+  $('dunChoices').classList.add('hidden');
+  setTimeout(processDungeonRoom, 400);
+}
+function dungeonBoss() {
+  $('dunChoices').classList.add('hidden');
+  $('dunTitle').textContent = '⚔️ Patron savaşı!';
+  $('dunDesc').textContent = 'Saldırıyorsun...';
+  let hp = 1000;
+  const dmg = S.perClick * (S.dungeonBuffs.filter(b => b.stat === 'dmg').length * 2 || 1);
+  const coinMult = S.dungeonBuffs.filter(b => b.stat === 'coin').length * 2 || 1;
+  const iv = setInterval(() => {
+    hp -= dmg;
+    $('dunDesc').textContent = `⚔️ ${Math.max(0, hp)} can kaldı`;
+    if (hp <= 0) {
+      clearInterval(iv);
+      const reward = Math.floor((5000 + S.lvl * 200) * coinMult);
+      const gemReward = 3 + Math.floor(Math.random() * 5);
+      S.coins += reward; S.gems += gemReward;
+      if ((S.dungeonBest || 0) < S.dungeonFloor) S.dungeonBest = S.dungeonFloor;
+      $('dunIcon').textContent = '🏆';
+      $('dunTitle').textContent = `🎉 Zindan Tamamlandı! Kat ${S.dungeonFloor}`;
+      $('dunDesc').textContent = `💰+${fmt(reward)} · 💎+${gemReward}`;
+      $('dunExitBtn').classList.remove('hidden');
+      S.dungeonFloor++;
+      S.dungeonDaily = (S.dungeonDaily||0) + 1;
+      save(); update();
+      sfxLevelUp();
+      spawnParticles(null,null,'#f3ba2f');
+    }
+  }, 500);
+}
+function dungeonComplete() {
+  $('dunIcon').textContent = '🏆';
+  $('dunTitle').textContent = '🎉 MÜKEMMEL! Tüm zindan temizlendi!';
+  const bonus = Math.floor(20000 * (1 + S.prestige * 0.2));
+  S.coins += bonus; S.gems += 10;
+  $('dunDesc').textContent = `🏆 Bonus: +${fmt(bonus)}💰 +10💎`;
+  $('dunExitBtn').classList.remove('hidden');
+  if ((S.dungeonBest || 0) < 10) S.dungeonBest = 10;
+  save(); update();
+  sfxLevelUp();
+}
+
+/* ===== TIME RIFT ===== */
+let riftInterval = null;
+let riftTimeLeft = 0;
+let riftEarned = 0;
+let riftActive = false;
+function openRift() {
+  const today = new Date().toDateString();
+  const used = S.riftUsed === today;
+  riftActive = false;
+  if (riftInterval) { clearInterval(riftInterval); riftInterval = null; }
+  $('riftStatus').textContent = used ? '✅ Bugün kullandın! Yarın tekrar gel.' : '🌀 60sn boyunca 10x kazanç!';
+  $('riftTimer').textContent = used ? '--:--' : '60sn';
+  $('riftRewardText').textContent = '0 coin';
+  $('riftIcon').textContent = used ? '✅' : '⏳';
+  $('riftActivateBtn').textContent = used ? '⏰ Yarın Açılır' : '🌀 Yarığı Aç';
+  $('riftActivateBtn').disabled = used;
+  $('riftModal').classList.remove('hidden');
+}
+function activateRift() {
+  const today = new Date().toDateString();
+  if (S.riftUsed === today) return toast('❌ Bugün zaten kullandın!');
+  S.riftUsed = today;
+  riftActive = true; riftTimeLeft = 60; riftEarned = 0;
+  S.riftReward = 0;
+  $('riftActivateBtn').disabled = true;
+  $('riftActivateBtn').textContent = '🌀 AKTİF!';
+  document.querySelector('.app').classList.add('rift-active');
+  riftInterval = setInterval(() => {
+    riftTimeLeft--;
+    $('riftTimer').textContent = `${riftTimeLeft}sn`;
+    $('riftTimer').classList.add('rift-countdown');
+    if (riftTimeLeft <= 10) $('riftTimer').style.color = '#ff4757';
+    if (riftTimeLeft <= 0) {
+      clearInterval(riftInterval); riftInterval = null;
+      endRift();
+    }
+  }, 1000);
+  toast('🌀 ZAMAN YARIĞI AKTİF! 60sn 10x kazanç!');
+  sfxLevelUp();
+}
+function endRift() {
+  riftActive = false;
+  document.querySelector('.app').classList.remove('rift-active');
+  S.riftReward = riftEarned;
+  const bonus = Math.floor(riftEarned * 0.5);
+  S.coins += bonus;
+  $('riftIcon').textContent = '🎉';
+  $('riftStatus').textContent = `🌀 Yarık kapandı! Ekstra bonus: +${fmt(bonus)}💰`;
+  $('riftRewardText').textContent = `+${fmt(riftEarned + bonus)}💰`;
+  $('riftActivateBtn').textContent = '✅ Kullanıldı';
+  $('riftTimer').textContent = '🎉';
+  save(); update();
+  spawnParticles(null,null,'#9b59b6');
+  toast(`🌀 Zaman yarığı bitti! +${fmt(bonus)} bonus!`);
+}
+
+/* ===== WORLD CONQUEST ===== */
+const TERRITORIES = [
+  { name: 'Türkiye', icon: '🇹🇷', cost: 5000, bonus: { type: 'perClick', val: 1 }, region: 'Avrasya' },
+  { name: 'Almanya', icon: '🇩🇪', cost: 12000, bonus: { type: 'perSec', val: 50 }, region: 'Avrupa' },
+  { name: 'Japonya', icon: '🇯🇵', cost: 25000, bonus: { type: 'maxEnergy', val: 500 }, region: 'Asya' },
+  { name: 'ABD', icon: '🇺🇸', cost: 50000, bonus: { type: 'perClick', val: 3 }, region: 'Amerika' },
+  { name: 'Brezilya', icon: '🇧🇷', cost: 40000, bonus: { type: 'perSec', val: 200 }, region: 'Amerika' },
+  { name: 'Rusya', icon: '🇷🇺', cost: 35000, bonus: { type: 'maxEnergy', val: 1000 }, region: 'Avrasya' },
+  { name: 'Hindistan', icon: '🇮🇳', cost: 45000, bonus: { type: 'perClick', val: 4 }, region: 'Asya' },
+  { name: 'Çin', icon: '🇨🇳', cost: 60000, bonus: { type: 'perSec', val: 500 }, region: 'Asya' },
+  { name: 'Fransa', icon: '🇫🇷', cost: 30000, bonus: { type: 'energyRegenBonus', val: 1 }, region: 'Avrupa' },
+  { name: 'İngiltere', icon: '🇬🇧', cost: 28000, bonus: { type: 'perClick', val: 2 }, region: 'Avrupa' },
+  { name: 'Mısır', icon: '🇪🇬', cost: 15000, bonus: { type: 'perSec', val: 80 }, region: 'Afrika' },
+  { name: 'Avustralya', icon: '🇦🇺', cost: 22000, bonus: { type: 'maxEnergy', val: 300 }, region: 'Okyanusya' },
+  { name: 'Kanada', icon: '🇨🇦', cost: 32000, bonus: { type: 'perSec', val: 150 }, region: 'Amerika' },
+  { name: 'Güney Kore', icon: '🇰🇷', cost: 38000, bonus: { type: 'perClick', val: 3 }, region: 'Asya' },
+  { name: 'İtalya', icon: '🇮🇹', cost: 20000, bonus: { type: 'energyRegenBonus', val: 1 }, region: 'Avrupa' },
+  { name: 'İspanya', icon: '🇪🇸', cost: 18000, bonus: { type: 'perSec', val: 100 }, region: 'Avrupa' },
+  { name: 'Endonezya', icon: '🇮🇩', cost: 26000, bonus: { type: 'maxEnergy', val: 400 }, region: 'Asya' },
+  { name: 'Suudi Arabistan', icon: '🇸🇦', cost: 55000, bonus: { type: 'perClick', val: 5 }, region: 'Avrasya' },
+  { name: 'Meksika', icon: '🇲🇽', cost: 16000, bonus: { type: 'perSec', val: 60 }, region: 'Amerika' },
+  { name: 'Nijerya', icon: '🇳🇬', cost: 10000, bonus: { type: 'maxEnergy', val: 200 }, region: 'Afrika' },
+];
+function openWorldMap() {
+  const owned = S.territories || [];
+  $('worldProgress').textContent = `🌍 ${owned.length}/${TERRITORIES.length} bölge`;
+  const cont = $('worldList'); cont.innerHTML = '';
+  TERRITORIES.forEach((t, i) => {
+    const isOwned = owned.includes(i);
+    const d = document.createElement('div'); d.className = 'world-territory' + (isOwned ? ' owned' : '');
+    const bVal = t.bonus.val + (isOwned ? 0 : 0);
+    d.innerHTML = `<span class="w-icon">${t.icon}</span>
+      <span class="w-name">${t.name} ${isOwned ? '✅' : ''}</span>
+      <div style="text-align:right;">
+        <div class="w-bonus">${isOwned ? '✔️' : ''} +${bVal} ${t.bonus.type}</div>
+        ${!isOwned ? `<div class="w-cost">💰${fmt(t.cost)}</div>` : ''}
+      </div>`;
+    if (!isOwned) {
+      d.style.cursor = 'pointer';
+      d.addEventListener('click', () => conquerTerritory(i));
+    }
+    cont.appendChild(d);
+  });
+  $('worldModal').classList.remove('hidden');
+}
+function conquerTerritory(idx) {
+  const t = TERRITORIES[idx];
+  if ((S.territories || []).includes(idx)) return toast('❌ Zaten ele geçirdin!');
+  if (S.coins < t.cost) return toast(`❌ ${fmt(t.cost)} coin lazım!`);
+  S.coins -= t.cost;
+  if (!S.territories) S.territories = [];
+  S.territories.push(idx);
+  applyTerritoryBonus(t.bonus);
+  save(); update();
+  openWorldMap();
+  toast(`🌍 ${t.name} ele geçirildi! +${t.bonus.val} ${t.bonus.type}`);
+  sfxBuy();
+}
+function applyTerritoryBonus(bonus) {
+  switch (bonus.type) {
+    case 'perClick': S.perClick += bonus.val; break;
+    case 'perSec': S.perSec += bonus.val; break;
+    case 'maxEnergy': S.maxEnergy += bonus.val; break;
+    case 'energyRegenBonus': S.energyRegenBonus = (S.energyRegenBonus || 0) + bonus.val; break;
+  }
+}
+
+/* ===== ALCHEMY ===== */
+const ARTIFACTS = [
+  { icon: '⚗️', name: 'Bilgelik İksiri', bonus: '+2 perClick', apply: () => { S.perClick += 2; } },
+  { icon: '🔮', name: 'Kristal Küre', bonus: '+50 perSec', apply: () => { S.perSec += 50; } },
+  { icon: '💫', name: 'Yıldız Tozu', bonus: '+200 maxEnergy', apply: () => { S.maxEnergy += 200; } },
+  { icon: '🪄', name: 'Sihirli Asa', bonus: '+5 perClick', apply: () => { S.perClick += 5; } },
+  { icon: '🏺', name: 'Antik Vazo', bonus: '+150 perSec', apply: () => { S.perSec += 150; } },
+  { icon: '💎', name: 'Büyülü Elmas', bonus: '+500 maxEnergy', apply: () => { S.maxEnergy += 500; } },
+  { icon: '👑', name: 'Kral Tacı', bonus: '+10 perClick', apply: () => { S.perClick += 10; } },
+  { icon: '⚡', name: 'Yıldırım Taşı', bonus: '+300 perSec', apply: () => { S.perSec += 300; } },
+];
+let alchemyTimer = null;
+function openAlchemy() {
+  if (!S.alchemyEssence && S.alchemyEssence !== 0) S.alchemyEssence = 0;
+  if (!S.artifacts) S.artifacts = [];
+  $('alchemyEssence').textContent = S.alchemyEssence;
+  $('alchemyArtifacts').textContent = S.artifacts.length;
+  $('alchemyResult').classList.add('hidden');
+  const list = $('alchemyArtifactList'); list.innerHTML = '';
+  if (S.artifacts.length === 0) { list.innerHTML = '<div style="font-size:11px;color:#8e9cb5;text-align:center;">Henüz eserin yok</div>'; }
+  else {
+    S.artifacts.forEach((a, i) => {
+      const d = document.createElement('div'); d.className = 'artifact-item';
+      d.innerHTML = `<span class="a-icon">${a.icon}</span><span class="a-name">${a.name}</span><span class="a-bonus">${a.bonus}</span>`;
+      list.appendChild(d);
+    });
+  }
+  $('alchemyModal').classList.remove('hidden');
+}
+function craftArtifact() {
+  if (!S.alchemyEssence) S.alchemyEssence = 0;
+  if (S.alchemyEssence < 3) return toast('❌ 3✨ öz lazım! Tıkladıkça öz kazanırsın.');
+  S.alchemyEssence -= 3;
+  if (!S.artifacts) S.artifacts = [];
+  const artifact = ARTIFACTS[Math.floor(Math.random() * ARTIFACTS.length)];
+  S.artifacts.push(artifact);
+  artifact.apply();
+  const result = $('alchemyResult'); result.classList.remove('hidden');
+  result.innerHTML = `<div style="font-size:32px;animation:dunAniam .5s;">${artifact.icon}</div>
+    <div style="font-weight:700;">🧪 ${artifact.name} üretildi!</div>
+    <div style="color:#f3ba2f;font-size:12px;">${artifact.bonus}</div>`;
+  save(); update(); openAlchemy();
+  sfxLevelUp();
+}
+$('craftBtn').addEventListener('click', craftArtifact);
+
+/* ===== ESSENCE ON TAP ===== */
+function giveEssence() {
+  if (Math.random() < 0.08) {
+    S.alchemyEssence = (S.alchemyEssence || 0) + 1;
+    spawnFloat(innerWidth/2 + Math.random()*100-50, innerHeight/2, '✨+1', false, '#9b59b6');
+  }
+}
+
+/* ===== MODAL CLOSE ===== */
+function wireClose(id) {
+  const el = $(id);
+  if (el) el.addEventListener('click', (e) => { if (e.target === el) el.classList.add('hidden'); });
+}
+['pvpModal','dungeonModal','riftModal','worldModal','alchemyModal'].forEach(id => wireClose(id));
+$('closePvpModal').addEventListener('click', () => $('pvpModal').classList.add('hidden'));
+$('closeDungeonModal').addEventListener('click', () => { $('dungeonModal').classList.add('hidden'); S.dungeonFloor = 0; });
+$('closeRiftModal').addEventListener('click', () => { $('riftModal').classList.add('hidden'); if (riftInterval) { clearInterval(riftInterval); riftInterval = null; riftActive = false; document.querySelector('.app').classList.remove('rift-active'); } });
+$('closeWorldModal').addEventListener('click', () => $('worldModal').classList.add('hidden'));
+$('closeAlchemyModal').addEventListener('click', () => $('alchemyModal').classList.add('hidden'));
+$('riftActivateBtn').addEventListener('click', activateRift);
 
 update();
 if (!S._firstPlayDate) S._firstPlayDate = new Date().toLocaleDateString('tr-TR');

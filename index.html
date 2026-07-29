@@ -292,6 +292,37 @@
             <span style="flex:1;font-weight:600;">2x Çarpan 60sn</span>
             <button class="btn btn-gold btn-xs">Aktifleştir</button>
         </div>
+        <div class="section-label" style="margin-top:14px;">⚔️ Çığır Açan</div>
+        <div class="task" id="pvpTask" style="cursor:pointer;">
+            <span style="font-size:20px;">⚔️</span>
+            <span style="flex:1;font-weight:600;">PVP Arena</span>
+            <span style="font-size:10px;color:#ff4757;">Rakipleri Yen!</span>
+            <button class="btn btn-gold btn-xs" onclick="event.stopPropagation();openPvpArena()">Savaş</button>
+        </div>
+        <div class="task" id="dungeonTask" style="cursor:pointer;">
+            <span style="font-size:20px;">🏰</span>
+            <span style="flex:1;font-weight:600;">Zindan</span>
+            <span style="font-size:10px;color:#8e9cb5;">50⚡</span>
+            <button class="btn btn-gold btn-xs" onclick="event.stopPropagation();openDungeon()">Gir</button>
+        </div>
+        <div class="task" id="riftTask" style="cursor:pointer;">
+            <span style="font-size:20px;">🌀</span>
+            <span style="flex:1;font-weight:600;">Zaman Yarığı</span>
+            <span style="font-size:10px;color:#9b59b6;">10x Günde 1</span>
+            <button class="btn btn-gold btn-xs" onclick="event.stopPropagation();openRift()">Aktifleştir</button>
+        </div>
+        <div class="task" id="worldTask" style="cursor:pointer;">
+            <span style="font-size:20px;">🌍</span>
+            <span style="flex:1;font-weight:600;">Dünya Fethi</span>
+            <span style="font-size:10px;color:#2ed573;">Bölgeleri Ele Geçir</span>
+            <button class="btn btn-gold btn-xs" onclick="event.stopPropagation();openWorldMap()">Keşfet</button>
+        </div>
+        <div class="task" id="alchemyTask" style="cursor:pointer;">
+            <span style="font-size:20px;">🧪</span>
+            <span style="flex:1;font-weight:600;">Simya</span>
+            <span style="font-size:10px;color:#3498db;">Eser Yap</span>
+            <button class="btn btn-gold btn-xs" onclick="event.stopPropagation();openAlchemy()">Üret</button>
+        </div>
         <div style="height:80px;"></div>
     </section>
 
@@ -602,6 +633,89 @@
         </div>
     </div>
 </div>
+<!-- ===== PVP ARENA ===== -->
+<div class="modal-overlay hidden" id="pvpModal">
+    <div class="modal-card" style="max-width:360px;">
+        <button class="modal-x" id="closePvpModal">✕</button>
+        <div style="font-size:40px;">⚔️</div>
+        <h3>PVP Arena</h3>
+        <p style="font-size:11px;color:#8e9cb5;">Gerçek rakiplere karşı savaş, sıralamada yüksel!</p>
+        <div id="pvpRankDisplay" style="font-size:12px;color:#f3ba2f;font-weight:700;">🏆 Bronz · 0 Puan</div>
+        <div id="pvpOpponents" style="display:flex;flex-direction:column;gap:4px;margin:6px 0;max-height:200px;overflow-y:auto;"></div>
+        <div id="pvpBattleArea" class="hidden" style="text-align:center;padding:10px;background:rgba(255,71,87,.08);border-radius:12px;margin-top:4px;">
+            <div style="font-size:28px;" id="pvpBattleIcon">⚔️</div>
+            <div style="font-size:14px;font-weight:700;" id="pvpBattleStatus">Savaş hazırlanıyor...</div>
+            <div style="font-size:20px;font-weight:900;color:#ff4757;margin:4px 0;" id="pvpBattleResult"></div>
+        </div>
+    </div>
+</div>
+
+<!-- ===== DUNGEON ===== -->
+<div class="modal-overlay hidden" id="dungeonModal">
+    <div class="modal-card" style="max-width:360px;">
+        <button class="modal-x" id="closeDungeonModal">✕</button>
+        <div style="font-size:40px;">🏰</div>
+        <h3>Zindan</h3>
+        <p style="font-size:11px;color:#8e9cb5;">10 katlı zindanı temizle, büyük ödülleri kap!</p>
+        <div id="dungeonStatus" style="display:flex;justify-content:space-between;font-size:12px;margin:4px 0;">
+            <span>🏛️ Kat: <span id="dunFloor">0</span>/10</span>
+            <span>🏆 Rekor: <span id="dunBest">0</span></span>
+        </div>
+        <div id="dungeonArea" style="text-align:center;padding:12px;background:rgba(0,0,0,.2);border-radius:12px;min-height:140px;">
+            <div style="font-size:32px;" id="dunIcon">🏛️</div>
+            <div style="font-size:14px;font-weight:700;margin:4px 0;" id="dunTitle">Zindana girmeye hazır mısın?</div>
+            <div style="font-size:12px;color:#8e9cb5;" id="dunDesc">50 ⚡ karşılığında maceraya atıl!</div>
+            <div class="hidden" id="dunBuffs" style="display:flex;flex-wrap:wrap;gap:4px;justify-content:center;margin:4px 0;"></div>
+            <div class="hidden" id="dunChoices" style="display:flex;flex-direction:column;gap:4px;margin-top:6px;"></div>
+        </div>
+        <button class="btn btn-gold btn-block hidden" id="dunEnterBtn" onclick="enterDungeon()">🗡️ Zindana Gir (50⚡)</button>
+        <button class="btn btn-secondary btn-block hidden" id="dunExitBtn" onclick="closeDungeon()">Çık</button>
+    </div>
+</div>
+
+<!-- ===== TIME RIFT ===== -->
+<div class="modal-overlay hidden" id="riftModal">
+    <div class="modal-card" style="max-width:360px;text-align:center;">
+        <button class="modal-x" id="closeRiftModal">✕</button>
+        <div style="font-size:40px;">🌀</div>
+        <h3>Zaman Yarığı</h3>
+        <p id="riftStatus" style="font-size:11px;color:#8e9cb5;">Günde 1 kez 10x çarpanla 60sn boyunca inanılmaz kazanç!</p>
+        <div style="font-size:48px;margin:8px 0;" id="riftIcon">⏳</div>
+        <div style="font-size:24px;font-weight:900;color:#9b59b6;" id="riftTimer">00:00</div>
+        <div style="font-size:18px;font-weight:700;color:#f3ba2f;" id="riftRewardText">+0 coin</div>
+        <button class="btn btn-gold btn-block" id="riftActivateBtn">🌀 Yarığı Aç</button>
+    </div>
+</div>
+
+<!-- ===== WORLD CONQUEST ===== -->
+<div class="modal-overlay hidden" id="worldModal">
+    <div class="modal-card" style="max-width:360px;">
+        <button class="modal-x" id="closeWorldModal">✕</button>
+        <div style="font-size:40px;">🌍</div>
+        <h3>Dünya Fethi</h3>
+        <p style="font-size:11px;color:#8e9cb5;">Bölgeleri ele geçir, kalıcı bonuslar kazan!</p>
+        <div id="worldProgress" style="font-size:12px;color:#2ed573;font-weight:700;margin-bottom:4px;">🌍 0/20 bölge</div>
+        <div id="worldList" style="display:flex;flex-direction:column;gap:4px;max-height:260px;overflow-y:auto;"></div>
+    </div>
+</div>
+
+<!-- ===== ALCHEMY ===== -->
+<div class="modal-overlay hidden" id="alchemyModal">
+    <div class="modal-card" style="max-width:360px;">
+        <button class="modal-x" id="closeAlchemyModal">✕</button>
+        <div style="font-size:40px;">🧪</div>
+        <h3>Simya</h3>
+        <p style="font-size:11px;color:#8e9cb5;">Özlerden eserler yap, kalıcı güçler kazan!</p>
+        <div style="display:flex;justify-content:space-between;font-size:12px;margin:4px 0;">
+            <span>✨ Öz: <span id="alchemyEssence" style="color:#9b59b6;font-weight:700;">0</span></span>
+            <span>🏺 Eser: <span id="alchemyArtifacts" style="color:#f3ba2f;font-weight:700;">0</span></span>
+        </div>
+        <div id="alchemyResult" class="hidden" style="text-align:center;padding:10px;background:rgba(155,89,182,.1);border-radius:12px;margin:4px 0;"></div>
+        <div id="alchemyArtifactList" style="display:flex;flex-direction:column;gap:4px;max-height:140px;overflow-y:auto;"></div>
+        <button class="btn btn-gold btn-block" id="craftBtn">🧪 Eser Yap (3✨)</button>
+    </div>
+</div>
+
 <audio id="bgm" loop preload="none"></audio>
 <div class="toast-area" id="toastArea"></div>
 <script src="script.js"></script>

@@ -308,5 +308,47 @@ body{background:#0a0a0f;display:flex;justify-content:center;align-items:center;m
 .ambient-particle{position:fixed;border-radius:50%;pointer-events:none;z-index:0;opacity:.1;animation:ambientDrift linear infinite;}
 @keyframes ambientDrift{0%{transform:translateY(100vh) rotate(0deg);opacity:0}10%{opacity:.1}90%{opacity:.1}100%{transform:translateY(-20vh) rotate(360deg);opacity:0}}
 
+/* ===== PVP ARENA ===== */
+.pvp-opponent{display:flex;align-items:center;gap:8px;padding:8px;background:rgba(255,255,255,.04);border-radius:10px;cursor:pointer;transition:all .2s;}
+.pvp-opponent:hover{border-color:#f3ba2f;}
+.pvp-opponent:active{transform:scale(.96);}
+.pvp-opponent .pvp-icon{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:18px;}
+.pvp-opponent .pvp-tier{font-size:9px;padding:2px 6px;border-radius:6px;font-weight:700;}
+.pvp-battle-shake{animation:pvpShake .1s ease-in-out 3;}
+@keyframes pvpShake{0%,100%{transform:translateX(0)}25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
+.pvp-flash{animation:pvpFlash .3s ease-out;}
+@keyframes pvpFlash{0%{box-shadow:inset 0 0 60px rgba(255,71,87,.6)}100%{box-shadow:inset 0 0 0 rgba(255,71,87,0)}}
+
+/* ===== DUNGEON ===== */
+.dun-buff{display:inline-block;padding:3px 8px;border-radius:8px;font-size:10px;font-weight:700;background:rgba(46,213,115,.15);color:#2ed573;margin:2px;}
+.dun-choice{display:flex;align-items:center;gap:8px;padding:10px;background:rgba(255,255,255,.04);border-radius:10px;cursor:pointer;transition:all .2s;font-size:12px;font-weight:600;}
+.dun-choice:active{transform:scale(.96);}
+.dun-choice .dun-c-icon{font-size:20px;}
+@keyframes dunPulse{0%,100%{transform:scale(1)}50%{transform:scale(1.05)}}
+.dun-boss{animation:dunPulse .8s ease-in-out infinite;}
+@keyframes dunReward{0%{transform:scale(0) rotate(-180deg);opacity:0}50%{transform:scale(1.2) rotate(10deg)}100%{transform:scale(1) rotate(0);opacity:1}}
+.dun-anim{animation:dunReward .5s ease-out forwards;}
+
+/* ===== TIME RIFT ===== */
+.rift-active .app{animation:riftPulse 2s ease-in-out infinite;}
+@keyframes riftPulse{0%,100%{filter:brightness(1) hue-rotate(0deg)}25%{filter:brightness(1.3) hue-rotate(30deg)}50%{filter:brightness(1.5) hue-rotate(60deg)}75%{filter:brightness(1.3) hue-rotate(30deg)}}
+.rift-countdown{animation:riftCount 1s ease-out infinite;}
+@keyframes riftCount{0%,100%{transform:scale(1)}50%{transform:scale(1.15)}}
+
+/* ===== WORLD CONQUEST ===== */
+.world-territory{display:flex;align-items:center;gap:8px;padding:8px;background:rgba(255,255,255,.04);border-radius:10px;justify-content:space-between;transition:all .2s;}
+.world-territory.owned{background:rgba(46,213,115,.1);border:1px solid rgba(46,213,115,.2);}
+.world-territory .w-icon{font-size:24px;}
+.world-territory .w-name{font-weight:600;font-size:12px;flex:1;}
+.world-territory .w-bonus{font-size:10px;color:#2ed573;}
+.world-territory .w-cost{font-size:10px;color:#8e9cb5;}
+
+/* ===== ALCHEMY ===== */
+.artifact-item{display:flex;align-items:center;gap:6px;padding:6px 8px;background:rgba(155,89,182,.1);border-radius:8px;font-size:11px;margin:2px 0;}
+.artifact-item .a-icon{font-size:18px;}
+.artifact-item .a-name{font-weight:600;flex:1;}
+.artifact-item .a-bonus{color:#f3ba2f;font-size:10px;}
+@keyframes essenceGlow{0%,100%{box-shadow:0 0 4px rgba(155,89,182,.3)}50%{box-shadow:0 0 14px rgba(155,89,182,.7)}}
+
 /* ===== RESPONSIVE ===== */
 @media(min-width:440px){.app{border-radius:20px;height:92vh;border:1px solid rgba(255,255,255,.06);box-shadow:0 0 60px rgba(0,0,0,.5);}}
