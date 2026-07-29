@@ -150,7 +150,7 @@ body{background:#000;display:flex;justify-content:center;align-items:center;min-
 .lb-val{font-size:10px;color:#f3ba2f;}
 
 /* ============ BOTTOM NAV ============ */
-.bottom-nav{height:64px;background:#272a2f;border-radius:24px 24px 0 0;margin:0 8px;display:flex;justify-content:space-around;align-items:center;}
+.bottom-nav{height:64px;background:#272a2f;border-radius:24px 24px 0 0;margin:0 8px;display:flex;justify-content:space-around;align-items:center;padding-bottom:env(safe-area-inset-bottom,0);}
 .nav-btn{background:none;border:none;color:#85827d;display:flex;flex-direction:column;align-items:center;gap:2px;font-size:9px;font-weight:600;cursor:pointer;padding:6px 8px;}
 .nav-btn.active{color:#fff;}
 .nav-btn .nav-icon{font-size:22px;}

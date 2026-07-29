@@ -346,11 +346,8 @@ function update() {
   $('perSecText').textContent = '+' + fmt(perSecDisplay) + (isX2() ? ' x2' : '');
   const perHrEl = $('perHourText');
   if (perHrEl) perHrEl.textContent = `(${fmt(perSecDisplay * 3600)}/saat)`;
-  const perHourShort = $('perHourShort');
+  const perHourShort = $('phShort');
   if (perHourShort) perHourShort.textContent = fmt(perSecDisplay * 3600) + '/saat';
-  const totalTop = $('totalEarnedTop');
-  if (totalTop) totalTop.textContent = fmt(S.totalEarned || 0);
-  setBadge('earnTabBadge', S.totalEarned >= 1e6 ? '💰' : '');
   updateEnergyBar();
   const userDisp = $('userDisplay');
   if (userDisp) userDisp.textContent = S.username && S.username.trim() ? S.username.trim() : 'Misafir';
@@ -365,7 +362,6 @@ function update() {
   S.perClick = Math.floor((2 + clickBonus) * setClickMult);
   const tapValEl = $('perTapText');
   if (tapValEl) tapValEl.textContent = '/tık: ' + fmt(Math.floor(S.perClick)) + (isX2() ? ' 🔥x2' : '');
-  $('bossDmgDisplay').textContent = '⚔️ ' + fmt(Math.floor(S.perClick)) + '/tık';
   const x2Indicator = $('x2Indicator');
   if (x2Indicator) {
     if (isX2()) {
@@ -411,10 +407,6 @@ function update() {
   $('statRegen').textContent = (1 + (S.energyRegenBonus || 0)).toFixed(1) + '/s';
   $('statMulti').textContent = (S.multiTap || 1) + 'x';
   $('statBoss').textContent = S.bossWins || 0;
-  $('statCrates').textContent = S.crates || 0;
-  $('statPassive').textContent = fmt(S.perSec * 3600) + '/s';
-  $('statCardLevels').textContent = fmt(getTotalCardLevels());
-  $('statTotalGems').textContent = fmt(S.totalEarned ? Math.floor(S.totalEarned / 10000) + (S.gems || 0) : S.gems || 0);
   $('multiTapDesc').textContent = S.multiTap || 1;
   $('multiTapCostBtn').textContent = '💎 ' + fmt(getMultiTapCost());
   $('regenDesc').textContent = (1 + (S.energyRegenBonus || 0)).toFixed(1);
@@ -427,8 +419,6 @@ function update() {
   checkDailyTasks();
   const autoInd = $('autoTapIndicator');
   if (autoInd) autoInd.style.display = autoTapInterval ? 'inline' : 'none';
-  const totalLevelsEl = $('totalCardLevels');
-  if (totalLevelsEl) totalLevelsEl.textContent = `📈 Toplam ${fmt(getTotalCardLevels())} seviye`;
   updateBadge();
   const mineBtn = document.querySelector('.nav-btn[data-tab="tab-mine"] .nav-icon');
   if (mineBtn) {
@@ -1116,7 +1106,6 @@ function renderGrid(filter) {
     const isRainbow = lvl >= 1000;
     const isMaxed = lvl >= 9999;
     const isFav = (S.favorites || []).includes(c.id);
-    const lvlMilestone = lvl >= 5000 ? '💎' : lvl >= 1000 ? '🌟' : lvl >= 500 ? '⭐' : lvl >= 100 ? '🏅' : lvl >= 50 ? '🎖️' : lvl >= 25 ? '🔰' : '';
     const locked = c.levelReq && S.lvl < c.levelReq;
     const tooExpensive = locked || S.coins < cost;
     const ri = RARITY[c.rarity] || 0;
@@ -1134,14 +1123,11 @@ function renderGrid(filter) {
     div.setAttribute('data-rarity', c.rarity || 'legendary');
     if (isMaxed) div.style.setProperty('--gold-glow', '#f3ba2f');
     div.innerHTML = `
-      <div class="ucard-icon" style="background:${rc}22;border-color:${rc}44;position:relative;">
-        ${locked ? '🔒' : c.icon}
-        ${!locked ? `<span class="fav-star" data-id="${c.id}" style="position:absolute;top:-4px;right:-4px;font-size:12px;cursor:pointer;filter:drop-shadow(0 0 2px rgba(0,0,0,.5));">${isFav ? '⭐' : '☆'}</span>` : ''}
-      </div>
+      <div class="ucard-icon" style="background:${rc}22;border-color:${rc}44;">${locked ? '🔒' : c.icon}</div>
       <div class="ucard-body">
         <div class="ucard-top">
           <span class="ucard-name">${locked ? '🔒 ' + c.name : c.name}${c.levelReq ? ' <span style="font-size:9px;color:#ff00ff;">Lv.' + c.levelReq + '</span>' : ''}</span>
-          <span class="ucard-level" style="background:${rc}22;color:${rc};">${locked ? '🔒' : lvlMilestone + 'Lv.' + lvl}</span>
+          <span class="ucard-level" style="background:${rc}22;color:${rc};">${locked ? '🔒' : 'Lv.' + lvl}</span>
         </div>
         <div class="ucard-pps" style="color:${rc}">${locked ? '🔒 Level ' + c.levelReq + ' gerekli' : (pph > 0 ? '+' + fmt(pph) + '/s' : rarityLabel) + (extraStr ? ' | ' + extraStr : '')}</div>
         <div class="ucard-bar"><div class="ucard-fill" style="width:${locked ? 0 : fillPct}%;background:${locked ? 'transparent' : isRainbow ? 'linear-gradient(90deg,#ff4757,#ff9f43,#2ed573,#3498db,#9b59b6)' : `hsl(${barHue},80%,${50 + lvl * 0.03}%)`}"></div></div>
@@ -1166,18 +1152,6 @@ function renderGrid(filter) {
       sellBtn.addEventListener('click', e => {
         e.stopPropagation();
         if (confirm(`${c.icon} ${c.name} seviye ${lvl} satılsın mı?`)) sellCard(c.id);
-      });
-    }
-    const favStar = div.querySelector('.fav-star');
-    if (favStar) {
-      favStar.addEventListener('click', e => {
-        e.stopPropagation();
-        if (!S.favorites) S.favorites = [];
-        const idx = S.favorites.indexOf(c.id);
-        if (idx >= 0) S.favorites.splice(idx, 1);
-        else S.favorites.push(c.id);
-        save();
-        renderGrid(document.querySelector('.chip.active')?.dataset?.f || 'all');
       });
     }
     div.addEventListener('click', e => {
@@ -1856,17 +1830,13 @@ function showCardDetail(id) {
   const perSecNext = (c.baseSec || 0) * (lvl + 1);
   const perClickHere = (c.baseClick || 0) * lvl;
   const perClickNext = (c.baseClick || 0) * (lvl + 1);
-  const totalSpent = lvl > 0 ? Array.from({length: lvl}, (_, i) => cardCost(c, i)).reduce((a, b) => a + b, 0) : 0;
-  const roi = lvl > 0 && perSecHere > 0 ? Math.floor(totalSpent / perSecHere) : 0;
   const rarityColors = {'common':'#8e9cb5','uncommon':'#2ed573','rare':'#3498db','epic':'#9b59b6','legendary':'#f39c12','mythic':'#ff4757'};
   const rc = rarityColors[c.rarity] || '#fff';
-  const setInfo = SET_BONUSES.find(s => s.cat === c.cat);
   el.innerHTML = `
     <span style="font-size:48px;">${c.icon}</span>
     <h3 style="color:${rc};margin:0;">${c.name}</h3>
     <span style="color:#8e9cb5;font-size:11px;">${c.rarity.toUpperCase()} · Seviye ${lvl}/9999 ${c.cat === 'retro' ? '🎮 RETRO' : ''}</span>
     <span style="color:${rc};font-size:22px;font-weight:800;">💰${fmt(cost)}</span>
-    ${setInfo ? `<span style="font-size:10px;color:#8e9cb5;">🎯 Set: ${setInfo.name} ${setInfo.desc}</span>` : ''}
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;width:100%;margin-top:6px;">
       <div style="background:rgba(255,255,255,.04);padding:8px;border-radius:8px;text-align:center;">
         <div style="color:#8e9cb5;font-size:10px;">Anlık ⏱️</div>
@@ -1876,38 +1846,18 @@ function showCardDetail(id) {
       </div>
       <div style="background:rgba(255,255,255,.04);padding:8px;border-radius:8px;text-align:center;">
         <div style="color:#8e9cb5;font-size:10px;">Sonraki ⏭️</div>
-        ${perSecNext > 0 ? `<div style="font-size:14px;font-weight:700;color:#2ed573;">💰${fmt(perSecNext)}/s <span style="font-size:10px;color:#2ed573;">(+${fmt(perSecNext - perSecHere)})</span></div>` : ''}
-        ${perClickNext > 0 ? `<div style="font-size:14px;font-weight:700;color:#2ed573;">👆${fmt(perClickNext)}/tık <span style="font-size:10px;color:#2ed573;">(+${fmt(perClickNext - perClickHere)})</span></div>` : ''}
+    ${perSecNext > 0 ? `<div style="font-size:14px;font-weight:700;color:#2ed573;">💰${fmt(perSecNext)}/s</div>` : ''}
+    ${perClickNext > 0 ? `<div style="font-size:14px;font-weight:700;color:#2ed573;">👆${fmt(perClickNext)}/tık</div>` : ''}
         <div style="font-size:11px;color:#8e9cb5;">💰${fmt(nextCost)}</div>
       </div>
     </div>
-    ${lvl > 0 ? `
-    <div style="background:rgba(255,255,255,.04);padding:8px;border-radius:8px;width:100%;">
-      <div style="display:flex;justify-content:space-between;font-size:11px;">
-        <span style="color:#8e9cb5;">Yatırım:</span><span style="font-weight:700;">💰${fmt(totalSpent)}</span>
-      </div>
-      ${roi > 0 ? `<div style="display:flex;justify-content:space-between;font-size:11px;margin-top:2px;">
-        <span style="color:#8e9cb5;">Geri ödeme:</span><span style="color:${roi < 3600 ? '#2ed573' : '#f39c12'};">${roi < 60 ? roi+'s' : roi < 3600 ? Math.floor(roi/60)+'dk' : Math.floor(roi/3600)+'s'}</span>
-      </div>` : ''}
-    </div>` : ''}
     ${c.desc ? `<div style="color:#8e9cb5;font-size:11px;text-align:center;margin-top:4px;">📖 ${c.desc}</div>` : ''}
     ${lvl > 0 && lvl < 9999 ? `<button class="btn btn-gold btn-block" style="margin-top:6px;font-size:12px;" id="quickBuyDetailBtn">↑ Yükselt (💰${fmt(cost)})</button>` : ''}
-    ${lvl > 0 && lvl < 9999 ? `<button class="btn btn-secondary btn-block" style="margin-top:4px;font-size:10px;background:rgba(46,213,115,.15);color:#2ed573;" id="quickBuy10DetailBtn">↑↑ x10 Yükselt (💰${fmt(cardCost(c, lvl + 10))})</button>` : ''}
     ${lvl > 0 ? `<button class="btn btn-secondary btn-block" style="margin-top:4px;font-size:11px;background:rgba(255,71,87,.15);color:#ff4757;" id="sellDetailBtn">🔄 Sat (💰${fmt(Math.floor(cardCost(c, lvl) * 0.4))})</button>` : ''}
   `;
   $('cardDetailModal').classList.remove('hidden');
   const buyBtn = $('quickBuyDetailBtn');
   if (buyBtn) buyBtn.addEventListener('click', () => { buyCard(id); showCardDetail(id); });
-  const buy10Btn = $('quickBuy10DetailBtn');
-  if (buy10Btn) buy10Btn.addEventListener('click', () => { 
-    let bought = 0;
-    for (let i = 0; i < 10; i++) {
-      if (S.coins >= cardCost(c) && getItemLevel(c.id) < 9999) { buyCard(id); bought++; }
-      else break;
-    }
-    if (bought > 0) toast(`⚡ ${bought}x ${c.name} yükseltildi!`);
-    showCardDetail(id);
-  });
   const sellBtn = $('sellDetailBtn');
   if (sellBtn) sellBtn.addEventListener('click', () => { if (confirm(`${c.icon} ${c.name} seviye ${lvl} satılsın mı?`)) { sellCard(id); $('cardDetailModal').classList.add('hidden'); } });
 }
@@ -2225,7 +2175,8 @@ try {
     Telegram.WebApp.enableClosingConfirmation();
     Telegram.WebApp.setHeaderColor('#000000');
     Telegram.WebApp.setBackgroundColor('#000000');
-    Telegram.WebApp.onEvent('viewportChanged', () => { Telegram.WebApp.expand(); });
+    let expanded = false;
+    Telegram.WebApp.onEvent('viewportChanged', () => { if (!expanded) { Telegram.WebApp.expand(); expanded = true; } });
     const u = Telegram.WebApp.initDataUnsafe?.user;
     if (u) {
       if (u.id) S.userId = String(u.id);
@@ -2296,10 +2247,6 @@ setInterval(() => {
   if (tapEl && tpm > 0) {
     tapEl.textContent = combo > 0 ? `${combo} tık | ${tpm} TPM` : `${tpm} TPM`;
   }
-  const tsEl = $('tapSpeedDisplay');
-  if (tsEl) tsEl.textContent = Math.round(tpm / 60) + '/s';
-  const sessEl = $('sessionTimeDisplay');
-  if (sessEl) sessEl.textContent = getSessionTime();
 }, 1000);
 
 /* ===== TUTORIAL ===== */

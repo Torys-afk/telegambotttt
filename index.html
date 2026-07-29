@@ -71,8 +71,8 @@
                     <span id="x2Indicator" style="display:none;font-size:13px;font-weight:800;color:#f3ba2f;margin-left:6px;"></span>
                 <span id="autoTapIndicator" style="display:none;font-size:11px;font-weight:700;color:#3498db;margin-left:4px;">🤖</span>
             </div>
-            <div style="display:flex;justify-content:space-between;font-size:9px;color:#8e9cb5;padding:0 10px;"><span><span id="userDisplay" style="color:#f3ba2f;font-weight:700;">Misafir</span> · <span id="lastActive">🟢 Çevrimiçi</span></span><span>👆 <span id="tapSpeedDisplay">0/s</span> · ⏱️ <span id="sessionTimeDisplay">0dk</span></span></div>
-            <div id="passiveDisplay" style="font-size:10px;color:#8e9cb5;text-align:center;margin-top:-2px;">⏱️ <span id="perSecText">+0/s</span> · <span id="perHourShort">0/saat</span></div>
+            <div style="display:flex;justify-content:space-between;font-size:9px;color:#8e9cb5;padding:0 10px;"><span><span id="userDisplay" style="color:#f3ba2f;font-weight:700;">Misafir</span> · <span id="lastActive">🟢 Çevrimiçi</span></span></div>
+            <div id="passiveDisplay" style="font-size:10px;color:#8e9cb5;text-align:center;margin-top:-2px;">⏱️ <span id="psText">+0/s</span> · <span id="phShort">0/saat</span></div>
 
                 <div id="tierBadge" style="display:none;text-align:center;font-size:11px;font-weight:800;margin-top:6px;letter-spacing:1px;"></div>
 
@@ -123,7 +123,7 @@
     <!-- TAB 2: MINE -->
     <section id="tab-mine" class="tab">
         <div class="mine-header" style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:4px;">
-            <div><h2>⛏️ Madencilik</h2><p>Kartları yükselterek güçlen</p><span id="totalCards" style="font-size:10px;color:#8e9cb5;"></span> <span id="totalCardLevels" style="font-size:10px;color:#8e9cb5;"></span></div>
+            <div><h2>⛏️ Madencilik</h2><p>Kartları yükselterek güçlen</p><span id="totalCards" style="font-size:10px;color:#8e9cb5;"></span></div>
             <div style="display:flex;gap:4px;flex-wrap:wrap;justify-content:flex-end;">
                 <input id="cardSearch" placeholder="🔍 Ara..." style="width:80px;padding:4px 8px;border-radius:8px;border:1px solid rgba(255,255,255,.1);background:rgba(255,255,255,.04);color:#fff;font-size:11px;" oninput="renderGrid(document.querySelector('.chip.active')?.dataset?.f || 'all')">
                 <button class="btn btn-xs" style="background:rgba(255,255,255,.08);padding:4px 6px;" onclick="setCardSort('default')" title="Varsayılan">📋</button>
@@ -131,7 +131,6 @@
                 <button class="btn btn-xs" style="background:rgba(255,255,255,.08);padding:4px 6px;" onclick="setCardSort('price')" title="Fiyata göre">💰</button>
                 <button class="btn btn-xs" style="background:rgba(255,255,255,.08);padding:4px 6px;" onclick="setCardSort('rarity')" title="Nadirlik">⭐</button>
                 <button class="btn btn-gold btn-xs" onclick="quickUpgrade()" style="height:32px;padding:4px 8px;">⚡</button>
-            <button class="btn btn-xs" style="background:rgba(255,255,255,.08);padding:4px 6px;" onclick="setCardSort('favorites')" title="Favoriler">⭐</button>
             </div>
         </div>
         <div class="chips">
@@ -182,10 +181,6 @@
             <div class="stat-box"><div class="stat-icon">⚡</div><div class="stat-label">Yenilenme</div><div class="stat-value" id="statRegen">1/s</div></div>
             <div class="stat-box"><div class="stat-icon">👆</div><div class="stat-label">Çoklu Tık</div><div class="stat-value" id="statMulti">1x</div></div>
             <div class="stat-box"><div class="stat-icon">🏆</div><div class="stat-label">Boss</div><div class="stat-value" id="statBoss">0</div></div>
-            <div class="stat-box"><div class="stat-icon">📦</div><div class="stat-label">Kasa</div><div class="stat-value" id="statCrates">0</div></div>
-            <div class="stat-box"><div class="stat-icon">⏱️</div><div class="stat-label">Pasif/s</div><div class="stat-value" id="statPassive">0</div></div>
-            <div class="stat-box"><div class="stat-icon">🎮</div><div class="stat-label">Kart Seviye</div><div class="stat-value" id="statCardLevels">0</div></div>
-            <div class="stat-box"><div class="stat-icon">💎</div><div class="stat-label">Toplam Elmas</div><div class="stat-value" id="statTotalGems">0</div></div>
         </div>
 
         <div class="section-label" style="margin-top:12px;">💎 Elmas Mağazası</div>
@@ -219,7 +214,7 @@
             <span id="dailyStreakBadge" style="font-size:11px;color:#ff9f43;">🔥 0 gün</span>
             <span style="color:#8e9cb5;">▶️</span>
         </div>
-        <div class="section-label" style="margin-top:14px;">🎁 Hızlı Ödüller</div>
+        <div class="section-label" style="margin-top:14px;">🎁 Ödüller</div>
         <div class="task" onclick="quickReward('coin')">
             <span style="font-size:20px;">💰</span>
             <span style="flex:1;font-weight:600;">+10,000 Coin +2💎</span>
@@ -234,27 +229,6 @@
             <span style="font-size:20px;">🔥</span>
             <span style="flex:1;font-weight:600;">2x Çarpan 60sn</span>
             <button class="btn btn-gold btn-xs">Aktifleştir</button>
-        </div>
-        <div class="task" onclick="quickReward('gem')">
-            <span style="font-size:20px;">💎</span>
-            <span style="flex:1;font-weight:600;">+100 Elmas (25💎)</span>
-            <button class="btn btn-gold btn-xs">💎 25</button>
-        </div>
-        <div class="task" onclick="quickReward('boost')">
-            <span style="font-size:20px;">🚀</span>
-            <span style="flex:1;font-weight:600;">+1,000 Enerji (10💎)</span>
-            <button class="btn btn-gold btn-xs">💎 10</button>
-        </div>
-        <div class="section-label" style="margin-top:14px;">🔄 Gelişmiş</div>
-        <div class="task" onclick="toggleAutoBuy()">
-            <span style="font-size:20px;">🤖</span>
-            <span style="flex:1;font-weight:600;">Otomatik Alım <span id="autoBuyStatus">(Kapalı)</span></span>
-            <button class="btn btn-gold btn-xs" id="autoBuyBtn">Aç</button>
-        </div>
-        <div class="task" onclick="doPrestige()">
-            <span style="font-size:20px;">🔄</span>
-            <span style="flex:1;font-weight:600;">Prestige (Level 250+)</span>
-            <button class="btn btn-gold btn-xs">🔄</button>
         </div>
         <div style="height:80px;"></div>
     </section>
@@ -282,10 +256,6 @@
                 </div>
                 <div class="b-hp"><span>HP</span><span id="bossHpDisplay">15000/15000</span></div>
                 <div class="bar-track"><div class="bar-fill hp-fill" id="bossHpFill" style="width:100%"></div></div>
-                <div style="display:flex;justify-content:space-between;font-size:11px;color:#8e9cb5;margin-top:4px;">
-                    <span id="bossDmgDisplay">⚔️ 2/tık</span>
-                    <span id="bossRewardDisplay">💰 +0</span>
-                </div>
                 <div class="b-tap" id="bossTapTarget">
                     <img src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 200'><circle cx='100' cy='85' r='68' fill='%23e0e0e0' stroke='%23999' stroke-width='3'/><ellipse cx='100' cy='155' rx='40' ry='16' fill='%23e0e0e0' stroke='%23999' stroke-width='2'/><circle cx='100' cy='75' r='36' fill='%23e0e0e0' stroke='%23999' stroke-width='2'/><ellipse cx='87' cy='64' rx='10' ry='16' fill='%23e0e0e0' stroke='%23999' stroke-width='2'/><ellipse cx='113' cy='64' rx='10' ry='16' fill='%23e0e0e0' stroke='%23999' stroke-width='2'/><circle cx='100' cy='52' r='6' fill='%23ff4757'/><circle cx='90' cy='78' r='5' fill='%23ff4757'/><circle cx='110' cy='78' r='5' fill='%23ff4757'/><path d='M40 60 Q50 30 60 65' stroke='%23e0e0e0' stroke-width='4' fill='none' stroke-linecap='round'/><path d='M160 60 Q150 30 140 65' stroke='%23e0e0e0' stroke-width='4' fill='none' stroke-linecap='round'/><path d='M65 130 Q100 150 135 130 L130 148 Q100 168 70 148 Z' fill='%23ff4757'/></svg>">
                 </div>
