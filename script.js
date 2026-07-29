@@ -24,6 +24,7 @@ function defState() {
     _xpFromCrits: 0, _totalDungeonRuns: 0, _bossMaxDmg: 0,
     bossPoints: 0, bossUpgrades: [], bossAbilityActive: '', bossAbilityTimer: 0,
     _boss10xTap: false, _bossAutoStart: false, _bossDmgMult: 1, _bossTimeBonus: 0,
+    bossPlayerHp: 100, bossPlayerMaxHp: 100,
   };
 }
 
@@ -3110,11 +3111,15 @@ function startBoss() {
   S.bossActive = true;
   S.bossAbilityActive = '';
   S.bossAbilityTimer = 0;
+  S._bossShieldUsed = false;
   const tier = getBossTier();
   const bData = getBossData();
   const bLvl = getBossLevel();
   S.bossMaxHp = getBossHp();
   S.bossHp = S.bossMaxHp;
+  const tierScale = 1 + tier * 0.5;
+  S.bossPlayerMaxHp = Math.floor(100 * tierScale);
+  S.bossPlayerHp = S.bossPlayerMaxHp;
   S.bossTimer = bData.time + (S._bossTimeBonus || 0);
   updateBossUI();
   $('startBossBtn').textContent = `⚔️ ${bData.icon} Savaş Sürüyor (Seviye ${bLvl})`;
@@ -3133,9 +3138,11 @@ function startBoss() {
   }
   let abilityTick = 0;
   let regenUsed = false;
+  let bossAtkTick = 0;
   const iv = setInterval(() => {
     S.bossTimer -= 0.1;
     abilityTick += 0.1;
+    bossAtkTick += 0.1;
     if (bData.ability === 'regen' && abilityTick >= 5 && !regenUsed) {
       if (S.bossHp > 0 && S.bossHp < S.bossMaxHp) { S.bossHp = Math.min(S.bossMaxHp, S.bossHp + S.bossMaxHp * 0.1); toast(`🔄 ${bData.name} can yeniledi!`); }
       regenUsed = true;
@@ -3161,6 +3168,33 @@ function startBoss() {
       S.bossHp = Math.min(S.bossMaxHp, S.bossHp + sdmg);
       S.energy = Math.max(0, S.energy - sdmg);
       if (abilityTick % 3 < 0.2) toast(`🌀 Kara delik canını emiyor! -${sdmg}⚡`);
+    }
+    /* Boss attacks player */
+    const atkInterval = Math.max(1.5, 4 - tier * 0.3);
+    if (bossAtkTick >= atkInterval) {
+      const baseDmg = Math.floor((10 + tier * 8) * (1 + S.bossWins * 0.02));
+      let bossAtk = Math.floor(baseDmg * (0.8 + Math.random() * 0.4));
+      if (S._bossShield && !S._bossShieldUsed) {
+        S._bossShieldUsed = true;
+        bossAtk = 0;
+        toast('🛡️ Kalkan ilk hasarı emdi!');
+      }
+      S.bossPlayerHp = Math.max(0, S.bossPlayerHp - bossAtk);
+      flashOverlay('red');
+      spawnFloat(innerWidth / 2, innerHeight / 3, '💢 ' + bossAtk, true, '#ff4757');
+      bossAtkTick = 0;
+    }
+    if (S.bossPlayerHp <= 0) {
+      clearInterval(iv);
+      S.bossActive = false; S.bossAbilityActive = '';
+      const abilEl = $('bossAbilityIndicator');
+      if (abilEl) abilEl.classList.add('hidden');
+      $('startBossBtn').textContent = '⚔️ Başlat';
+      $('startBossBtn').disabled = false;
+      toast(`💀 ${bData.icon} seni yendi! Bir dahakine.`);
+      spawnParticles(innerWidth / 2, innerHeight / 2, '#ff4757');
+      updateBossUI(); update();
+      return;
     }
     if (S.bossTimer <= 0 || S.bossHp <= 0) {
       clearInterval(iv);
@@ -3273,6 +3307,18 @@ function updateBossUI() {
   $('bossTimerDisplay').textContent = Math.max(0, Math.ceil(S.bossTimer)) + 's';
   const bpEl = $('bossPointsDisplay');
   if (bpEl) bpEl.textContent = `🪙 ${S.bossPoints || 0} BP`;
+  const ph = $('playerHpDisplay');
+  const pf = $('playerHpFill');
+  const pp = document.querySelector('.b-player-hp');
+  if (ph && pf && pp) {
+    if (S.bossActive) {
+      pp.classList.remove('hidden');
+      ph.textContent = `${S.bossPlayerHp}/${S.bossPlayerMaxHp}`;
+      const pct = S.bossPlayerMaxHp > 0 ? (S.bossPlayerHp / S.bossPlayerMaxHp) * 100 : 0;
+      pf.style.width = Math.max(0, pct) + '%';
+      pf.style.background = pct < 25 ? '#ff4757' : pct < 50 ? '#ff9f43' : '#2ed573';
+    } else { pp.classList.add('hidden'); }
+  }
 }
 
 /* ===== OFFLINE EARNINGS ===== */
