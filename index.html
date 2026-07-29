@@ -372,67 +372,28 @@
             <h2>⚙️ Ayarlar</h2>
             <p>Oyun ayarları, görünüm ve daha fazlası</p>
         </div>
-        <div style="display:flex;flex-direction:column;gap:8px;padding:0 12px 12px;min-height:0;">
-
+        <div class="settings-scroll">
             <div class="section-label">🎨 Görünüm</div>
-            <div class="task" id="skinBtn2" style="cursor:pointer;">
-                <span style="font-size:20px;">🎨</span>
-                <span style="flex:1;font-weight:600;">Görünüm Seç</span>
-                <span style="font-size:10px;color:#8e9cb5;">Yeni skinler</span>
-                <button class="btn btn-gold btn-xs">Aç</button>
-            </div>
-            <div class="task" onclick="openNamePicker()">
-                <span style="font-size:20px;">🏷️</span>
-                <span style="flex:1;font-weight:600;">İsim Değiştir</span>
-                <span style="font-size:10px;color:#8e9cb5;">Rastgele isim seç</span>
-                <button class="btn btn-gold btn-xs">Seç</button>
-            </div>
-
+            <div class="task" id="skinBtn2"><span style="font-size:20px;">🎨</span><span style="flex:1;font-weight:600;">Görünüm Seç</span><span style="font-size:10px;color:#8e9cb5;">Yeni skinler</span><button class="btn btn-gold btn-xs">Aç</button></div>
+            <div class="task" onclick="openNamePicker()"><span style="font-size:20px;">🏷️</span><span style="flex:1;font-weight:600;">İsim Değiştir</span><span style="font-size:10px;color:#8e9cb5;">Rastgele isim seç</span><button class="btn btn-gold btn-xs">Seç</button></div>
             <div class="section-label">⚙️ Genel</div>
-            <div style="display:flex;align-items:center;justify-content:space-between;background:rgba(255,255,255,.04);border-radius:10px;padding:10px 12px;">
-                <span style="color:#fff;font-weight:600;font-size:12px;">🔊 Efekt</span>
-                <button id="sfxToggleQuick" class="btn btn-gold" style="min-width:50px;padding:4px 10px;font-size:10px;">Açık</button>
-            </div>
-            <div style="display:flex;align-items:center;justify-content:space-between;background:rgba(255,255,255,.04);border-radius:10px;padding:10px 12px;">
-                <span style="color:#fff;font-weight:600;font-size:12px;">⚙️ Detaylı Ayarlar</span>
-                <button class="btn btn-gold btn-xs" onclick="$('settingsModal').classList.remove('hidden');initSettingsUI();">Aç</button>
-            </div>
-
+            <div class="sett-row"><span>🔊 Efekt</span><button id="sfxToggleQuick" class="btn btn-gold" style="min-width:50px;padding:4px 10px;font-size:10px;">Açık</button></div>
+            <div class="sett-row"><span>⚙️ Detaylı Ayarlar</span><button class="btn btn-gold btn-xs" onclick="$('settingsModal').classList.remove('hidden');initSettingsUI();">Aç</button></div>
             <div class="section-label">💎 Dükkan & İstatistik</div>
-            <div class="task" id="gemDisplay" style="cursor:pointer;">
-                <span style="font-size:20px;">💎</span>
-                <span style="flex:1;font-weight:600;">Elmas Dükkanı</span>
-                <span style="font-size:10px;color:#3498db;font-weight:700;"><span id="gemCount">0</span> Elmas</span>
-                <button class="btn btn-gold btn-xs">Aç</button>
-            </div>
-            <div class="task" onclick="exchangeCoins()">
-                <span style="font-size:20px;">🔄</span>
-                <span style="flex:1;font-weight:600;">Coin → Elmas</span>
-                <span style="font-size:10px;color:#8e9cb5;">100K = 1💎</span>
-                <button class="btn btn-gold btn-xs">Dönüştür</button>
-            </div>
-            <div class="task" id="statBtn2" style="cursor:pointer;">
-                <span style="font-size:20px;">📊</span>
-                <span style="flex:1;font-weight:600;">İstatistikler</span>
-                <span style="font-size:10px;color:#8e9cb5;">Detaylı veriler</span>
-                <button class="btn btn-gold btn-xs">Gör</button>
-            </div>
-
+            <div class="task" id="gemDisplay"><span style="font-size:20px;">💎</span><span style="flex:1;font-weight:600;">Elmas Dükkanı</span><span style="font-size:10px;color:#3498db;font-weight:700;"><span id="gemCount">0</span> Elmas</span><button class="btn btn-gold btn-xs">Aç</button></div>
+            <div class="task" onclick="exchangeCoins()"><span style="font-size:20px;">🔄</span><span style="flex:1;font-weight:600;">Coin → Elmas</span><span style="font-size:10px;color:#8e9cb5;">100K = 1💎</span><button class="btn btn-gold btn-xs">Dönüştür</button></div>
+            <div class="task" id="statBtn2"><span style="font-size:20px;">📊</span><span style="flex:1;font-weight:600;">İstatistikler</span><span style="font-size:10px;color:#8e9cb5;">Detaylı veriler</span><button class="btn btn-gold btn-xs">Gör</button></div>
             <div class="section-label">💬 Geri Bildirim</div>
-            <div style="background:rgba(255,255,255,.04);border-radius:10px;padding:10px;">
-                <textarea id="feedbackInput" rows="2" style="width:100%;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:8px;color:#fff;font-size:12px;padding:8px;resize:none;outline:none;box-sizing:border-box;" placeholder="Öneri, hata bildirimi veya fikir..."></textarea>
+            <div class="sett-feedback">
+                <textarea id="feedbackInput" rows="2" placeholder="Öneri, hata bildirimi veya fikir..."></textarea>
                 <div style="display:flex;gap:6px;margin-top:6px;">
                     <button id="feedbackSendBtn" class="btn btn-gold" style="flex:1;padding:6px;font-size:11px;">📤 Gönder</button>
                     <button id="feedbackCopyBtn" class="btn btn-secondary" style="flex:1;padding:6px;font-size:11px;background:rgba(52,152,219,.15);color:#3498db;">📋 Kopyala</button>
                 </div>
                 <div id="feedbackStatus" style="font-size:10px;color:#2ed573;text-align:center;margin-top:4px;min-height:16px;"></div>
             </div>
-
-            <div style="text-align:center;margin-top:6px;color:#8e9cb5;font-size:9px;">
-                <span id="gameVersionDisplay2" style="color:#f3ba2f;font-weight:700;font-size:11px;">v4.0.0</span>
-                <br>🤖 Bot: @Rat_combatbot
-            </div>
-            <div style="height:20px;"></div>
+            <div style="text-align:center;margin-top:8px;color:#8e9cb5;font-size:9px;padding-bottom:8px;">
+                <span id="gameVersionDisplay2" style="color:#f3ba2f;font-weight:700;font-size:11px;">v4.0.0</span><br>🤖 Bot: @Rat_combatbot</div>
         </div>
     </section>
 
@@ -452,7 +413,7 @@
     <div class="modal-overlay hidden" id="slotModal">
         <div class="modal-card">
             <button class="modal-x" id="closeSlotModal">✕</button>
-            <div style="font-size:40px;">🎰</div>
+            <div style="font-size:28px;">🎰</div>
             <h3>Slot Makinesi</h3>
             <p style="font-size:11px;">5💎 ile dene, büyük kazan!</p>
             <div id="slotReels" style="font-size:42px;letter-spacing:12px;padding:16px;background:rgba(0,0,0,.3);border-radius:12px;margin:8px 0;">🍒 | 🍋 | 🍊</div>
@@ -464,7 +425,7 @@
     <div class="modal-overlay hidden" id="coinFlipModal">
         <div class="modal-card">
             <button class="modal-x" id="closeCoinFlipModal">✕</button>
-            <div style="font-size:40px;">🪙</div>
+            <div style="font-size:28px;">🪙</div>
             <h3>Yazı Tura</h3>
             <p style="font-size:11px;">10.000 Coin yatır, 2 katını kazan!</p>
             <div id="coinFlipResult" style="font-size:14px;color:#8e9cb5;margin:8px 0;">🪙 Yazı mı tura mı?</div>
@@ -478,7 +439,7 @@
     <div class="modal-overlay hidden" id="numberGuessModal">
         <div class="modal-card">
             <button class="modal-x" id="closeNumberGuessModal">✕</button>
-            <div style="font-size:40px;">🔢</div>
+            <div style="font-size:28px;">🔢</div>
             <h3>Sayı Tahmini</h3>
             <p style="font-size:11px;">5.000 Coin yatır, 1-10 arası bil, x2-x10 kazan!</p>
             <div id="numberGuessResult" style="font-size:14px;color:#8e9cb5;margin:8px 0;">🔢 1-10 arası tahmin et</div>
@@ -500,7 +461,7 @@
     <div class="modal-overlay hidden" id="reactionModal">
         <div class="modal-card">
             <button class="modal-x" id="closeReactionModal">✕</button>
-            <div style="font-size:40px;">⚡</div>
+            <div style="font-size:28px;">⚡</div>
             <h3>Refleks Testi</h3>
             <p style="font-size:11px;">Yeşil olunca tıkla! Hızlı ol, çok kazan!</p>
             <div id="reactionStatus" style="font-size:16px;font-weight:700;color:#f39c12;margin:8px 0;">🟡 Hazır ol...</div>
@@ -512,7 +473,7 @@
     <div class="modal-overlay hidden" id="mergeModal">
         <div class="modal-card" style="max-width:280px;">
             <button class="modal-x" id="closeMergeModal">✕</button>
-            <div style="font-size:40px;">🔄</div>
+            <div style="font-size:28px;">🔄</div>
             <h3>Kart Birleştir</h3>
             <p style="font-size:11px;">2 seviye harca, 1 seviye yükselt (%30 maliyetle)</p>
             <div id="mergeCardList" style="display:flex;flex-direction:column;gap:4px;max-height:250px;overflow-y:auto;margin-top:6px;"></div>
@@ -522,7 +483,7 @@
     <div class="modal-overlay hidden" id="prestigeShopModal">
         <div class="modal-card">
             <button class="modal-x" id="closePrestigeShopModal">✕</button>
-            <div style="font-size:40px;">🔄</div>
+            <div style="font-size:28px;">🔄</div>
             <h3>Prestige Dükkanı</h3>
             <p style="font-size:11px;">Prestige puanlarınla (PP) kalıcı güçlenmeler satın al</p>
             <div id="prestigeShopList" style="display:flex;flex-direction:column;gap:4px;margin-top:6px;"></div>
@@ -544,7 +505,7 @@
 <div class="modal-overlay hidden" id="dailyModal">
     <div class="modal-card">
         <button class="modal-x" id="closeDailyModal">✕</button>
-        <div style="font-size:40px;margin-bottom:8px;">📅</div>
+        <div style="font-size:28px;margin-bottom:8px;">📅</div>
         <h3>Günlük Ödüller</h3>
         <p>Her gün farklı ödül - streak arttıkça bonus artar!</p>
         <div class="daily-streak"><span>🔥</span><span id="dailyStreakText">0 gün</span></div>
@@ -580,7 +541,7 @@
 <div class="modal-overlay hidden" id="statModal">
     <div class="modal-card">
         <button class="modal-x" id="closeStatModal">✕</button>
-        <div style="font-size:40px;margin-bottom:8px;">📊</div>
+        <div style="font-size:28px;margin-bottom:8px;">📊</div>
         <h3>İstatistikler</h3>
         <div id="statContent" style="display:flex;flex-direction:column;gap:8px;margin-top:8px;font-size:12px;color:#fff;"></div>
     </div>
@@ -588,7 +549,7 @@
 <div class="modal-overlay hidden" id="skinModal">
     <div class="modal-card">
         <button class="modal-x" id="closeSkinModal">✕</button>
-        <div style="font-size:40px;margin-bottom:8px;">🎨</div>
+        <div style="font-size:28px;margin-bottom:8px;">🎨</div>
         <h3>Görünüm Seç</h3>
         <p style="font-size:12px;color:#8e9cb5;">100+ level'da yeni görünümler açılır</p>
         <div id="skinList" style="display:flex;flex-direction:column;gap:6px;margin-top:8px;"></div>
@@ -597,7 +558,7 @@
 <div class="modal-overlay hidden" id="settingsModal">
     <div class="modal-card">
         <button class="modal-x" id="closeSettingsModal">✕</button>
-        <div style="font-size:40px;margin-bottom:8px;">⚙️</div>
+        <div style="font-size:28px;margin-bottom:8px;">⚙️</div>
         <h3>Ayarlar</h3>
         <div style="display:flex;flex-direction:column;gap:14px;margin-top:8px;">
             <div style="display:flex;align-items:center;justify-content:space-between;">
@@ -635,7 +596,7 @@
 <div class="modal-overlay hidden" id="shopModal">
     <div class="modal-card">
         <button class="modal-x" id="closeShopModal">✕</button>
-        <div style="font-size:40px;margin-bottom:8px;">💎</div>
+        <div style="font-size:28px;margin-bottom:8px;">💎</div>
         <h3>Elmas Dükkanı</h3>
         <p style="color:#3498db;font-weight:700;">💎 <span id="shopGemCount">0</span> Elmasın var</p>
         <div class="shop-grid" id="shopGrid"></div>
@@ -644,7 +605,7 @@
 <div class="modal-overlay hidden" id="dailyCipherModal">
     <div class="modal-card" style="max-width:280px;">
         <button class="modal-x" id="closeCipherModal">✕</button>
-        <div style="font-size:40px;margin-bottom:8px;">🔐</div>
+        <div style="font-size:28px;margin-bottom:8px;">🔐</div>
         <h3>Günlük Şifre</h3>
         <p style="font-size:11px;color:#8e9cb5;">Kısa bas = <b style="color:#2ed573;">•</b> · Uzun bas (250ms+) = <b style="color:#f3ba2f;">−</b></p>
         <div id="cipherWordDisplay" style="font-size:14px;font-weight:700;color:#f3ba2f;letter-spacing:6px;font-family:monospace;min-height:28px;"></div>
@@ -664,7 +625,7 @@
 <div class="modal-overlay hidden" id="wheelModal">
     <div class="modal-card" style="max-width:280px;align-items:center;">
         <button class="modal-x" id="closeWheelModal">✕</button>
-        <div style="font-size:40px;margin-bottom:4px;">🎡</div>
+        <div style="font-size:28px;margin-bottom:4px;">🎡</div>
         <h3>Şans Çarkı</h3>
         <p style="font-size:11px;color:#8e9cb5;" id="wheelFreeText">🎟️ Kalan bedava spin: <span id="wheelFreeCount">1</span></p>
         <canvas id="wheelCanvas" width="280" height="280" style="margin:8px 0;"></canvas>
@@ -677,7 +638,7 @@
 <div class="modal-overlay hidden" id="airdropModal">
     <div class="modal-card" style="max-width:280px;">
         <button class="modal-x" id="closeAirdropModal">✕</button>
-        <div style="font-size:40px;margin-bottom:8px;">🪂</div>
+        <div style="font-size:28px;margin-bottom:8px;">🪂</div>
         <h3>Airdrop & Cüzdan</h3>
         <div style="background:rgba(255,255,255,.04);border-radius:12px;padding:12px;display:flex;flex-direction:column;gap:8px;">
             <div style="display:flex;justify-content:space-between;font-size:12px;"><span style="color:#8e9cb5;">📈 Puan</span><span style="font-weight:700;" id="airdropPph">0</span></div>
@@ -692,7 +653,7 @@
 <div class="modal-overlay hidden" id="dailyComboModal">
     <div class="modal-card">
         <button class="modal-x" id="closeComboModal">✕</button>
-        <div style="font-size:40px;margin-bottom:8px;">🎯</div>
+        <div style="font-size:28px;margin-bottom:8px;">🎯</div>
         <h3>Günlük Combo</h3>
         <p>3 kart seç ve büyük ödülü kazan!</p>
         <div id="comboCards" style="display:flex;gap:6px;justify-content:center;margin:8px 0;flex-wrap:wrap;"></div>
@@ -727,7 +688,7 @@
 <div class="modal-overlay hidden" id="pvpModal">
     <div class="modal-card" style="max-width:280px;">
         <button class="modal-x" id="closePvpModal">✕</button>
-        <div style="font-size:40px;">⚔️</div>
+        <div style="font-size:28px;">⚔️</div>
         <h3>PVP Arena</h3>
         <p style="font-size:11px;color:#8e9cb5;">Gerçek rakiplere karşı savaş, sıralamada yüksel!</p>
         <div id="pvpRankDisplay" style="font-size:12px;color:#f3ba2f;font-weight:700;">🏆 Bronz · 0 Puan</div>
@@ -744,7 +705,7 @@
 <div class="modal-overlay hidden" id="dungeonModal">
     <div class="modal-card" style="max-width:280px;">
         <button class="modal-x" id="closeDungeonModal">✕</button>
-        <div style="font-size:40px;">🏰</div>
+        <div style="font-size:28px;">🏰</div>
         <h3>Zindan</h3>
         <p style="font-size:11px;color:#8e9cb5;">10 katlı zindanı temizle, büyük ödülleri kap!</p>
         <div id="dungeonStatus" style="display:flex;justify-content:space-between;font-size:12px;margin:4px 0;">
@@ -767,7 +728,7 @@
 <div class="modal-overlay hidden" id="riftModal">
     <div class="modal-card" style="max-width:280px;text-align:center;">
         <button class="modal-x" id="closeRiftModal">✕</button>
-        <div style="font-size:40px;">🌀</div>
+        <div style="font-size:28px;">🌀</div>
         <h3>Zaman Yarığı</h3>
         <p id="riftStatus" style="font-size:11px;color:#8e9cb5;">Günde 1 kez 10x çarpanla 60sn boyunca inanılmaz kazanç!</p>
         <div style="font-size:48px;margin:8px 0;" id="riftIcon">⏳</div>
@@ -781,7 +742,7 @@
 <div class="modal-overlay hidden" id="worldModal">
     <div class="modal-card" style="max-width:280px;">
         <button class="modal-x" id="closeWorldModal">✕</button>
-        <div style="font-size:40px;">🌍</div>
+        <div style="font-size:28px;">🌍</div>
         <h3>Dünya Fethi</h3>
         <p style="font-size:11px;color:#8e9cb5;">Bölgeleri ele geçir, kalıcı bonuslar kazan!</p>
         <div id="worldProgress" style="font-size:12px;color:#2ed573;font-weight:700;margin-bottom:4px;">🌍 0/20 bölge</div>
@@ -793,7 +754,7 @@
 <div class="modal-overlay hidden" id="alchemyModal">
     <div class="modal-card" style="max-width:280px;">
         <button class="modal-x" id="closeAlchemyModal">✕</button>
-        <div style="font-size:40px;">🧪</div>
+        <div style="font-size:28px;">🧪</div>
         <h3>Simya</h3>
         <p style="font-size:11px;color:#8e9cb5;">Özlerden eserler yap, kalıcı güçler kazan!</p>
         <div style="display:flex;justify-content:space-between;font-size:12px;margin:4px 0;">
